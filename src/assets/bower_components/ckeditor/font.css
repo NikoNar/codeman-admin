@@ -1,0 +1,5 @@
+@font-face {  
+    font-family: "yourfontname";  
+    src: url( ../fonts/font.eot ); /* IE */  
+    src: local("realfontname"), url("../fonts/font.TTF") format("truetype"); /*non-IE*/  
+}

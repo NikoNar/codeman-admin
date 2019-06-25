@@ -1,0 +1,164 @@
+{{-- {!! dd(json_decode($resource->description)) !!} --}}
+@extends('admin-panel::layouts.app')
+@section('style')
+	<!-- Select2 -->
+	<style>
+		.draggables, .dragged {
+			border: 1px solid #eee;
+			width: 100%;
+			min-height: 20px;
+			list-style-type: none;
+			margin: 0;
+			padding: 5px 0 0 0;
+			float: left;
+			margin-right: 10px;
+		}
+		.draggables li, .dragged li {
+			margin: 0 5px 5px 5px;
+			/*padding: 5px;*/
+			font-size: 1.2em;
+			width: 100%;
+		}
+	</style>
+	<link rel="stylesheet" href="{{ asset('admin-panel/bower_components/select2/dist/css/select2.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('admin-panel/plugins/bootstrap-tagsinput-master/src/bootstrap-tagsinput.css') }}">
+@endsection
+@section('content')
+	<div class="box">
+	    <div class="box-header with-border">
+	    	@if(!isset($resource))
+	        	<h3 class="box-title">Create {{Str::singular(ucwords($module))}}</h3>
+	        @else
+				<input type="hidden"  id="resource_id" value="{{$resource->id}}">
+				<h3 class="box-title">Edit {{Str::singular(ucwords($module))}}</h3>
+				<a href='{{ url("admin/resource/$module/create") }}' class="btn btn-primary btn-flat pull-right ">Add New</a>
+{{--				@if(isset($parent_lang_id) || isset($resource) && $resource->lang == 'arm')--}}
+{{--					@if(isset($parent_lang_id))--}}
+{{--						<a href="{{ route('resource-edit', [$parent_lang_id]) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to English</a>--}}
+{{--					@else--}}
+{{--						<a href="{{ route('resource-edit', $resource->parent_lang_id) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to English</a>--}}
+{{--					@endif--}}
+{{--				@else--}}
+{{--					<a href="{{ route('resource-translate',$resource->id) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to Armenian</a>--}}
+{{--				@endif--}}
+
+{{--				<a href="{{ route('resource-translate', [$resource->id, $resource->language_id]) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate</a>--}}
+			@endif
+	    </div>
+	    <div class="box-body">
+	        @include('admin-panel::resource.parts.forms._create_edit_form')
+	    </div>
+	    <!-- /.box-body -->
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="category-add-edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title pull-left" id="exampleModalLabel">@if(isset($category)) Category Edit @else Category Add @endif</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					@include('admin-panel::category.parts.forms._create_edit_modal')
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+@endsection
+@section('script')
+	<!-- Select2 -->
+	<script src="{{ asset('admin-panel/bower_components/select2/dist/js/select2.full.min.js') }}"></script>
+	<script src="{{ asset('admin-panel/plugins/bootstrap-tagsinput-master/src/bootstrap-tagsinput.js') }}"></script>
+
+	<script src="{{ asset('admin-panel/bower_components/ckeditor/ckeditor.js') }}"></script>
+	<!-- Laravel Javascript Validation -->
+	<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+	
+	{!! JsValidator::formRequest('Codeman\Admin\Http\Requests\ResourceRequest') !!}
+	<script>
+        $('select').select2();
+	  	$(function () {
+	  		if($('.editor').length > 0){
+				CKEDITOR.replaceClass('.editor');
+			}
+	  	})
+  	
+	  	
+	  </script>
+	<script src="{{ asset('admin-panel/plugins/sortable/Sortable.min.js') }} "></script>
+
+	<script>
+		$( function() {
+			$( ".draggables, .dragged" ).sortable({
+				connectWith: ".connectedSortable"
+			}).disableSelection();
+		} );
+
+
+		$('body').off('submit','form').on('submit', 'form', function (e) {
+			if($(this).attr('id') != 'store_category') {
+				e.preventDefault();
+				var relations = {};
+				// $('.dragged').each(function () {
+				//     var name = $(this).data('name');
+				//     var ids = $(this).find('li').map(function() {
+				//         return $(this).data("id");
+				//     }).get().join();
+				//     relations[name] = ids;
+				// });
+				var ids = $('.dragged').find('li').map(function () {
+					relations[$(this).data('id')] = {'resourceable_type': $(this).closest('ul').data('name')};
+				});
+
+
+				$('#relations').val(JSON.stringify(relations));
+				$(this)[0].submit();
+			}
+		});
+		$('.gallery-show-container').each(function(){
+			var gallery_id = $(this).data('meta');
+
+			if (window.hasOwnProperty('galleryObj')){
+				var currentGallery = galleryObj[gallery_id];
+			}
+
+			var sortable = Sortable.create(this, {
+				// Element dragging ended
+				onEnd: function (evt) {
+					var itemEl = evt.item;  // dragged HTMLElement
+					evt.to;    // target list
+					evt.from;  // previous list
+					evt.oldIndex;  // element’s old index within old parent
+					evt.newIndex;  // element’s new index within new parent
+					old_index = evt.oldIndex - 1;
+					new_index = evt.newIndex - 1;
+
+					function arrayMove(array, old_index, new_index) {
+						if (new_index >= array.length) {
+							var k = new_index - array.length;
+							while ((k--) + 1) {
+								array.push(undefined);
+							}
+						}
+						array.splice(new_index, 0, array.splice(old_index, 1)[0]);
+						return array; // for testing purposes
+					};
+					// console.log(old_index, new_index);
+					currentGallery = arrayMove(currentGallery, old_index, new_index);
+
+					if (gallery_id) {
+						$('.gallery-container[data-id='+gallery_id+']').find('.meta_images').val(JSON.stringify(currentGallery));
+					} else {
+						$('#images').val(JSON.stringify(currentGallery));
+					}
+				},
+			});
+		});
+	</script>
+	  <!-- <script src="{{ asset('admin-panel/content-builder/content-builder.js') }}"></script> -->
+@endsection()
