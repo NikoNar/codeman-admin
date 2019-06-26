@@ -1,5 +1,5 @@
 {
-    "name": "codemanstudio/admin-panel",
+    "name": "codemanstudio/codeman-admin",
     "description": "package for admin panel",
     "keywords": ["laravel", "admin panel", "codeman studio"],
     "type": "library",
