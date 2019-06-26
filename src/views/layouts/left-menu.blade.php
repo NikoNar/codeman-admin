@@ -166,23 +166,11 @@
 {{--                </ul>--}}
 {{--            </li>--}}
             
-{{--            <li class="@if(Request::is('admin/menus*')) active @endif">--}}
-{{--                <a href="{!! route('menu-index') !!}">--}}
-{{--                    <i class="fa fa-th"></i> <span>Menus</span>--}}
-{{--                </a>--}}
-{{--                --}}{{-- <ul class="treeview-menu">--}}
-{{--                    <li class="@if(Request::is('admin/menus')) active @endif">--}}
-{{--                        <a href="{!! route('menu-index') !!}">--}}
-{{--                            <i class="fa fa-circle-notch fz-12"></i> View All Menus--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
-{{--                    <li class="@if(Request::is('admin/menus/create')) active @endif">--}}
-{{--                        <a href="{!! route('menu-create') !!}">--}}
-{{--                            <i class="fa fa-circle-notch fz-12"></i> Create New Menu--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
-{{--                </ul> --}}
-{{--            </li>--}}
+                <li class="@if(Request::is('admin/menus*')) active @endif">
+                    <a href="{!! route('menu-index') !!}">
+                        <i class="fa fa-th"></i> <span>Menus</span>
+                    </a>
+                </li>
 
 {{--            <li class="treeview @if(Request::is('admin/lecturer*')) active @endif">--}}
 {{--               <a href="#">--}}

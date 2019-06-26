@@ -53,7 +53,6 @@
 	<br>
 	{{-- @include('admin-panel::layouts.content-builder.index') --}}
 
-
 	<div class="form-group">
 		{!! Form::label('content', 'Content'); !!}
 		{!! Form::textarea('content', null, ['class' => 'form-control', 'id' => 'content', 'name' =>  'content']); !!}
@@ -110,7 +109,7 @@
 	</div>
 	<div class="form-group">
 		{!! Form::label('template', 'Page Template'); !!}
-		{!! Form::select('template', $templates, request()->has('template') ? request()->template : null , ['class' => 'form-control select2']); !!}
+		{!! Form::select('template',[null=>'Select template'] + $templates, request()->has('template') ? request()->template : null , ['class' => 'form-control select2']); !!}
 	</div>
 	@if(isset($parents) && !empty($parents))
 		<div class="form-group">

@@ -18,7 +18,7 @@ class CreateModulesTable extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->string('icon');
-            $table->string('module_type');
+            $table->string('module_type')->default('module');
             $table->enum('status', ['published','draft'] );
             $table->text('options')->nullable();
             $table->text('additional_options')->nullable();

@@ -185,7 +185,7 @@ class ResourceController extends Controller
         $resource = $this->CRUD->get_with_relations($id);
         $attached_relations = array_column($resource->relations->toArray(), 'id');
 //        foreach($attached_relations as $key =>)
-        if(null == $relations = Resource::select('id', 'title', 'type')->whereIn('type', $slugs)->whereNotIn('id', $attached_relations)->get()->groupBy('type')->toArray()){
+        if(null == $relations = Resource::select('id', 'title', 'type')->where('language_id', $resource->language_id)->whereIn('type', $slugs)->whereNotIn('id', $attached_relations)->get()->groupBy('type')->toArray()){
             $relations = [];
 //            $slugs = is_array($slugs)? $slugs : $slugs->toArray();
 //            foreach($slugs as $key=>$val){
@@ -242,7 +242,6 @@ class ResourceController extends Controller
     {
         $translate = $this->CRUD->createOrEditResourceTranslation($module, $id, $lang );
         $model = Module::where('title', $module)->first();
-//        dd($model);
 
         if (isset($translate['status']) && $translate['status'] == 'redirect') {
             return redirect($translate['route']);
@@ -265,7 +264,6 @@ class ResourceController extends Controller
 
 
 
-
         $resourcemetas = $this->CRUD->getPageMetas($id);
         $decoded_resourcemetas = [];
         foreach($resourcemetas as $key => $value) {
@@ -277,17 +275,19 @@ class ResourceController extends Controller
         }
 
         $add_opts = json_decode($model->additional_options);
+
         $additional_options = [];
         foreach($add_opts as $key =>$val){
             $arr =[];
             parse_str($val, $arr);
             $additional_options[$key] = $arr;
         }
+
         $resourcemetas = $decoded_resourcemetas;
         $resource = $this->CRUD->get_with_relations($id);
         $attached_relations = array_column($resource->relations->toArray(), 'id');
 //        foreach($attached_relations as $key =>)
-        if(null == $relations = Resource::select('id', 'title', 'type')->whereIn('type', $slugs)->whereNotIn('id', $attached_relations)->get()->groupBy('type')->toArray()){
+        if(null == $relations = Resource::select('id', 'title', 'type')->where('language_id', $resource->language_id)->whereIn('type', $slugs)->whereNotIn('id', $attached_relations)->get()->groupBy('type')->toArray()){
             $relations = [];
 //            $slugs = is_array($slugs)? $slugs : $slugs->toArray();
 //            foreach($slugs as $key=>$val){
@@ -296,7 +296,7 @@ class ResourceController extends Controller
 
         }
 
-        $resource->setAttribute('meta', $resourcemetas);
+        $translate->setAttribute('meta', $resourcemetas);
         $categories = Category::where(['language_id'=>$resource->language_id, 'type'=>$module])->get();
 
         if ($translate) {

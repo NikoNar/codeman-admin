@@ -65,9 +65,14 @@
 
 		$(".btn-add-panel").on("click", function (e) {
 			e.preventDefault();
+			if($('.clone-hint').length > 0){
+				var type = $('.template').last().prev().find('.input_type').val();
+				var label = $('.template').last().prev().find('.type_label').val();
+			} else {
+				var type = $('.template').last().find('.input_type').val();
+				var label = $('.template').last().find('.type_label').val();
+			}
 
-			let type = $('.template').last().find('.input_type').val();
-			let label = $('.template').last().find('.type_label').val();
 			if(type == '' && label == ''){
 				alert('please fill th form');
 				return
@@ -126,6 +131,9 @@
 
 
 		function validateForm() {
+			$('.type_label').css("border","1px solid");
+			$('.input_type').css("border","1px solid");
+
 			let type = $('.template').last().find('.input_type').val();
 			let label = $('.template').last().find('.type_label').val();
 			let type_opts = $('.template').last().find('.type_options').val();
@@ -133,14 +141,14 @@
 				$('.template').last().find('.select2-selection').css("border","1px solid red");
 				setTimeout(function() {
 					alert("Please select input type");
-				}, 50);
+				}, 100);
 				return false;
 			}
 			if (label == "" && type != "") {
 				$('.template').last().find('.type_label').css("border","1px solid red");
 				setTimeout(function() {
 					alert("Please select label for input");
-				}, 50);
+				}, 100);
 				return false;
 			}
 
@@ -148,7 +156,7 @@
 				$('.template').last().find('.type_options').css("border","1px solid red");
 				setTimeout(function() {
 					alert("Please fill options for input");
-				}, 50);
+				}, 100);
 				return false;
 			}
 			return true;

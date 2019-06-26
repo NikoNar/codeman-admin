@@ -58,9 +58,7 @@
 		</div>
 	</div>
 
-	@if(isset($module) && $module->module_type == "module")
-
-		@else
+	@if(!isset($module) || (isset($module) && $module->module_type != "template"))
 		<div class="form-group hide-relations">
 			{!! Form::label('relations[]', 'Relations') !!}
 			<div class="form-group">
@@ -112,7 +110,6 @@
 
 
 	@isset($additional_options)
-{{--		{{dd($additional_options)}}--}}
 		<div class="panel-group" id="accordion">
 		@foreach($additional_options as $id =>$arr)
 			@if($arr['type'] != '')
@@ -185,7 +182,7 @@
 			</div>
 				@endif
 			@endforeach
-			<div class="panel panel-default template" style="display:none">
+			<div class="panel panel-default template clone-hint" style="display:none">
 				<div class="panel-heading"> <span class="glyphicon glyphicon-remove-circle pull-right "></span>
 
 					<h4 class="panel-title">
@@ -212,7 +209,7 @@
 									<option value="text" >Text</option>
 									<option value="number">Number</option>
 									<option value="textarea">Textarea</option>
-									{{--								<option value="range">Range</option>--}}
+									{{--<option value="range">Range</option>--}}
 									<option value="select">Select</option>
 									<option value="checkbox">Checkbox</option>
 									<option value="radio">Radio</option>

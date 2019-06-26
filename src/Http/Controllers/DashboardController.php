@@ -76,12 +76,6 @@ class DashboardController extends Controller
     	return view('admin-panel::dashboard',
         [
             'pages_count' => Page::where('language_id', $def_land_id)->count(),
-//            'portfolio_count' => Portfolio::where('language_id', $def_land_id)->count(),
-            'services_count' => Service::where('language_id', $def_land_id)->count(),
-            'lecturers_count' => Lecturer::where('language_id', $def_land_id)->count(),
-            'reviews_count' => Review::where('language_id', $def_land_id)->count(),
-            'files_count' => File::where('language_id', $def_land_id)->count(),
-//            'applicants_count' => Application::count(),
             'sessionsCharterData' => $sessionsCharterData,
             'dates' => $dates,
             // 'visitors' => $visitors,

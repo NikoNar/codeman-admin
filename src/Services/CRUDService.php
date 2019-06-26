@@ -256,7 +256,6 @@ class CRUDService implements CrudInterface
 	*/
 	private function createInputs( $inputs)
 	{
-
         if(array_key_exists('slug', $inputs)){
             $inputs['slug'] = getUniqueSlug($this->model, $inputs['slug']);
         } else {
@@ -264,7 +263,6 @@ class CRUDService implements CrudInterface
         }
 
         $inputs['meta-title'] =  isset($inputs['meta-title']) ? $inputs['meta-title'] : $inputs['title'];
-
         return $inputs;
 	}
 

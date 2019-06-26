@@ -95,12 +95,12 @@ class PagesController extends Controller
 	public function store(PageRequest $request, PageInterface $pageInterface )
 	{
 		// $this->authorize('create', $this->model);
-
+//        dd($request->all());
 
         $inputs = $pageInterface->getMaxOrderNumber($request->all());
 //        dd('store');
 
-        if(null != $page = $this->CRUD->store($inputs)){
+        if(null != $page = $pageInterface->store($inputs)){
 			if($request->has('meta'))
 			{
 				$pageInterface->createUpdateMeta($page->id, $request->get('meta'));
@@ -124,7 +124,9 @@ class PagesController extends Controller
 	*/
 	public function translate($id, $lang, PageInterface $pageInterface)
 	{
-		$template = null;
+
+
+        $template = null;
         $templates = Module::where('module_type', 'template')->pluck('title', 'id')->toArray();
         $languages = Language::orderBy('order')->pluck('name','id')->toArray();
 		if(request()->has('template')){
@@ -148,34 +150,37 @@ class PagesController extends Controller
 			if(!$template){
 				$template = $translate->template;
 			}
-			if($template){
-				$pagemetas = $pageInterface->getPageMetas($translate->id);
-				$decoded_pagemetas = [];
+            $pagemetas = $pageInterface->getPageMetas($translate->id);
+            $decoded_pagemetas = [];
 
 				
-		foreach($pagemetas as $key => $value) {
-			if(isJson($value)){
-
-				$decoded_pagemetas[$key] = json_decode($value, true); 
-			} else {
-				$decoded_pagemetas[$key] = $value; 
-			}
-		} 
-		$pagemetas = $decoded_pagemetas;
+            foreach($pagemetas as $key => $value) {
+                if(isJson($value)){
+                    $decoded_pagemetas[$key] = json_decode($value, true);
+                } else {
+                    $decoded_pagemetas[$key] = $value;
+                }
+            }
+		        $pagemetas = $decoded_pagemetas;
+//            dd($pagemetas);
 
 
 				$translate->setAttribute('meta', $pagemetas);
-			}
+
 
             $model = Module::where('id', $template)->first();
-            $add_opts = json_decode($model->additional_options);
-            $additional_options = [];
-            foreach($add_opts as $key =>$val){
-                $arr =[];
-                parse_str($val, $arr);
-                $additional_options[$key] = $arr;
+            if($model){
+                $add_opts = json_decode($model->additional_options);
+                $additional_options = [];
+                foreach($add_opts as $key =>$val){
+                    $arr =[];
+                    parse_str($val, $arr);
+                    $additional_options[$key] = $arr;
+                }
+            } else {
+                $additional_options = [];
             }
-    		return view('admin-panel::page.create_edit', [
+            return view('admin-panel::page.create_edit', [
     			'page' => $translate,
     			'parents' => $pageInterface->getAllPagesTitlesArray(),
     			'template' 	=> $additional_options,
@@ -194,7 +199,6 @@ class PagesController extends Controller
 	*/
 	public function edit($id, PageInterface $pageInterface)
 	{
-
 		$template = null;
         $templates = Module::where('module_type', 'template')->pluck('title', 'id')->toArray();
 		$page = $pageInterface->getById($id);
@@ -208,12 +212,16 @@ class PagesController extends Controller
 			$template = request()->get('template');
 		}
         $model = Module::where('id', $template)->first();
-        $add_opts = json_decode($model->additional_options);
-        $additional_options = [];
-        foreach($add_opts as $key =>$val){
-            $arr =[];
-            parse_str($val, $arr);
-            $additional_options[$key] = $arr;
+        if($model){
+            $add_opts = json_decode($model->additional_options);
+            $additional_options = [];
+            foreach($add_opts as $key =>$val){
+                $arr =[];
+                parse_str($val, $arr);
+                $additional_options[$key] = $arr;
+            }
+        } else {
+            $additional_options = [];
         }
 		$pagemetas = $pageInterface->getPageMetas($id);
 
