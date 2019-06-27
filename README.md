@@ -11,7 +11,7 @@ This package support Laravel 5.8.8 or higher.
 
     Run the Composer require command from the Terminal:
 
-      composer require codemanstudio/admin-panel
+      composer require codemanstudio/codeman-admin
 
   ## Step 2
     
