@@ -181,6 +181,7 @@ class ResourceController extends Controller
             parse_str($val, $arr);
             $additional_options[$key] = $arr;
         }
+
         $resourcemetas = $decoded_resourcemetas;
         $resource = $this->CRUD->get_with_relations($id);
         $attached_relations = array_column($resource->relations->toArray(), 'id');
@@ -220,7 +221,6 @@ class ResourceController extends Controller
                 $relations = (array) json_decode($request->relations, true);
                 $this->CRUD->getById($id)->relations()->sync($relations);
             }
-
             return redirect()->route('resources.edit', [$module, $id])->with('success', Str::singular(ucwords($module)) . " Successfully Updated.");
         }
     }
@@ -297,7 +297,7 @@ class ResourceController extends Controller
         }
 
         $translate->setAttribute('meta', $resourcemetas);
-        $categories = Category::where(['language_id'=>$resource->language_id, 'type'=>$module])->get();
+        $categories = Category::where(['language_id'=>$translate->language_id, 'type'=>$module])->get();
 
         if ($translate) {
             return view('admin-panel::resource.create_edit', [

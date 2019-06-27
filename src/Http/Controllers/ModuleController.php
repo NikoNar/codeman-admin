@@ -27,7 +27,7 @@ class ModuleController extends Controller
      */
     public function create()
     {
-        $relations = Module::pluck('title', 'id');
+        $relations = Module::where('module_type', 'module')->pluck('title', 'id');
         return view('admin-panel::modules.create_edit' , compact('relations'));
     }
 
@@ -76,7 +76,7 @@ class ModuleController extends Controller
     {
         $add_opts = json_decode($module->additional_options);
         $additional_options = [];
-        $relations = Module::pluck('title', 'id');
+        $relations = Module::where('module_type', 'module')->pluck('title', 'id');
         foreach($add_opts as $key =>$val){
             $arr =[];
             parse_str($val, $arr);

@@ -2,7 +2,7 @@
    
 	<div class="col-md-3 pull-right no-padding" >
         <div class="input-group ">
-    		<input type="text" name="search" id="resource-search" placeholder="Search By Name" class="form-control" value="{!! request()->has('search') ? request()->get('search') : '' !!}">
+    		<input type="text" name="search" id="resource-search" placeholder="Search By Title" class="form-control" value="{!! request()->has('search') ? request()->get('search') : '' !!}">
     		<div class="input-group-addon input-group-blue">
         		<i class="fa fa-search"></i>
         	</div>
@@ -10,7 +10,7 @@
 	</div>
     <div class="col-md-2 pull-right no-padding" style="margin-left: 15px;">
             <select name="search_by" id="search_by" class="form-control">
-                <option value="name" {!! request()->has('search_by') && request()->get('search_by') == 'name' ? 'selected' : '' !!}>Search By Name</option>
+                <option value="title" {!! request()->has('search_by') && request()->get('search_by') == 'title' ? 'selected' : '' !!}>Search By Title</option>
 {{--                <option value="upc" {!! request()->has('search_by') && request()->get('search_by') == 'upc' ? 'selected' : '' !!}>Search By UPC</option>--}}
             </select>
     </div>

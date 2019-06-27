@@ -41,6 +41,7 @@
 	<script src="{{ asset('admin-panel/bower_components/ckeditor/ckeditor.js') }}"></script>
 	<!-- Laravel Javascript Validation -->
 	<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+	<script src="{{ asset('admin-panel/plugins/sortable/Sortable.min.js') }} "></script>
 	
 	{!! JsValidator::formRequest('Codeman\Admin\Http\Requests\PageRequest') !!}
 	<script>
@@ -48,26 +49,26 @@
 	  	$(function () {
 	  		
 	    	if($('#content').length > 0){
-	    		CKEDITOR.replace('content');	  			
+	    		CKEDITOR.replace('content');
 	  		}
-	  		if($('#principles').length > 0){
-	    		CKEDITOR.replace('principles');	  			
-	  		}
-	  		if($('#courses').length > 0){
-	    		CKEDITOR.replace('courses');	  			
-	  		}
-	  		if($('#banner').length > 0){
-	    		CKEDITOR.replace('banner');	  			
-	  		}
-	  		if($('#company').length > 0){
-	    		CKEDITOR.replace('company');	  			
-	  		}
-	  		if($('#image').length > 0){
-	    		CKEDITOR.replace('image');	  			
-	  		}
-	  		if($('#table').length > 0){
-	    		CKEDITOR.replace('table');	  			
-	  		}
+	  		// if($('#principles').length > 0){
+	    	// 	CKEDITOR.replace('principles');
+	  		// }
+	  		// if($('#courses').length > 0){
+	    	// 	CKEDITOR.replace('courses');
+	  		// }
+	  		// if($('#banner').length > 0){
+	    	// 	CKEDITOR.replace('banner');
+	  		// }
+	  		// if($('#company').length > 0){
+	    	// 	CKEDITOR.replace('company');
+	  		// }
+	  		// if($('#image').length > 0){
+	    	// 	CKEDITOR.replace('image');
+	  		// }
+	  		// if($('#table').length > 0){
+	    	// 	CKEDITOR.replace('table');
+	  		// }
 	  	})
   	
 	  	$('body').off('click', '.clone').on('click', '.clone', function(e){
@@ -79,18 +80,18 @@
 	  		
 	  	});
 
-  	 	$('body').off('click', '.remove-faq').on('click', '.remove-faq', function(e){
-	  		e.preventDefault();
-	  		$(this).parent().remove();
-	  		$('.question').each(function(){
-	  			new_order = $(this).parent().parent().index();
-	  			$(this).attr('name', 'meta[faq]['+ new_order +'][1]')
-	  		});
-	  		$('.answer').each(function(){
-	  			new_order = $(this).parent().parent().index();
-	  			$(this).attr('name', 'meta[faq]['+ new_order +'][2]')
-	  		});
-	  	});
+  	 	// $('body').off('click', '.remove-faq').on('click', '.remove-faq', function(e){
+	  	// 	e.preventDefault();
+	  	// 	$(this).parent().remove();
+	  	// 	$('.question').each(function(){
+	  	// 		new_order = $(this).parent().parent().index();
+	  	// 		$(this).attr('name', 'meta[faq]['+ new_order +'][1]')
+	  	// 	});
+	  	// 	$('.answer').each(function(){
+	  	// 		new_order = $(this).parent().parent().index();
+	  	// 		$(this).attr('name', 'meta[faq]['+ new_order +'][2]')
+	  	// 	});
+	  	// });
 	  	
 
 
@@ -101,6 +102,45 @@
 	  			window.location.href = app.ajax_url+window.location.pathname+'?template='+this.value
 	  		}
 	  	});
+		$('.gallery-show-container').each(function(){
+			var gallery_id = $(this).data('meta');
+
+			if (window.hasOwnProperty('galleryObj')){
+				var currentGallery = galleryObj[gallery_id];
+			}
+
+			var sortable = Sortable.create(this, {
+				// Element dragging ended
+				onEnd: function (evt) {
+					var itemEl = evt.item;  // dragged HTMLElement
+					evt.to;    // target list
+					evt.from;  // previous list
+					evt.oldIndex;  // element’s old index within old parent
+					evt.newIndex;  // element’s new index within new parent
+					old_index = evt.oldIndex - 1;
+					new_index = evt.newIndex - 1;
+
+					function arrayMove(array, old_index, new_index) {
+						if (new_index >= array.length) {
+							var k = new_index - array.length;
+							while ((k--) + 1) {
+								array.push(undefined);
+							}
+						}
+						array.splice(new_index, 0, array.splice(old_index, 1)[0]);
+						return array; // for testing purposes
+					};
+					// console.log(old_index, new_index);
+					currentGallery = arrayMove(currentGallery, old_index, new_index);
+
+					if (gallery_id) {
+						$('.gallery-container[data-id='+gallery_id+']').find('.meta_images').val(JSON.stringify(currentGallery));
+					} else {
+						$('#images').val(JSON.stringify(currentGallery));
+					}
+				},
+			});
+		});
 
 	  	// if(typeof builderOptions != "undefined"){
  			// $('body').off('submit', 'form').on('submit', 'form', function(e){

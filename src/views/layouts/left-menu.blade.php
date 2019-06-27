@@ -74,14 +74,14 @@
                             <span>{{$module->title}}</span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="@if(Request::is('admin/resource')) active @endif">
+                            <li class="@if(Request::is('admin/resource'.$module->title)) active @endif">
                                 <a href='{!! url("admin/resource/$module->slug") !!}'>
                                     <i class="fa fa-circle-notch fz-12"></i> View All
                                 </a>
                             </li>
-                            <li class="@if(Request::is('admin/resource/create')) active @endif">
+                            <li class="@if(Request::is('admin/resource/'.$module->title.'/create')) active @endif">
                                 <a href='{!! url("admin/resource/$module->slug/create") !!}'>
-                                    <i class="fas fa-plus "></i></i> Add New
+                                    <i class="fas fa-plus "></i> Add New
                                 </a>
                             </li>
                             @php
@@ -91,7 +91,7 @@
                             }
                             @endphp
                             @if(in_array('categories', $options))
-                                <li class="@if(Request::is('admin/resource/categories')) active @endif">
+                                <li class="@if(Request::is('admin/resource/'.$module->title.'/categories')) active @endif">
                                     <a href='{!! url("admin/resource/$module->slug/categories") !!}'>
                                         <i class="fas fa-code-branch"></i> Categories
                                     </a>
@@ -166,11 +166,6 @@
 {{--                </ul>--}}
 {{--            </li>--}}
             
-                <li class="@if(Request::is('admin/menus*')) active @endif">
-                    <a href="{!! route('menu-index') !!}">
-                        <i class="fa fa-th"></i> <span>Menus</span>
-                    </a>
-                </li>
 
 {{--            <li class="treeview @if(Request::is('admin/lecturer*')) active @endif">--}}
 {{--               <a href="#">--}}
@@ -214,30 +209,38 @@
 {{--                   --}}
 {{--               </ul>--}}
 {{--           </li>--}}
-{{--           <li class="treeview @if(Request::is('admin/users*')) active @endif">--}}
-{{--                <a href="#">--}}
-{{--                    <i class="fas fa-user"></i>--}}
-{{--                    <span>Users</span>--}}
-{{--                </a>--}}
-{{--                <ul class="treeview-menu">--}}
-{{--                    <li class="@if(Request::is('admin/users')) active @endif">--}}
-{{--                        <a href="{!! route('user.index') !!}">--}}
-{{--                            <i class="fa fa-circle-notch fz-12"></i> View All--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
-{{--                    <li class="@if(Request::is('admin/users/create')) active @endif">--}}
-{{--                        <a href="{!! route('user.create') !!}">--}}
-{{--                            <i class="fa fa-circle-notch fz-12"></i> Add New--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
-{{--                    <li class="@if(Request::is('admin/users/roles')) active @endif">--}}
-{{--                        <a href="{!! route('roles.index') !!}">--}}
-{{--                            <i class="fa fa-user-tag"></i> Roles--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
-{{--                </ul>  --}}
-{{--            </li>--}}
             <hr>
+           <li class="treeview @if(Request::is('admin/users*')) active @endif">
+                <a href="#">
+                    <i class="fas fa-user"></i>
+                    <span>Users</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="@if(Request::is('admin/users')) active @endif">
+                        <a href="{!! route('user.index') !!}">
+                            <i class="fa fa-circle-notch fz-12"></i> View All
+                        </a>
+                    </li>
+                    <li class="@if(Request::is('admin/users/create')) active @endif">
+                        <a href="{!! route('user.create') !!}">
+                            <i class="fa fa-circle-notch fz-12"></i> Add New
+                        </a>
+                    </li>
+                    <li class="@if(Request::is('admin/users/roles')) active @endif">
+                        <a href="{!! route('roles.index') !!}">
+                            <i class="fa fa-user-tag"></i> Roles
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="@if(Request::is('admin/menus*')) active @endif">
+                <a href="{!! route('menu-index') !!}">
+                    <i class="fa fa-th"></i> <span>Menus</span>
+                </a>
+            </li>
+
+
             <li class="treeview @if(Request::is('admin/media*')) active @endif">
                 <a href="#">
                     <i class="fa fa-image"></i> <span>Media</span>

@@ -186,6 +186,8 @@ $(document).ready(function(){
         var ckeditor = ($('#ck').data("editor") == 'ckeditor')? true : false;
         var isMultichoose = $(this).hasClass('multichoose');
         var isPdf = $(this).hasClass('pdf');
+        var meta = $(this).data('meta');
+        console.log('meta', meta);
         thumbnail_container = $(this).closest('.fileupload');
         resource_id = $(this).hasClass('featured-img-change') ? $(this).closest('tr').data('id') : 0;
         chnage_just_image = $(this).hasClass('img-change') ? $(this) : 0;
@@ -201,7 +203,9 @@ $(document).ready(function(){
             dataType: 'JSON',
             data: {'multichoose' : isMultichoose,
                 'ckeditor' : ckeditor,
-                'pdf': isPdf
+                'pdf': isPdf,
+                'meta' : meta
+
             },
             success: function(data){
                 var dropzoneCss = document.createElement("link");
@@ -228,8 +232,24 @@ $(document).ready(function(){
         // console.log(galleryImagesArr);
 
         $(this).closest('.media-item').fadeOut(400, function(){$(this).remove()});
-        galleryImagesArr.splice(itemIndex, 1);
-        $('#images').val(JSON.stringify(galleryImagesArr));
+
+        var index = $(this).closest('.gallery-show-container').data('meta');
+
+        if($('.gallery-container[data-id='+index+']').find('.meta_images').length > 0){
+            var res = galleryObj[index];
+            console.log(res);
+
+            res.splice(itemIndex, 1);
+            if(res.length === 0){
+                $(this).closest('.gallery-show-container').find('.empty-gallery').fadeIn();
+            }
+            console.log(res);
+            $('.gallery-container[data-id='+index+']').find('.meta_images').val(JSON.stringify(res));
+
+        } else {
+            galleryImagesArr.splice(itemIndex, 1);
+            $('#images').val(JSON.stringify(galleryImagesArr));
+        }
 
     });
 
@@ -243,7 +263,12 @@ $(document).ready(function(){
 
         // $(this).closest('.media-item').fadeOut(400, function(){$(this).remove()});
         galleryImagesArr[itemIndex].alt = itemImageAlt;
-        $('#images').val(JSON.stringify(galleryImagesArr));
+        var galleryId = $(this).closest('.gallery-container').data('id');
+        if (galleryId) {
+            $('.gallery-container[data-id='+galleryId+']').find('.meta_images').val(JSON.stringify(galleryImagesArr));
+        } else {
+            $('#images').val(JSON.stringify(galleryImagesArr));
+        }
 
     });
 
@@ -369,7 +394,7 @@ $(document).ready(function(){
             dataType: 'JSON',
             data: {'query' : query},
             success: function(data){
-                console.log(data);
+                // console.log(data);
                 if(data.success == true){
                     $('.media-container').html(data.html)
                 }
@@ -380,7 +405,7 @@ $(document).ready(function(){
     $('body').off('click', '#update-media').on('click', '#update-media', function(e){
         e.preventDefault();
         var formData = $('form#media-info').serialize();
-        console.log(formData);
+        // console.log(formData);
         $.ajax({
             type: 'POST',
             url: app.ajax_url+ '/admin/media/update',
@@ -394,23 +419,25 @@ $(document).ready(function(){
 
     $('body').off('click', '#add-category').on('click', '#add-category', function(e){
         e.preventDefault();
-        console.log('#add-category click');
-        $('#category-add-edit').modal('show');
+        // console.log('#add-category click');
+        // $('#store_category').trigger('reset');
+        // $('#category-add-edit').modal('show');
         var type = $(this).data('type');
-        // $.ajax({
-        //     type: 'GET',
-        //     url: app.ajax_url+ '/admin/categories/create/'+type,
-        //     dataType: 'JSON',
-        //     success: function(data){
-        //         if(data.success == true){
-        //             $('#category-add-edit').remove();
-        //             setTimeout(function(){
-        //                 $('body').append(data.html);
-        //                 $('#category-add-edit').modal('show');
-        //             },1000);
-        //         }
-        //     }
-        // });
+        $.ajax({
+            type: 'GET',
+            url: app.ajax_url+ '/admin/categories/create/'+type,
+            dataType: 'JSON',
+            success: function(data){
+                if(data.success == true){
+                    $('#category-add-edit').remove();
+                    setTimeout(function(){
+                        console.log(data.html);
+                        $('body').append(data.html);
+                        $('#category-add-edit').modal('show');
+                    },1000);
+                }
+            }
+        });
     });
     $('body').off('submit', '#store_category').on('submit', '#store_category', function(e){
         e.preventDefault();
@@ -461,7 +488,7 @@ function filterAjax($this)
 
     var form = $this.closest('form');
     var queryString = form.serialize();
-    console.log(queryString);
+    // console.log(queryString);
     var key = $this.attr('name');
     var value = $this.val();
     gueryStringBuilder(queryString);
@@ -471,7 +498,7 @@ function filterAjax($this)
         dataType: 'JSON',
         data: queryString + '&model=' + $('#modelName').val()+ '&type=' + $('#resource_type').val(),
         success: function(data){
-            console.log(data);
+            // console.log(data);
             if(data.success == true){
                 $('#resource-container').html(data.html);
                 checkImageAvailability();

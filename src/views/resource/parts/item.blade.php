@@ -6,10 +6,11 @@
 			<i class="fa fa-camera"></i>
 			<input name="thumbnail" type="hidden" value="">
 		</a>
-		{{ $item->title }}</td>
-	<td>
-		{{ str_excerpt($item->content) }}	
+		{{ $item->title }}
 	</td>
+{{--	<td>--}}
+{{--		{{ str_excerpt($item->content) }}	--}}
+{{--	</td>--}}
 	<td class="text_capitalize">{{ $item->status }}</td>
 	<td>{{ date('m/d/Y', strtotime($item->created_at)) }}</td>
 	<td>{{ date('m/d/Y g:i A', strtotime($item->updated_at)) }}</td>

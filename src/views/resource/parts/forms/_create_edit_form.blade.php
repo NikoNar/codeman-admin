@@ -19,6 +19,38 @@
 			{!! Form::text('title', null, ['class' => 'form-control']) !!}
 		</div>
 	</div>
+	@if(in_array('slug', $options))
+		<div class="form-group">
+			<div class="col-md-12 no-padding">
+				{!! Form::label('slug', 'Slug'); !!}
+				<div class='input-group'>
+					<span class="input-group-addon">
+						@if(isset($resource))
+							<a href="{!! url($resource->type.'/'.$resource->slug) !!}" target="_blank">
+								<i class="fa fa-link"></i>
+							</a>
+						@else
+							<span class="fa fa-link"></span>
+						@endif
+					</span>
+					<span class="input-group-addon no-border-right">
+						<i>
+							@if(isset($resource))
+								{{ URL::to('/'.buildUrl($resource, array(), false)).'/'.$resource->type }}
+							@else
+								{{ URL::to('/') }}
+							@endif
+						/</i>
+					</span>
+					@if(isset($slugEdit) && $slugEdit == false)
+						{!! Form::text('slug', null, ['class' => 'form-control', 'readonly']) !!}
+					@else
+						{!! Form::text('slug', null, ['class' => 'form-control']) !!}
+					@endif
+				</div>
+			</div>
+		</div>
+	@endif
 	
 	<div class="clearfix"></div>
 	<br>
@@ -36,7 +68,8 @@
 {{--		@include('admin-panel::components.gallery')--}}
 {{--	@endif--}}
 {{--{{dd($resource->meta)}}--}}
-	@foreach($additional_options as $key => $val)
+{{--{{dd($additional_options)}}--}}
+@foreach($additional_options as $key => $val)
 		@if($val['type'] != '')
 			@switch($val['type'])
 				@case('select')

@@ -15,9 +15,9 @@
                         $keyval = explode(':', $val);
                     @endphp
                 @if($multiple)
-                    <option value="{{trim($keyval[0])}}" @if(in_array($keyval[0],$res_val))selected @endif>{{isset($keyval[1])? $keyval[1] : ''}}</option>
+                    <option value="{{trim($keyval[0])}}" @if(in_array(trim($keyval[0]),$res_val))selected @endif>{{isset($keyval[1])? $keyval[1] : ''}}</option>
                 @else
-                    <option value="{{trim($keyval[0])}}" @if($res_val == $keyval[0]) selected @endif>{{isset($keyval[1])? $keyval[1] : ''}}</option>
+                    <option value="{{trim($keyval[0])}}" @if($res_val == trim($keyval[0])) selected @endif>{{isset($keyval[1])? $keyval[1] : ''}}</option>
                 @endif
                 @endforeach
             @endif

@@ -13,7 +13,7 @@ $currentUrl = url()->current();
 					<div id="wpbody-content">
 
 						<div class="wrap">
-							
+
 							<div class="manage-menus">
 								<form method="get" action="{{ $currentUrl }}">
 									<label for="menu" class="selected-menu">Select the menu you want to edit:</label>
@@ -236,7 +236,7 @@ $currentUrl = url()->current();
 				</div>
 				<div class="clear"></div>
 			</div>
-			
+
 			<div class="clear"></div>
 		</div>
 	</div>

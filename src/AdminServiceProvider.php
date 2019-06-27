@@ -29,9 +29,13 @@ class AdminServiceProvider extends ServiceProvider
        	 	__DIR__.'/assets' => public_path('admin-panel'),
    		 ], 'public');
 
-		 $this->publishes([
+		$this->publishes([
        		 __DIR__.'/config/images.php' => config_path('images.php'),
 		], 'config');
+
+        $this->publishes([
+            __DIR__.'/config/translation-manager.php' => config_path('translation-manager.php'),
+        ], 'config');
 			
 		$this->publishes([
 			__DIR__.'/config/service-account-credentials.json' => storage_path('app/analytics/service-account-credentials.json'),
@@ -85,10 +89,10 @@ class AdminServiceProvider extends ServiceProvider
 		    "Codeman\Admin\Services\PageService"
 		);
 
-		$this->app->bind(
-		    "Codeman\Admin\Interfaces\NewsInterface",
-		    "Codeman\Admin\Services\NewsService"
-		);
+//		$this->app->bind(
+////		    "Codeman\Admin\Interfaces\NewsInterface",
+////		    "Codeman\Admin\Services\NewsService"
+////		);
 		$this->app->bind(
 		    "Codeman\Admin\Interfaces\MenuInterface",
 		    "Codeman\Admin\Services\MenuService"

@@ -4,7 +4,7 @@
 			<th width="3%" class="no-sort"><input type="checkbox" name="checked" onClick="checkAll(this)"></th>
 					
 			<th >Title</th>
-			<th width="25%">Content</th>
+{{--			<th width="25%">Content</th>--}}
 			{{-- <th width="15%">Language</th> --}}
 			<th width="10%">Status</th>
 			<th width="10%">Created Date</th>
