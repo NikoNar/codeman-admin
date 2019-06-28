@@ -163,7 +163,6 @@ class ResourceController extends Controller
         }
 
 
-
         $resourcemetas = $this->CRUD->getPageMetas($id);
         $decoded_resourcemetas = [];
         foreach($resourcemetas as $key => $value) {

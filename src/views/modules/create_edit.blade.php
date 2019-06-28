@@ -54,10 +54,10 @@
 	<script>
 		$('body').off('change', '.module_type').on('change', '.module_type', function(){
 			if($(this).val() == "template"){
-				$('.hide-relations').hide();
+				// $('.hide-relations').hide();
 				$('.hide-options').hide();
 			}else{
-				$('.hide-relations').show();
+				// $('.hide-relations').show();
 				$('.hide-options').show();
 			}
 		});

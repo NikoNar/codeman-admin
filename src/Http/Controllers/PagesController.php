@@ -3,6 +3,7 @@
 namespace Codeman\Admin\Http\Controllers;
 
 use Codeman\Admin\Models\Module;
+use Codeman\Admin\Models\Resource;
 use Illuminate\Http\Request;
 use Codeman\Admin\Http\Requests\PageRequest;
 use Codeman\Admin\Http\Controllers\Controller;
@@ -67,9 +68,19 @@ class PagesController extends Controller
 		}
 		
 		if($template){
+            if(null == $relation_ids = json_decode($model->relations)){
+                $slugs = [];
+                $attachments = null;
+            }else{
+                $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
+                $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->get();
+                $attachments = $relations->groupBy('type');
+            }
+
     		return view('admin-panel::page.create_edit', [
     			'template' 	=> $additional_options,
     			'templates' 	=> $templates,
+                'attachments' => $attachments,
     			'parents' 	=> $pageInterface->getAllPagesTitlesArray(),
     			'order' 	=> $pageInterface->getMaxOrderNumber(),
                 'languages' => $languages,
@@ -180,11 +191,22 @@ class PagesController extends Controller
             } else {
                 $additional_options = [];
             }
+            if(null == $relation_ids = json_decode($model->relations)){
+                $slugs = [];
+                $attachments = null;
+            }else{
+                $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
+                $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->get();
+                $attachments = $relations->groupBy('type');
+            }
+
+
             return view('admin-panel::page.create_edit', [
     			'page' => $translate,
     			'parents' => $pageInterface->getAllPagesTitlesArray(),
     			'template' 	=> $additional_options,
     			'templates' 	=> $templates,
+                'attachments' => $attachments,
     			'parent_lang_id' => $parent_lang_id,
                 'languages' => $languages
     		]);
@@ -233,14 +255,24 @@ class PagesController extends Controller
 			} else {
 				$decoded_pagemetas[$key] = $value; 
 			}
-		} 
+		}
+
+        if(null == $relation_ids = json_decode($model->relations)){
+            $slugs = [];
+            $attachments = null;
+        }else{
+            $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
+            $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->get();
+            $attachments = $relations->groupBy('type');
+        }
+
 		$pagemetas = $decoded_pagemetas;
-	
 		$page->setAttribute('meta', $pagemetas);
 		if($template){
     		return view('admin-panel::page.create_edit', [
     			'template' 	=> $additional_options,
     			'templates' 	=> $templates,
+    			'attachments' => $attachments,
     			'page' => $page,
     			'parents' => $pageInterface->getAllPagesTitlesArray($id),
                 'languages' => $languages
@@ -260,7 +292,7 @@ class PagesController extends Controller
 	{
 		// $this_page = $pageInterface->getById($id);
 		// $this->authorize('update', $this->model);
-		// dd(request()->all());
+		 dd(request()->all());
 
 //        dd('update');
 		

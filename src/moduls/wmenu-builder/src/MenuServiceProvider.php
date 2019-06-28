@@ -28,7 +28,7 @@ class MenuServiceProvider extends ServiceProvider
         ], 'view');
 
          $this->publishes([
-            __DIR__.'/../assets' => public_path('harimayco-menu'),
+            __DIR__.'/../assets' => public_path('vendor/harimayco-menu'),
         ], 'public');
 
         $this->publishes([

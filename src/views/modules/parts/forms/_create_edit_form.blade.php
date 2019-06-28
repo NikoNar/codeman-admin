@@ -58,7 +58,6 @@
 		</div>
 	</div>
 
-	@if(!isset($module) || (isset($module) && $module->module_type != "template"))
 		<div class="form-group hide-relations">
 			{!! Form::label('relations[]', 'Relations') !!}
 			<div class="form-group">
@@ -81,6 +80,8 @@
 				{{--			<a href="#" class="pull-right"  data-type="module"><i class="fa fa-plus"></i> Add New Option</a>--}}
 			</div>
 		</div>
+
+	@if(!isset($module) || (isset($module) && $module->module_type != "template" || true))
 		<div class="col-md-12 no-padding hide-options">
 			{!! Form::label('options', 'Options') !!}
 			<div class="form-group">

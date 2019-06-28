@@ -22,3 +22,45 @@
         @endswitch
     @endif
 @endforeach
+
+@isset($attachments)
+<hr>
+<h4>Attach Resources</h4>
+<div class="panel-group" id="accordion">
+    @foreach($attachments as $model => $items)
+        <div class="panel panel-default attachments" data-model="{{$model}}">
+            <div class="panel-heading">
+                <h4 class="panel-title">{{ucwords($model)}}
+                    <input type="checkbox" name="{{$model}}" value="" class="check-all">all
+                    <a class="accordion-toggle pull-right" data-toggle="collapse" data-parent="#accordion" href="#{{$model}}" >
+                        Custom
+                    </a>
+                </h4>
+            </div>
+            <div id="{{$model}}" class="panel-collapse collapse ">
+                <div class="panel-body ">
+                    <div class="form-group">
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <strong class="relation_name">{{$model}}</strong>
+                                <ul id="" class="draggables connectedSortable">
+                                    @foreach($items as $key => $arr)
+                                        <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <span>Attach</span>
+                                <ul id="" data-name="{{$model}}" class="dragged connectedSortable">
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    @endforeach
+        <input type="hidden" name="meta[attachmets]" id="attachments">
+</div>
+@endif

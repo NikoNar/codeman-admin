@@ -61,7 +61,7 @@
 	@if(isset($template) && $template != '')
 		<hr>
 		<div id="extended_template">
-			@include('admin-panel::page.parts.forms.template', ['data' => $template])
+			@include('admin-panel::page.parts.forms.template', ['data' => $template, 'attachments'=>$attachments])
 			<div class="clearfix"></div>
 		</div>
 	@endif
