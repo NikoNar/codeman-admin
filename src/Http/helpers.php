@@ -16,20 +16,20 @@
 
         // $slug = \Illuminate\Support\Str::slug($value);
         $slug = url_slug($value);
-//        dd($slug);
+    //        dd($slug);
 
-        $req_lang = request()->language_id;
-//dd($existing_id);
+        $req_lang = (request()->language_id)? request()->language_id : \Codeman\Admin\Models\Language::orderBy('order')->first()->id;
+    //dd($existing_id);
         if(isset($existing_id)){
             $lang = $model->where('id', $existing_id)->first()['language_id'];
-//            dd($lang);
+    //            dd($lang);
             $slugCount = count($model->whereRaw("slug REGEXP '^{$slug}(-[0-9]+)?$' and id != '{$existing_id}' and language_id = '{$lang}'")->get());
-//             dd('set', $lang, $slugCount);
+    //             dd('set', $lang, $slugCount);
         }else{
             $slugCount = count($model->whereRaw("slug REGEXP '^{$slug}(-[0-9]+)?$' and id != '{$model->id}' and language_id = '{$req_lang}' ")->get());
-//             dd('notset', $slugCount, $req_lang);
+    //             dd('notset', $slugCount, $req_lang);
         }
-//        dd(($slugCount > 0) ? "{$slug}-{$slugCount}" : $slug);
+    //        dd(($slugCount > 0) ? "{$slug}-{$slugCount}" : $slug);
         return ($slugCount > 0) ? "{$slug}-{$slugCount}" : $slug;
     }
 

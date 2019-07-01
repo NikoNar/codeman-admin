@@ -15,7 +15,7 @@
 		<div class="form-group">
 			<div class='input-group'>
 				<span class="input-group-addon">
-				    <span class="far fa-file-alt"></span>
+				    <span class="fa fa-anchor"></span>
 				</span>
 				<select name="module_type"  class="select2 form-control module_type" >
 					<option value="module" @if(isset($module->module_type) && $module->module_type == "module" )selected @endif>Module</option>
@@ -47,14 +47,18 @@
 	<div class="form-group">
 		{!! Form::label('icon', 'Font-Awsome Icon') !!}
 		<div class='input-group'>
-		    <span class="input-group-addon">
-				@isset($module)
-					{!! $module->icon !!}
-				@else
-		        <span class="fas fa-image"></span>
-				@endif
-		    </span>
-			{!! Form::text('icon', null, ['class' => 'form-control']) !!}
+{{--		    <span class="input-group-addon">--}}
+{{--				@isset($module)--}}
+{{--					{!! $module->icon !!}--}}
+{{--				@else--}}
+{{--		        <span class="fas fa-image"></span>--}}
+{{--				@endif--}}
+{{--		    </span>--}}
+			<div class="input-group iconpicker-container">
+				{!! Form::text('icon', null, ['class' => 'form-control icp icp-auto iconpicker-element iconpicker-input', 'data-placement' =>"bottomRight"]) !!}
+{{--				<input data-placement="bottomRight" class="form-control icp icp-auto iconpicker-element iconpicker-input" value="fas fa-archive" type="text">--}}
+				<span class="input-group-addon"><i class="fa fa-adn"></i></span>
+			</div>
 		</div>
 	</div>
 
@@ -63,7 +67,7 @@
 			<div class="form-group">
 				<div class='input-group'>
 					<span class="input-group-addon">
-						<span class="fas fa-paperclip"></span>
+						<span class="fa fa-chain"></span>
 					</span>
 					<select name="relations[]" id="relations" class="select2 form-control" multiple>
 						@if(isset($module) &&  null != $module_relations = json_decode($module->relations))
@@ -87,7 +91,7 @@
 			<div class="form-group">
 				<div class='input-group'>
 					<span class="input-group-addon">
-						<span class="fas fa-chevron-circle-down"></span>
+						<span class="fa fa-check-circle"></span>
 					</span>
 					@if(isset($module) &&  null != $module_options = json_decode($module->options))
 						{{--					{{dd($module_options)}}--}}

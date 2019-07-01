@@ -13,7 +13,7 @@
                     @else
                 {!! Form::hidden("meta[$name]", null , ['class' => 'meta_images']); !!}
             @endif
-    	    </span>
+        </span>
     </div>
     <div>
         @if(isset($resource->meta[$name]) && !empty($resource->meta[$name]))

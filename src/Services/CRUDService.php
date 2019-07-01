@@ -70,8 +70,9 @@ class CRUDService implements CrudInterface
 	*/
 	public function store($inputs)
 	{
-//	 dd($this->createInputs( $inputs ));
+//	    dd($inputs);
         $model = $this->model->create($this->createInputs($inputs));
+//        dd($model);
 //        dd($this->createInputs( $inputs ));
         if(isset($inputs['category_id'])){
             $model->categories()->sync($inputs['category_id']);
@@ -254,9 +255,9 @@ class CRUDService implements CrudInterface
 	* @param  int  $id
 	* @return Response
 	*/
-	private function createInputs( $inputs)
+	private function createInputs($inputs)
 	{
-        if(array_key_exists('slug', $inputs)){
+        if(in_array('slug', $inputs)){
             $inputs['slug'] = getUniqueSlug($this->model, $inputs['slug']);
         } else {
             $inputs['slug'] = getUniqueSlug($this->model, $inputs['title']);

@@ -113,7 +113,7 @@
 			var gallery_id = $(this).data('meta');
 
 			if (window.hasOwnProperty('galleryObj')){
-				var currentGallery = galleryObj[gallery_id];
+				 currentGallery = galleryObj[gallery_id];
 			}
 
 			var sortable = Sortable.create(this, {
@@ -138,7 +138,13 @@
 						return array; // for testing purposes
 					};
 					// console.log(old_index, new_index);
-					currentGallery = arrayMove(currentGallery, old_index, new_index);
+					if(currentGallery){
+						console.log(currentGallery,1)
+						currentGallery = arrayMove(currentGallery, old_index, new_index);
+					} else {
+						console.log(galleryImagesArr,2)
+						currentGallery = arrayMove(galleryImagesArr, old_index, new_index);
+					}
 
 					if (gallery_id) {
 						$('.gallery-container[data-id='+gallery_id+']').find('.meta_images').val(JSON.stringify(currentGallery));

@@ -174,8 +174,6 @@ class PagesController extends Controller
             }
 		        $pagemetas = $decoded_pagemetas;
 //            dd($pagemetas);
-
-
 				$translate->setAttribute('meta', $pagemetas);
 
 
@@ -195,9 +193,16 @@ class PagesController extends Controller
                 $slugs = [];
                 $attachments = null;
             }else{
+                $meta_attachments = $decoded_pagemetas['attachments'];
+                $selected_attachments = [];
+                foreach($meta_attachments as $key => $val){
+                    if($val != "all" || $val != ""){
+                        $selected_attachments = array_merge($selected_attachments, explode(',', $val));
+                    }
+                }
                 $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
-                $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->get();
-                $attachments = $relations->groupBy('type');
+                $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->where('language_id', $translate->language_id)->get();
+                $attachments = $relations->groupBy('type')->toArray();
             }
 
 
@@ -207,6 +212,7 @@ class PagesController extends Controller
     			'template' 	=> $additional_options,
     			'templates' 	=> $templates,
                 'attachments' => $attachments,
+                'selected_attachments' => $selected_attachments,
     			'parent_lang_id' => $parent_lang_id,
                 'languages' => $languages
     		]);
@@ -256,23 +262,32 @@ class PagesController extends Controller
 				$decoded_pagemetas[$key] = $value; 
 			}
 		}
+		$page->setAttribute('meta', $decoded_pagemetas);
 
         if(null == $relation_ids = json_decode($model->relations)){
             $slugs = [];
             $attachments = null;
         }else{
+            $meta_attachments = $decoded_pagemetas['attachments'];
+            $selected_attachments = [];
+            foreach($meta_attachments as $key => $val){
+                if($val != "all" || $val != ""){
+                    $selected_attachments = array_merge($selected_attachments, explode(',', $val));
+                }
+            }
             $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
-            $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->get();
-            $attachments = $relations->groupBy('type');
+            $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->where('language_id', $page->language_id)->get();
+            $attachments = $relations->groupBy('type')->toArray();
         }
 
-		$pagemetas = $decoded_pagemetas;
-		$page->setAttribute('meta', $pagemetas);
+//		$pagemetas = $decoded_pagemetas;
+//		$page->setAttribute('meta', $decoded_pagemetas);
 		if($template){
     		return view('admin-panel::page.create_edit', [
     			'template' 	=> $additional_options,
     			'templates' 	=> $templates,
     			'attachments' => $attachments,
+    			'selected_attachments' => $selected_attachments,
     			'page' => $page,
     			'parents' => $pageInterface->getAllPagesTitlesArray($id),
                 'languages' => $languages
@@ -292,7 +307,7 @@ class PagesController extends Controller
 	{
 		// $this_page = $pageInterface->getById($id);
 		// $this->authorize('update', $this->model);
-		 dd(request()->all());
+//		 dd(request()->all());
 
 //        dd('update');
 		

@@ -255,14 +255,14 @@
 				if(feed){
 					$('.empty-gallery').fadeOut();
 					for (var i = imagesUrlsArr.length - 1; i >= 0; i--) {
-						console.log(imagesUrlsArr[i]);
+						// console.log(imagesUrlsArr[i]);
 						if(imagesUrlsArr[i] != undefined){
 							container.append('<div class="media-item"><i class="fa fa-times-circle remove"></i><i class="fa fa-arrows-alt gallery-image-sort"></i><img src="'+imagesUrlsArr[i].url+'" class="thumbnail"></div>');
 							galleryImagesArr.push(imagesUrlsArr[i]);
 						}
 					}
 					$('#images').val(JSON.stringify(galleryImagesArr));
-					console.log(galleryImagesArr);
+					// console.log(galleryImagesArr);
 					// console.log(galleryImagesArr.length);
 					$('#media-popup').modal('hide');
 					setTimeout(function(){
@@ -274,7 +274,7 @@
 				container.find('.empty-gallery').fadeOut();
 				// var container = $('.gallery-show-container');
 				for (var i = imagesUrlsArr.length - 1; i >= 0; i--) {
-					console.log(imagesUrlsArr[i]);
+					// console.log(imagesUrlsArr[i]);
 					if(imagesUrlsArr[i] != undefined){
 						container.append('<div class="media-item"><i class="fa fa-times-circle remove"></i><i class="fa fa-arrows-alt gallery-image-sort"></i><img src="'+imagesUrlsArr[i].url+'" class="thumbnail"><input name="thumbnail-alt" class="form-control" value="'+imagesUrlsArr[i].alt+'" placeholder="Alt Name"></div>');
 						galleryImagesArr.push(imagesUrlsArr[i]);
@@ -286,7 +286,8 @@
 					}else{
 						$('#images').val(JSON.stringify(galleryImagesArr));
 					}
-				console.log(galleryImagesArr);
+					galleryImagesArr = [];
+				// console.log(galleryImagesArr);
 				// console.log(galleryImagesArr.length);
 				$('#media-popup').modal('hide');
 				setTimeout(function(){

@@ -170,8 +170,8 @@
 	<div class="clearfix"></div>
 	<br>
 
-
 	@if($relations)
+		<div class="panel-group" id="accordion">
 		<div class="form-group">
 			@isset($resource)
 				@php
@@ -180,17 +180,16 @@
 				{!! Form::label('relations', 'Relations'); !!}
 				@foreach($relations as $key => $val)
 					@include('admin-panel::components.relations', ['relation_name'=> $key, 'items' => $val, 'selected' => @isset($current_rel[$key])? $current_rel[$key]:null])
-					<hr>
 				@endforeach
 				{!! Form::hidden('relations', null, ['id' => 'relations']) !!}
 			@else
 				{!! Form::label('relations', 'Relations'); !!}
 				@foreach($relations as $key => $val)
 					@include('admin-panel::components.relations', ['relation_name'=> $key, 'items' => $val])
-					<hr>
 				@endforeach
 				{!! Form::hidden('relations', null, ['id' => 'relations']) !!}
 			@endif
+		</div>
 		</div>
 	@endif
 
@@ -204,6 +203,5 @@
 		@endif
 	</div>
 </div>
-
 
 {!! Form::close() !!}

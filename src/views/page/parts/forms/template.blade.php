@@ -22,8 +22,14 @@
         @endswitch
     @endif
 @endforeach
-
 @isset($attachments)
+        @php
+            if(isset($page)){
+                $full = array_keys($page->meta['attachments'], 'all');
+            } else {
+                 $full = [];
+            }
+        @endphp
 <hr>
 <h4>Attach Resources</h4>
 <div class="panel-group" id="accordion">
@@ -31,7 +37,7 @@
         <div class="panel panel-default attachments" data-model="{{$model}}">
             <div class="panel-heading">
                 <h4 class="panel-title">{{ucwords($model)}}
-                    <input type="checkbox" name="{{$model}}" value="" class="check-all">all
+                    <input type="checkbox" name="{{$model}}" value="" @if(in_array($model,$full))checked @endif class="check-all">all
                     <a class="accordion-toggle pull-right" data-toggle="collapse" data-parent="#accordion" href="#{{$model}}" >
                         Custom
                     </a>
@@ -45,14 +51,28 @@
                                 <strong class="relation_name">{{$model}}</strong>
                                 <ul id="" class="draggables connectedSortable">
                                     @foreach($items as $key => $arr)
-                                        <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>
+                                        @if(isset($selected_attachments) && !empty($selected_attachments))
+                                            @if(!in_array($arr['id'], $selected_attachments))
+                                                <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>
+                                            @endif
+                                        @else
+                                            <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>
+                                        @endif
                                     @endforeach
                                 </ul>
                             </div>
                             <div class="col-md-6">
                                 <span>Attach</span>
                                 <ul id="" data-name="{{$model}}" class="dragged connectedSortable">
-
+                                    @foreach($items as $key => $arr)
+                                        @if(isset($selected_attachments) && !empty($selected_attachments))
+                                            @if(in_array($arr['id'], $selected_attachments))
+                                                <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>
+                                            @endif
+                                        @else
+                                            <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>
+                                        @endif
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>
@@ -61,6 +81,6 @@
             </div>
          </div>
     @endforeach
-        <input type="hidden" name="meta[attachmets]" id="attachments">
+        <input type="hidden" name="meta[attachments]" id="attachments">
 </div>
 @endif

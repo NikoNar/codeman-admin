@@ -236,7 +236,7 @@ $(document).ready(function(){
         var index = $(this).closest('.gallery-show-container').data('meta');
 
         if($('.gallery-container[data-id='+index+']').find('.meta_images').length > 0){
-            var res = galleryObj[index];
+            var res = galleryObj[index]? galleryObj[index] : galleryImagesArr;
             console.log(res);
 
             res.splice(itemIndex, 1);

@@ -102,13 +102,12 @@
 				$(this)[0].submit();
 			}
 		});
+
 		$('.gallery-show-container').each(function(){
 			var gallery_id = $(this).data('meta');
-
 			if (window.hasOwnProperty('galleryObj')){
 				var currentGallery = galleryObj[gallery_id];
 			}
-
 			var sortable = Sortable.create(this, {
 				// Element dragging ended
 				onEnd: function (evt) {
@@ -131,7 +130,11 @@
 						return array; // for testing purposes
 					};
 					// console.log(old_index, new_index);
-					currentGallery = arrayMove(currentGallery, old_index, new_index);
+					if(currentGallery){
+						currentGallery = arrayMove(currentGallery, old_index, new_index);
+					} else {
+						currentGallery = arrayMove(galleryImagesArr, old_index, new_index);
+					}
 
 					if (gallery_id) {
 						$('.gallery-container[data-id='+gallery_id+']').find('.meta_images').val(JSON.stringify(currentGallery));

@@ -71,7 +71,9 @@ class PageService implements PageInterface
 	*/
 	public function destroy( $id )
 	{
-		return $this->getById($id)->delete();
+	    $page = $this->getById($id);
+//        $page->metas()->detach();
+		return $page->delete();
 	}
 
 	/**

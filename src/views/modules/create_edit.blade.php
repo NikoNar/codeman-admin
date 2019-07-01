@@ -4,6 +4,7 @@
 	<!-- Select2 -->
 	<link rel="stylesheet" href="{{ asset('admin-panel/bower_components/select2/dist/css/select2.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('admin-panel/plugins/bootstrap-tagsinput-master/src/bootstrap-tagsinput.css') }}">
+	<link rel="stylesheet" href="{{ asset('admin-panel/plugins/fontawesome-iconpicker-1.4.0/dist/css/fontawesome-iconpicker.css') }}">
 @endsection
 @section('content')
 	<div class="box">
@@ -41,10 +42,83 @@
 	<script src="{{ asset('admin-panel/bower_components/ckeditor/ckeditor.js') }}"></script>
 	<!-- Laravel Javascript Validation -->
 	<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
-	
+
+	<!-- Icon-Picker -->
+	<script type="text/javascript" src="{{ asset('admin-panel/plugins/fontawesome-iconpicker-1.4.0/dist/js/fontawesome-iconpicker.js')}}"></script>
+
 	{!! JsValidator::formRequest('Codeman\Admin\Http\Requests\ModuleRequest') !!}
 	<script>
         $('select').select2();
+		$('.icp').iconpicker({
+
+			// Popover title (optional) only if specified in the template
+			title: false,
+
+			// use this value as the current item and ignore the original
+			selected: false,
+
+			// use this value as the current item if input or element value is empty
+			defaultValue: false,
+
+			// (has some issues with auto and CSS). auto, top, bottom, left, right
+			placement: 'bottom',
+
+			// If true, the popover will be repositioned to another position when collapses with the window borders
+			collision: 'none',
+
+			// fade in/out on show/hide ?
+			animation: true,
+
+			// hide iconpicker automatically when a value is picked.
+			// it is ignored if mustAccept is not false and the accept button is visible
+			hideOnSelect: false,
+
+			// show footer
+			showFooter: false,
+
+			// If true, the search will be added to the footer instead of the title
+			searchInFooter: true,
+
+			// only applicable when there's an iconpicker-btn-accept button in the popover footer
+			mustAccept: false,
+
+			// Appends this class when to the selected item
+			selectedCustomClass: 'bg-primary',
+
+			// // list of icon classes
+			// icons: [],
+
+			fullClassFormatter: function(val) {
+				return 'fa ' + val;
+			},
+
+			// children input selector
+			input: 'input,.iconpicker-input',
+
+			// use the input as a search box too?
+			inputSearch: true,
+
+			// Appends the popover to a specific element.
+			// If not set, the selected element or element parent is used
+			container: false,
+
+			// children component jQuery selector or object, relative to the container element
+			component: '.input-group-addon,.iconpicker-component',
+
+			// Plugin templates:
+			templates: {
+				popover: '<div class="iconpicker-popover popover"><div class="arrow"></div>' +
+						'<div class="popover-title"></div><div class="popover-content"></div></div>',
+				footer: '<div class="popover-footer"></div>',
+				buttons: '<button class="iconpicker-btn iconpicker-btn-cancel btn btn-default btn-sm">Cancel</button>' +
+						' <button class="iconpicker-btn iconpicker-btn-accept btn btn-primary btn-sm">Accept</button>',
+				search: '<input type="search" class="form-control iconpicker-search" placeholder="Type to filter" />',
+				iconpicker: '<div class="iconpicker"><div class="iconpicker-items"></div></div>',
+				iconpickerItem: '<a role="button" href="#" class="iconpicker-item"><i></i></a>',
+			}
+
+		});
+
 	  	$(function () {
 			if($('#editor').length > 0){
 				CKEDITOR.replace('editor');
