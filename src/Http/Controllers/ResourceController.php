@@ -184,8 +184,9 @@ class ResourceController extends Controller
         $resourcemetas = $decoded_resourcemetas;
         $resource = $this->CRUD->get_with_relations($id);
         $attached_relations = array_column($resource->relations->toArray(), 'id');
+//        dd($attached_relations);
 //        foreach($attached_relations as $key =>)
-        if(null == $relations = Resource::select('id', 'title', 'type')->where('language_id', $resource->language_id)->whereIn('type', $slugs)->whereNotIn('id', $attached_relations)->get()->groupBy('type')->toArray()){
+        if(null == $relations = Resource::select('id', 'title', 'type')->where('language_id', $resource->language_id)->whereIn('type', $slugs)->get()->groupBy('type')->toArray()){
             $relations = [];
 //            $slugs = is_array($slugs)? $slugs : $slugs->toArray();
 //            foreach($slugs as $key=>$val){
@@ -196,7 +197,7 @@ class ResourceController extends Controller
 
         $resource->setAttribute('meta', $resourcemetas);
         $categories = Category::where(['language_id'=>$resource->language_id, 'type'=>$module])->get();
-        return view('admin-panel::resource.create_edit', [ 'resource' => $resource, 'module' => $module, 'options' => $options, 'additional_options' => $additional_options, 'relations' => $relations,'languages' => $this->languages, 'order' => $this->CRUD->getMaxOrderNumber(),'categories' => $categories ]);
+        return view('admin-panel::resource.create_edit', [ 'resource' => $resource, 'module' => $module, 'options' => $options, 'additional_options' => $additional_options, 'relations' => $relations,'languages' => $this->languages, 'order' => $this->CRUD->getMaxOrderNumber(),'categories' => $categories, 'attached_relations' => $attached_relations ]);
     }
 
     /**
@@ -286,7 +287,7 @@ class ResourceController extends Controller
         $resource = $this->CRUD->get_with_relations($id);
         $attached_relations = array_column($resource->relations->toArray(), 'id');
 //        foreach($attached_relations as $key =>)
-        if(null == $relations = Resource::select('id', 'title', 'type')->where('language_id', $resource->language_id)->whereIn('type', $slugs)->whereNotIn('id', $attached_relations)->get()->groupBy('type')->toArray()){
+        if(null == $relations = Resource::select('id', 'title', 'type')->where('language_id', $resource->language_id)->whereIn('type', $slugs)->get()->groupBy('type')->toArray()){
             $relations = [];
 //            $slugs = is_array($slugs)? $slugs : $slugs->toArray();
 //            foreach($slugs as $key=>$val){
@@ -308,7 +309,8 @@ class ResourceController extends Controller
                 'options' => $options,
                 'relations' => $relations,
                 'additional_options' => $additional_options,
-                'categories' => $categories
+                'categories' => $categories,
+                'attached_relations' => $attached_relations
             ]);
 
 

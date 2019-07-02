@@ -14,7 +14,7 @@ Dropzone.options.realDropzone = {
     init:function() {
 
         this.on("removedfile", function(file) {
-            console.log(file);
+            // console.log(file);
             $.ajax({
                 type: 'POST',
                 url: app.ajax_url+ '/media/delete',
@@ -48,31 +48,34 @@ Dropzone.options.realDropzone = {
         return _results;
     },
     success: function(file,done) {
-        console.log(file);
-        console.log(done);
+        // console.log(file);
+        // console.log(done);
         if(done && done.image){
             var item = '';
-            item += '<div class="item" data-id="'+done.image.filename+'">';
-                item += '<div class="actions">';
-                    item += '<button class="btn btn-sm btn-primary btn-flat details" type="button" >';
-                        item += '<i class="fa fa-info-circle"></i> Details';
-                    item += '</button>';
-                    item += '<button class="btn btn-sm btn-danger btn-flat delete-file" type="button" >';
-                        item += '<i class="fa fa-trash"></i> Delete';
-                    item += '</button>';
-                item += '</div>';
-                item += '<img src="'+app.ajax_url+'/media/icon_size/'+done.image.filename+'" alt="'+done.image.alt+'" class="thumbnail img-responsive">';
-                // item += '<span class="filename">';
-                //     item += done.image.original_name;
-                // item += '</span>';
-                item += '<input type="hidden" name="filename" value="'+done.image.original_name+'">';
-                item += '<input type="hidden" name="alt" value="'+done.image.alt+'">';
-                item += '<input type="hidden" name="width" value="'+done.image.width+'">';
-                item += '<input type="hidden" name="height" value="'+done.image.height+'">';
-                item += '<input type="hidden" name="file_size" value="'+done.image.file_size+'">';
-                item += '<input type="hidden" name="file_type" value="'+done.image.file_type+'">';
-                item += '<input type="hidden" name="full-size-url" value="'+app.ajax_url+'/media/full_size/'+done.image.filename+'">';
-                item += '<input type="hidden" name="created_at" value="'+done.image.created_at+'">';
+
+            var multi = $('#media-search').hasClass('multiple')? '<div class="item multiple"   data-id="'+done.image.filename+'">' : '<div class="item"   data-id="'+done.image.filename+'">';
+
+            item += multi;
+            item += '<div class="actions">';
+            item += '<button class="btn btn-sm btn-primary btn-flat details" type="button" >';
+            item += '<i class="fa fa-info-circle"></i> Details';
+            item += '</button>';
+            item += '<button class="btn btn-sm btn-danger btn-flat delete-file" type="button" >';
+            item += '<i class="fa fa-trash"></i> Delete';
+            item += '</button>';
+            item += '</div>';
+            item += '<img src="'+app.ajax_url+'/media/icon_size/'+done.image.filename+'" alt="'+done.image.alt+'" class="thumbnail img-responsive">';
+            // item += '<span class="filename">';
+            //     item += done.image.original_name;
+            // item += '</span>';
+            item += '<input type="hidden" name="filename" value="'+done.image.original_name+'">';
+            item += '<input type="hidden" name="alt" value="'+done.image.alt+'">';
+            item += '<input type="hidden" name="width" value="'+done.image.width+'">';
+            item += '<input type="hidden" name="height" value="'+done.image.height+'">';
+            item += '<input type="hidden" name="file_size" value="'+done.image.file_size+'">';
+            item += '<input type="hidden" name="file_type" value="'+done.image.file_type+'">';
+            item += '<input type="hidden" name="full-size-url" value="'+app.ajax_url+'/media/full_size/'+done.image.filename+'">';
+            item += '<input type="hidden" name="created_at" value="'+done.image.created_at+'">';
             item += '</div>';
             $('.media-container').prepend(item);
         }

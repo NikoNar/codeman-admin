@@ -16,7 +16,7 @@ Route::middleware('web')->group(function () {
 		Route::get('admin/password/email', 'Auth\ForgotPasswordController@showLinkRequestForm');
 		Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
 		Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.request');
-		Route::post('password/reset', 'Auth\ResetPasswordController@reset');	
+		Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 	});
 // dd(auth()->check());
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -207,5 +207,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 	});
 });
 
-	
+    Route::namespace('Codeman\Admin\Http\Controllers')->group(function () {
+        Route::get('/{slug?}', 'Front\PagesController@index')->where('slug', '(?s).*');
+    });
 });

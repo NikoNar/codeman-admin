@@ -187,7 +187,7 @@ $(document).ready(function(){
         var isMultichoose = $(this).hasClass('multichoose');
         var isPdf = $(this).hasClass('pdf');
         var meta = $(this).data('meta');
-        console.log('meta', meta);
+        // console.log('meta', meta);
         thumbnail_container = $(this).closest('.fileupload');
         resource_id = $(this).hasClass('featured-img-change') ? $(this).closest('tr').data('id') : 0;
         chnage_just_image = $(this).hasClass('img-change') ? $(this) : 0;
@@ -228,7 +228,7 @@ $(document).ready(function(){
         e.preventDefault();
         e.stopPropagation();
         var itemIndex = $(this).closest('.media-item').index() - 1;
-        console.log(itemIndex);
+        // console.log(itemIndex);
         // console.log(galleryImagesArr);
 
         $(this).closest('.media-item').fadeOut(400, function(){$(this).remove()});
@@ -237,13 +237,13 @@ $(document).ready(function(){
 
         if($('.gallery-container[data-id='+index+']').find('.meta_images').length > 0){
             var res = galleryObj[index]? galleryObj[index] : galleryImagesArr;
-            console.log(res);
+            // console.log(res);
 
             res.splice(itemIndex, 1);
             if(res.length === 0){
                 $(this).closest('.gallery-show-container').find('.empty-gallery').fadeIn();
             }
-            console.log(res);
+            // console.log(res);
             $('.gallery-container[data-id='+index+']').find('.meta_images').val(JSON.stringify(res));
 
         } else {
@@ -388,11 +388,15 @@ $(document).ready(function(){
         e.preventDefault();
         e.stopPropagation();
         var query = this.value;
+        var multichoose = $(this).hasClass('multiple')? 1 : 0;
         $.ajax({
             type: 'GET',
             url: app.ajax_url+ '/admin/media/search',
             dataType: 'JSON',
-            data: {'query' : query},
+            data: {
+                'query' : query,
+                'multichoose' :multichoose
+            },
             success: function(data){
                 // console.log(data);
                 if(data.success == true){

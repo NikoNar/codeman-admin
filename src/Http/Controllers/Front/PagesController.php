@@ -4,6 +4,8 @@ namespace Codeman\Admin\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use Codeman\Admin\Models\Language;
+use Codeman\Admin\Models\Module;
+use Codeman\Admin\Models\Resource;
 use Illuminate\Http\Request;
 use Codeman\Admin\Models\Page;
 use Codeman\Admin\Models\Lecturer;
@@ -151,12 +153,11 @@ class PagesController extends Controller
 	    	// 	$pageObject = $this->page->where('slug', $submenu[0]->slug)->whereStatus('published')->first();
 	    	// }
 	    	$pagemetas = null;
-	    	if($pageObject){
-	    		$pagemetas = $this->getPageMetas($pageObject->id);
-		    	if($pagemetas){
-		    		$pageObject->setAttribute('meta', $pagemetas);
-		    	}
-	    	}
+            $pagemetas = $this->getPageMetas($pageObject->id);
+            if($pagemetas){
+                $pageObject->setAttribute('meta', $pagemetas);
+            }
+
 
             if(!empty($pageObject)){
                 $content = json_decode($pageObject->description);
@@ -164,97 +165,22 @@ class PagesController extends Controller
 
             // dd(json_decode($pageObject->description));
             // dd($pageObject);
-    
 
-            if ($pageObject->template && View::exists($pageObject->template)) {
-                if($pageObject->template == 'programs') {
-                    $programs = Program::where('lang', $this->lang)->get();
-                    // dd($programs);
-                        return view($pageObject->template, [
-                        'page' => $pageObject,
-                        'programs' => $programs,
-                        
-                    ] );
-                        
-//                } elseif($pageObject->template == 'interior'|| $pageObject->template == 'graphic'){
-//                    $lecturersIds = json_decode($pageObject->lecturers);
-//
-//                    if($lecturersIds){
-//                        $lecturers = [];
-//                    foreach($lecturersIds as $key => $id){
-//                        array_push($lecturers, Lecturer::find($id));
-//                    }
-//
-//                    $pageObject->lecturers = $lecturers;
-//                    }
-//
-//                    $portfolios = Portfolio::whereHas('categories', function($query) use($pageObject){
-//                        $query->where('categories.slug', $pageObject->template);
-//                    })->where('lang', $this->lang)->get();
-//                    $pageObject->portfolios = $portfolios;
-//                    // dd($pageObject);
-//
-//
-//
-//                } elseif ($pageObject->template == 'lecturers' ) {
-//                    $lecturers = Lecturer::with('categories')->whereHas('categories', function($query){
-//                        $query->where('slug', '!=', 'staff');
-//                    })->where('lang', $this->lang)->orderBy('order')->get();
-//
-//                    $categories = Category::whereHas('lecturers')->select(DB::raw('title_'.$this->lang.' as title'))->where('title_en', '!=', 'staff')->get();
-//                    $page = $pageObject;
-//                    return view('lecturers', compact('lecturers', 'categories', 'page'));
-
-//                } elseif( $pageObject->template == 'staff'){
-//
-//                    $staff = Lecturer::with('categories')->whereHas('categories', function($query){
-//                        $query->where('slug', '=', 'staff');
-//                    })->where('lang', $this->lang)->orderBy('order')->get();
-//                    $page = $pageObject;
-//                    return view('staff', compact('staff', 'page'));
-
-//                } elseif( $pageObject->template == 'portfolio'){
-//                    $pageObject['portfolios'] = Portfolio::with('categories')->where('lang', $this->lang)->orderBy('order')->get();
-//                    $pageObject['categories'] = Category::whereHas('portfolios')->select('title_'.$this->lang)->get();
-                } elseif( $pageObject->template == 'about-us'){
-
-                    // $pageObject['lecturers'] = Lecturer::with('categories')->whereHas('categories', function($query){
-                    // // $query->where('title', '!=', 'staff');
-                    // })->where('lang', $this->lang)->orderBy('order')->get();
-
-                    // $pageObject['categories'] = Category::whereHas('lecturers')->select(DB::raw('title_'.$this->lang.' as title'))->get();
-
-                    $pageObject['staff'] = Lecturer::where(['language_id' => $this_lang_id, 'status'=>'published'])->get();
-                    $pageObject['partners'] = Review::where(['language_id'=> $this_lang_id, 'status'=>'published'])->get();
-
-                    // dd($pageObject);
-                } elseif( $pageObject->template == 'index'){
-                   
-
-                    $pageObject['partners'] = Review::where(['language_id'=> $this_lang_id, 'status'=>'published'])->get();
-                    $pageObject['services'] = Service::where(['language_id'=> $this_lang_id, 'status'=>'published'])->orderBy('order')->limit(3)->get();
-
-                } elseif( $pageObject->template == 'testimonials'){
-                    $reviews = Review::where('language_id', $this_lang_id)->get();
-                    $page = $pageObject;
-                    return view('testimonials', compact('reviews', 'page'));
-                } elseif( $pageObject->template == 'services'){
-                    $pageObject['services'] = Service::where(['language_id' => $this_lang_id, 'status'=>'published'])->get();
-                } elseif( $pageObject->template == 'publications'){
-                    $pageObject['publications'] = File::where(['language_id' => $this_lang_id, 'status'=>'published'])->where('year',  now()->year)->whereHas('categories', function($query){
-                        $query->where('categories.slug', 'financial-reports');
-                    })->get();
-//                    $pageObject['companies'] = File::where('lang', $this->lang)->whereHas('categories', function($query){
-//                        $query->where('categories.slug', 'company');
-//                    })->get();
-                }elseif( $pageObject->template == 'useful-files'){
-                    $pageObject['useful_files'] = File::where(['language_id' => $this_lang_id, 'status'=>'published'])->whereHas('categories', function($query){
-                        $query->where('categories.slug', 'useful-file');
-                    })->get();
+            if(array_key_exists('attachments', $pagemetas) && !empty($pagemetas['attachments'])){
+                $attachments = json_decode($pagemetas['attachments'], true);
+                foreach($attachments as $type => $val){
+                    if($val == 'all'){
+                        $pageObject[$type] = Resource::where('type', $type)->get();
+                    } else {
+                        $pageObject[$type] = Resource::whereIn('id', explode(',', $val))->get();
+                    }
                 }
 
+            }
+            $template = Module::where('id', $pageObject->template)->first()->slug;
 
-                return view($pageObject->template, [
+            if ($template && View::exists($template)) {
+                return view($template, [
                 'page' => $pageObject,
                 // 'submenu' => $submenu,
                 // 'siblingmenu' => $siblingmenu,
@@ -281,19 +207,7 @@ class PagesController extends Controller
         return view('home', compact('reviews'));
     }
 
-    // public function testimonials(){
-    //     $reviews = Review::where('lang', $this->lang)->get();
-    //     return view('testimonilas', compact('reviews'));
-    // }
 
-    // public function lecturers(){
-    //     $lecturers = Lecturer::with('categories')->whereHas('categories', function($query){
-    //         $query->where('title', '!=', 'staff');
-    //     })->orderBy('order')->get();
-    //     $categories = Category::whereHas('lecturers')->select('title')->where('title', '!=', 'staff')->get();
-    //     // dd($categories);
-    //     return view('lecturers', compact('lecturers', 'categories'));
-    // }
 
     private function getPageMetas($page_id)
     {

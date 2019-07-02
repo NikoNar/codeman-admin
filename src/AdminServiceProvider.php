@@ -34,6 +34,10 @@ class AdminServiceProvider extends ServiceProvider
 		], 'config');
 
         $this->publishes([
+            __DIR__.'/config/images/users' => public_path('images/users'),
+        ], 'public');
+
+        $this->publishes([
             __DIR__.'/config/translation-manager.php' => config_path('translation-manager.php'),
         ], 'config');
 			

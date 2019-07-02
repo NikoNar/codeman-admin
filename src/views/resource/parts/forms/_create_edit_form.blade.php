@@ -179,7 +179,7 @@
 				@endphp
 				{!! Form::label('relations', 'Relations'); !!}
 				@foreach($relations as $key => $val)
-					@include('admin-panel::components.relations', ['relation_name'=> $key, 'items' => $val, 'selected' => @isset($current_rel[$key])? $current_rel[$key]:null])
+					@include('admin-panel::components.relations', ['relation_name'=> $key, 'items' => $val, 'attached_relations' => @isset($attached_relations)? $attached_relations:null])
 				@endforeach
 				{!! Form::hidden('relations', null, ['id' => 'relations']) !!}
 			@else

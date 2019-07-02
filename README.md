@@ -17,7 +17,7 @@ This package support Laravel 5.8.8 or higher.
     
     Publish the vendor
   
-      php artisan vendor:publish
+      php artisan vendor:publish --force
      
   ## Step 3
     
@@ -27,15 +27,11 @@ This package support Laravel 5.8.8 or higher.
   
   ## Step 4
     
-    Create images/users folder under public puth
-
-  ## Step 5
-    
     Seed the database
   
       php artisan db:seed --class=Codeman\\Admin\\Database\\Seeds\\AdminSeeder
   
-  ## Step 6
+  ## Step 5
     
     Follow the URL yoursite.com/admin/login
       

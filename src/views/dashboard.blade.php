@@ -20,14 +20,18 @@
 @endsection
 @section('content')
     <section class="content">
-
+@php
+    $rand = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+    $color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
+@endphp
         <!-- Info boxes -->
         <div class="row">
             <div class="col-md-12 col-md-offset-0">
+
                 <div class="col-md-4 col-sm-6 col-xs-12">
                     <div class="info-box ">
                         <a href="{!! route('page-index') !!}">
-                            <span class="info-box-icon bg-aqua"><i class="fa fa-window-restore"></i></span>
+                            <span class="info-box-icon" style="background-color: {{$color}}"><i class="fa fa-window-restore"></i></span>
                         </a>
                         <div class="info-box-content">
                       <span class="info-box-text" style="">Pages
@@ -41,6 +45,32 @@
                     </div>
                     <!-- /.info-box -->
                 </div>
+
+                @isset($resources)
+                    @foreach($resources as $res)
+                        @php
+                            $color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
+                        @endphp
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="info-box ">
+                                <a href="{!! route('resources.index', [$res->type]) !!}">
+                                    <span class="info-box-icon" style="background-color: {{$color}}"><i class="fa {{$res->icon}}"></i></span>
+                                </a>
+                                <div class="info-box-content">
+                                  <span class="info-box-text" style="">{{$res->type}}
+                                  <span class="info-box-number">{!! $res->total !!}</span>
+                                  </span>
+                                    <a href="{!! route('resources.index', [$res->type]) !!}"
+                                       class="small-box-footer info-box-text"
+                                       style="position: absolute;right: 30px; bottom: 30px;">View all <i
+                                                class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                                <!-- /.info-box-content -->
+                            </div>
+                            <!-- /.info-box -->
+                        </div>
+                @endforeach
+            @endif
                 <!-- /.col -->
 {{--                <div class="col-md-4 col-sm-6 col-xs-12">--}}
 {{--                    <div class="info-box ">--}}

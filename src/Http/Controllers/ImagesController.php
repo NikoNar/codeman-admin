@@ -96,9 +96,14 @@ class ImagesController extends Controller
 
     public function search()
     {
+        if(request()->has('multichoose')){
+            $multichoose = request()->get('multichoose');
+        } else {
+            $multichoose = null;
+        }
         $result = $this->image->where('original_name', 'LIKE', '%'.request()->get('query').'%')->get();
         if(isset($result) && !$result->isEmpty()){
-            $returnHTML =  view('admin-panel::media.parts._media_list', ['images' => $result])->render();
+            $returnHTML =  view('admin-panel::media.parts._media_list', ['images' => $result, 'multichoose' => $multichoose])->render();
         }else{
             $returnHTML =  view('admin-panel::media.parts._no_images_found', ['images' => $result])->render();
         }

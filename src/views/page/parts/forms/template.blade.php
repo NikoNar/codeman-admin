@@ -69,8 +69,6 @@
                                             @if(in_array($arr['id'], $selected_attachments))
                                                 <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>
                                             @endif
-                                        @else
-                                            <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>
                                         @endif
                                     @endforeach
                                 </ul>

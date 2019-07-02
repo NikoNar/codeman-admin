@@ -189,6 +189,7 @@ class PagesController extends Controller
             } else {
                 $additional_options = [];
             }
+
             if(null == $relation_ids = json_decode($model->relations)){
                 $slugs = [];
                 $attachments = null;

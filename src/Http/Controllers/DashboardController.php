@@ -7,11 +7,13 @@ use Codeman\Admin\Models\Page;
 use Codeman\Admin\Models\Portfolio;
 use Codeman\Admin\Models\Program;
 use Codeman\Admin\Models\Lecturer;
+use Codeman\Admin\Models\Resource;
 use Codeman\Admin\Models\Review;
 use Codeman\Admin\Models\Application;
 use Codeman\Admin\Models\Service;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use \Spatie\Analytics\Analytics;
 use \Spatie\Analytics\Period;
 use \Carbon\Carbon;
@@ -73,9 +75,16 @@ class DashboardController extends Controller
 
         $default_lang = Language::orderBy('order')->first();
         $def_land_id  = $default_lang->id;
+        $resources = DB::table('resources')
+            ->select('type', 'icon',  DB::raw('count(*) as total'))
+            ->where('language_id', $def_land_id)
+            ->leftJoin('modules', 'resources.type', '=', 'modules.slug')
+            ->groupBy('type')
+            ->get();
     	return view('admin-panel::dashboard',
         [
             'pages_count' => Page::where('language_id', $def_land_id)->count(),
+            'resources' => $resources,
             'sessionsCharterData' => $sessionsCharterData,
             'dates' => $dates,
             // 'visitors' => $visitors,

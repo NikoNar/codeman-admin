@@ -1,5 +1,5 @@
 
-<div class="item" data-id="{!! $image->filename !!}">
+<div class="item {!! isset($multichoose) && $multichoose == 1 ? 'multiple' : null !!}" data-id="{!! $image->filename !!}">
 	
 	{{-- <button type="button" class="close delete-file" aria-label="Close">
 		<i class="fa fa-trash delete-file-icon"></i>

@@ -24,7 +24,7 @@
 				    		<div class="pull-right col-md-3">
 				    			@if(isset($dates) && !empty($dates))
 				    				<div class="input-group">
-										<input type="text" name="media-search" id="media-search" placeholder="Search By Name" class="form-control">
+										<input type="text" name="media-search" id="media-search" placeholder="Search By Name" class="form-control {!! isset($multichoose) && $multichoose == 1 ? 'multiple' : null !!}">
 										<div class="input-group-addon">
 							        		<i class="fa fa-search"></i>
 							        	</div>

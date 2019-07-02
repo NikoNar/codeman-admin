@@ -2,9 +2,7 @@
 	<td><input type="checkbox" name="checked" value="{{ $item->id }}"></td>
 	<td>
 		<a href="javascript:void(0)">
-			{!! $item->icon !!}
-{{--			<i class="fa fa-camera"></i>--}}
-
+			<i class="fa {!! $item->icon !!}"></i>
 		</a>
 		{{ $item->title }}</td>
 	<td>
