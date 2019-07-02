@@ -19,8 +19,8 @@ class AdminSeeder extends Seeder
     {
         
         // $this->call(UsersTableSeeder::class);
-        $profile_pic_filename = Str::random(32).'.png';
-        $profile_pic = Avatar::create('Super Admin')->save(public_path().'/images/users/'.$profile_pic_filename);
+//        $profile_pic_filename = Str::random(32).'.png';
+//        $profile_pic = Avatar::create('Super Admin')->save(public_path().'/images/users/'.$profile_pic_filename);
 
         DB::table('languages')->insert([
             ['name' =>'English',
@@ -33,7 +33,7 @@ class AdminSeeder extends Seeder
         DB::table('users')->insert([
             'name' =>'Super Admin',
             'email' => 'superadmin@codeman.am',
-            'profile_pic' => $profile_pic_filename,
+            'profile_pic' => 'sa.png',
             'email_verified_at' => now(),
             'password' => bcrypt('nimda_@26'),
             'remember_token' => str_random(10),

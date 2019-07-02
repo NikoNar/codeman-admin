@@ -79,7 +79,7 @@ class DashboardController extends Controller
             ->select('type', 'icon',  DB::raw('count(*) as total'))
             ->where('language_id', $def_land_id)
             ->leftJoin('modules', 'resources.type', '=', 'modules.slug')
-            ->groupBy('type')
+            ->groupBy('type', 'icon')
             ->get();
     	return view('admin-panel::dashboard',
         [

@@ -21,8 +21,7 @@
 @section('content')
     <section class="content">
 @php
-    $rand = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
-    $color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
+    $color = $rand = array('#1a2226', '#008fca', '#ff9800', '#5cd5d5');
 @endphp
         <!-- Info boxes -->
         <div class="row">
@@ -31,7 +30,7 @@
                 <div class="col-md-4 col-sm-6 col-xs-12">
                     <div class="info-box ">
                         <a href="{!! route('page-index') !!}">
-                            <span class="info-box-icon" style="background-color: {{$color}}"><i class="fa fa-window-restore"></i></span>
+                            <span class="info-box-icon" style="background-color: {{$color[array_rand($color)]}}; color:#fff"><i class="fa fa-window-restore"></i></span>
                         </a>
                         <div class="info-box-content">
                       <span class="info-box-text" style="">Pages
@@ -48,13 +47,10 @@
 
                 @isset($resources)
                     @foreach($resources as $res)
-                        @php
-                            $color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
-                        @endphp
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="info-box ">
                                 <a href="{!! route('resources.index', [$res->type]) !!}">
-                                    <span class="info-box-icon" style="background-color: {{$color}}"><i class="fa {{$res->icon}}"></i></span>
+                                    <span class="info-box-icon" style="background-color: {{array_rand($color)}}"><i class="fa {{$res->icon}}"></i></span>
                                 </a>
                                 <div class="info-box-content">
                                   <span class="info-box-text" style="">{{$res->type}}
