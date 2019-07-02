@@ -38,7 +38,15 @@ class AdminServiceProvider extends ServiceProvider
         ], 'public');
 
         $this->publishes([
+            __DIR__.'/config/analytics-service-account-credentials.json' => public_path('analytics-service-account-credentials.json'),
+        ], 'public');
+
+        $this->publishes([
             __DIR__.'/config/translation-manager.php' => config_path('translation-manager.php'),
+        ], 'config');
+
+        $this->publishes([
+            __DIR__.'/config/analytics.php' => config_path('analytics.php'),
         ], 'config');
 			
 		$this->publishes([
