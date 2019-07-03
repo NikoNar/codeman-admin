@@ -51,7 +51,6 @@ class PagesController extends Controller
     */
     public function index($slug = null)
     {
-//        dd(session()->all(), 'ctrl');
 //        dd(LaravelLocalization::getCurrentLocale());
         $index_page_id = Setting::select('value')->where('key', 'index')->first()['value'];
     	$url = explode('/', $slug);
@@ -59,7 +58,6 @@ class PagesController extends Controller
         $def_land_id  = $default_lang->id;
         $def_land_code  = $default_lang->code;
         $this_lang_id = Language::where('code', $this->lang)->first()->id;
-
 
     	if(count($url) > 1){
 
@@ -110,7 +108,7 @@ class PagesController extends Controller
             }
         }
 
-             // dd($pageObject);
+//              dd($pageObject);
 
 
     	if($pageObject){
@@ -178,6 +176,7 @@ class PagesController extends Controller
 
             }
             $template = Module::where('id', $pageObject->template)->first()->slug;
+//            dd($template);
 
             if ($template && View::exists($template)) {
                 return view($template, [

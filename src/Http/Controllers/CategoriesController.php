@@ -82,7 +82,7 @@ class CategoriesController extends Controller
         $request['slug'] = getUniqueSlug($category, $request['title']);
         if($request->ajax()) {
             $category = $category->create($request->except('selected'));
-            if (isset($request['selected'])){
+            if(isset($request['selected'])){
              $keys =explode(',', $request['selected']);
 
                 array_push($keys, $category->id);

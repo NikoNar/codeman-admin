@@ -36,7 +36,7 @@
 							<div class="form-group">	
 								<div class="input-group">
 								    <span class="input-group-addon">
-								        <span class="fa fa-user"></span>
+								        <span class="fa fa-home"></span>
 								    </span>
 									{{ Form::select('index', $pages, isset($selected) && $selected != null ? $selected : null) }}
 								</div>
@@ -51,7 +51,7 @@
 							<div class="form-group">
 								<div class="input-group">
 								    <span class="input-group-addon">
-								        <span class="fa fa-user"></span>
+								        <span class="fa fa-globe"></span>
 								    </span>
 									@include('admin-panel::layouts.parts._all_languages')
 								</div>
@@ -65,7 +65,7 @@
 							<div class="form-group">
 								<div class="input-group">
 								    <span class="input-group-addon">
-								        <span class="fa fa-user"></span>
+								        <span class="fa fa-language"></span>
 								    </span>
 									{{ Form::select('default_lang', $languages, isset($selected) && $selected != null ? $selected : null) }}
 								</div>

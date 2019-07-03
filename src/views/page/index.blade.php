@@ -23,7 +23,7 @@
     		<div id="resource-container">
     			@include('admin-panel::page.parts.listing')
     		</div>
-			<input type="hidden" name="modelName" id="modelName" value="{!! isset($pages) && !$pages->isEmpty() ? class_basename($pages[0]) : null !!}" >
+			<input type="hidden" name="modelName" id="modelName" value="Page" >
 	    </div>
 	    <!-- /.box-footer-->
 	</div>

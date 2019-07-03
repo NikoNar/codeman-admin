@@ -1,5 +1,6 @@
 @extends('admin-panel::layouts.app')
 @section('style')
+{{--	{{dd($resources)}}--}}
 	<!-- DataTables -->
 	<link rel="stylesheet" href="{{ asset('admin-panel/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
 @endsection
@@ -26,7 +27,7 @@
     			@include('admin-panel::resource.parts.listing')
     		</div>
 			<input type="hidden" id="resource_type" value="{{$module}}">
-			<input type="hidden" name="modelName" id="modelName" value="{!! isset($resources) && !$resources->isEmpty() ? class_basename($resources[0]) : null !!}" >
+			<input type="hidden" name="modelName" id="modelName" value="Resource" >
 
 	    </div>
 	    <!-- /.box-footer-->

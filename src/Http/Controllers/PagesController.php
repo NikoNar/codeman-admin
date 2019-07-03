@@ -178,6 +178,7 @@ class PagesController extends Controller
 
 
             $model = Module::where('id', $template)->first();
+
             if($model){
                 $add_opts = json_decode($model->additional_options);
                 $additional_options = [];
@@ -190,9 +191,11 @@ class PagesController extends Controller
                 $additional_options = [];
             }
 
-            if(null == $relation_ids = json_decode($model->relations)){
+            if(!$model || null == $relation_ids = json_decode($model->relations)){
                 $slugs = [];
                 $attachments = null;
+                $selected_attachments = [];
+
             }else{
                 $meta_attachments = $decoded_pagemetas['attachments'];
                 $selected_attachments = [];
@@ -235,12 +238,10 @@ class PagesController extends Controller
 		
 		if($page->template != null){
 			$template = $page->template;
-		}
-
-		if(request()->has('template')){
-			$template = request()->get('template');
-		}
-        $model = Module::where('id', $template)->first();
+            $model = Module::where('id', $template)->first();
+        } else {
+		    $model = null;
+        }
         if($model){
             $add_opts = json_decode($model->additional_options);
             $additional_options = [];
@@ -252,8 +253,8 @@ class PagesController extends Controller
         } else {
             $additional_options = [];
         }
-		$pagemetas = $pageInterface->getPageMetas($id);
 
+		$pagemetas = $pageInterface->getPageMetas($id);
 		$decoded_pagemetas = [];
 		foreach($pagemetas as $key => $value) {
 			if(isJson($value)){
@@ -265,9 +266,11 @@ class PagesController extends Controller
 		}
 		$page->setAttribute('meta', $decoded_pagemetas);
 
-        if(null == $relation_ids = json_decode($model->relations)){
+        if(!$model || null == $relation_ids = json_decode($model->relations)){
             $slugs = [];
             $attachments = null;
+            $selected_attachments = [];
+
         }else{
             $meta_attachments = $decoded_pagemetas['attachments'];
             $selected_attachments = [];
@@ -280,7 +283,6 @@ class PagesController extends Controller
             $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->where('language_id', $page->language_id)->get();
             $attachments = $relations->groupBy('type')->toArray();
         }
-
 //		$pagemetas = $decoded_pagemetas;
 //		$page->setAttribute('meta', $decoded_pagemetas);
 		if($template){

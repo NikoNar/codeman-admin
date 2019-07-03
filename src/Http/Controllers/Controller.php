@@ -63,8 +63,7 @@ class Controller extends BaseController
     {
         $modelName = $request->has('model') ? $request->get('model') : null;
         $searchBy = $request->has('search_by') ? $request->get('search_by') : 'title';
-        $type = $request->has('type') ? $request->get('type') : null;
-
+        $type = ($request->has('type') && $request->get('type') != 'undefined')? $request->get('type') : null;
         if($modelName)
         {
             $model = $this->getModel($modelName);
