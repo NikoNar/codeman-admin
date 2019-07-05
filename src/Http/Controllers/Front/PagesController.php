@@ -33,6 +33,7 @@ class PagesController extends Controller
     */
     public function __construct(Page $page, Pagemeta $pagemeta)
     {
+
 //        \App::setLocale('hy');
 //        dd(LaravelLocalization::getCurrentLocale());
 //        dd(session()->all(), 'const');
@@ -51,44 +52,61 @@ class PagesController extends Controller
     */
     public function index($slug = null)
     {
-//        dd(LaravelLocalization::getCurrentLocale());
+//        dd(session()->get('prev_lang'), 'ctrl');
         $index_page_id = Setting::select('value')->where('key', 'index')->first()['value'];
-    	$url = explode('/', $slug);
+        $url = explode('/', $slug);
         $default_lang = Language::orderBy('order')->first();
         $def_land_id  = $default_lang->id;
         $def_land_code  = $default_lang->code;
         $this_lang_id = Language::where('code', $this->lang)->first()->id;
 
-    	if(count($url) > 1){
 
-    		$slug = $url[count($url) - 1];
 
-    	}
-    	if($this->lang != $def_land_code){
-//            dd('f');
+        if(count($url) > 1){
+            $slug = $url[count($url) - 1];
+        }
+
+        $pageObject = $this->page->whereSlug($slug)->whereLanguageId($this_lang_id)->whereStatus('published')->first();
+        if(!$pageObject){
+            if( null != $prevPage = $this->page->where('id',session()->get('page_id') )->first()){
+                if($prevPage->parent_lang_id){
+                    $pageObject = $this->page->where('language_id', $this_lang_id)->where(function ($query) use($prevPage){
+                        $query->where('parent_lang_id', $prevPage->parent_lang_id)
+                            ->orWhere('id', $prevPage->parent_lang_id);
+                    })->first();
+                } else {
+                    $pageObject = $this->page->where('parent_lang_id', $prevPage->id)->where('language_id', $this_lang_id)->first();
+                }
+                if($pageObject){
+                    $url = buildUrl($pageObject);
+                    return redirect()->to($url);
+                }
+            }
+        }
+
+        if($this->lang != $def_land_code){
             if(!$slug){
                 $pageObject = $this->page->where('parent_lang_id', $index_page_id)->where('language_id', '=', $this_lang_id)->whereStatus('published')->first();
             }else{
                 $pageObject = $this->page->where('slug', $slug)->where('language_id', '=', $this_lang_id)->whereStatus('published')->first();
             }
-    		if(!$pageObject){
+            if(!$pageObject){
                 if(!$slug){
                     $parent_page_id = $this->page->where('id', $index_page_id)->whereStatus('published')->pluck('id')->first();
                 }else{
-	    		    $parent_page_id = $this->page->where('slug', $slug)->whereStatus('published')->pluck('id')->first();
+                    $parent_page_id = $this->page->where('slug', $slug)->whereStatus('published')->pluck('id')->first();
                 }
                 $pageObject = $this->page->where('parent_lang_id', $parent_page_id)->whereStatus('published')->select('id', 'parent_id', 'slug')->first();
-	    		if($pageObject){
-	    			$url = buildUrl($pageObject);
-	    			return redirect()->to($url);
-	    		}
-    		}
-    	}else{
-
+                if($pageObject){
+                    $url = buildUrl($pageObject);
+                    return redirect()->to($url);
+                }
+            }
+        }else{
             if(!$slug){
                 $pageObject = $this->page->where('id', $index_page_id)->where('language_id', $def_land_id)->whereStatus('published')->first();
             }else{
-              $pageObject = $this->page->where('slug', $slug)->where('language_id', $def_land_id)->whereStatus('published')->first();
+                $pageObject = $this->page->where('slug', $slug)->where('language_id', $def_land_id)->whereStatus('published')->first();
             }
             if(!$pageObject){
                 if(!$slug){
@@ -104,11 +122,11 @@ class PagesController extends Controller
                     $url = buildUrl($pageObject);
                     return redirect()->to($url);
                 }
-                
+
             }
         }
 
-//              dd($pageObject);
+
 
 
     	if($pageObject){
@@ -175,9 +193,15 @@ class PagesController extends Controller
                 }
 
             }
-            $template = Module::where('id', $pageObject->template)->first()->slug;
-//            dd($template);
+            if($pageObject->template){
+                $template = Module::where('id', $pageObject->template)->first()->slug;
+            } else {
+                $template = null;
+            }
 
+//            dd($template);
+            session()->put('page_id', $pageObject->id);
+            session()->put('model_type', 'page');
             if ($template && View::exists($template)) {
                 return view($template, [
                 'page' => $pageObject,

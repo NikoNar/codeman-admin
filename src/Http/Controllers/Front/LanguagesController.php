@@ -14,7 +14,9 @@ class LanguagesController extends Controller
     public function changeLanguage($lang = null)
     {
 
+//dd();
         $default_language = Language::orderBy('order')->first()->code;
+        $avail_langs = Language::pluck('code')->toArray();
         if(!$lang){
             $lang = $default_language;
         }
@@ -30,20 +32,25 @@ class LanguagesController extends Controller
         foreach ($previous_url as $key => $value) {
             $next_url[] = $value;
         }
-        if($next_url[0] == 'hy' || $next_url[0] == 'en' || $next_url[0] == 'ru'){
+        if(in_array($next_url[0], $avail_langs)){
             unset($next_url[0]);
         }
+
         $next_request = implode('/', $next_url);
         session()->put('lang', $lang);
+//        dd(\App::getLocale());
+//        session()->put('prev_lang', \App::getLocale());
 //        dd(session()->all());
         \App::setLocale($lang);
-//        dd(LaravelLocalization::getCurrentLocale());
 
-//        dd($lang, $next_request, $previous_url);
+//        dd($lang, $next_request);
+//        dd(LaravelLocalization::getCurrentLocale());
+//        dd($lang, $next_request, $previous_url, $default_language);
         if($lang == $default_language )
         {
             return redirect()->to('/'.$next_request);
         }
+        
         return redirect()->to('/'.$lang.'/'.$next_request);
 
     }

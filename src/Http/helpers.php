@@ -227,7 +227,6 @@
 	function buildUrl($page, $url = array(), $includeCurrentUrl = true, $single_of = null)
 	{
 		$lang = \LaravelLocalization::getCurrentLocale();
-
 		if($includeCurrentUrl){
 			$url[] = $page->slug;
 		}
@@ -242,9 +241,10 @@
 			if($single_of){
 				$url[] = $single_of;
 			}
-			if($lang != 'en'){
+			if($lang != \Codeman\Admin\Models\Language::orderBy('order')->first()->code){
 				$url[] = $lang;
 			}
+//            dd($url);
 
 			$url = array_reverse($url);
 			$url = implode('/', $url);

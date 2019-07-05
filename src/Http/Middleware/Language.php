@@ -19,23 +19,23 @@ class Language  {
     /**
      * Handle an incoming request.
      *
+     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
+        $default_lang = \Codeman\Admin\Models\Language::orderBy('order')->first()->code;
         $segments = $request->segments();
-        $is_url_has_lang = $request->segment(2);
-        $current_lang = \App::getLocale();
+        $is_url_has_lang = $request->segment(1);
+        // $current_lang = \LaravelLocalization::getCurrentLocale();
         $current_lang = session()->get('lang');
-
-
-        if($is_url_has_lang != 'arm' && $current_lang == 'arm')
+        session()->put('prev_lang', $current_lang);
+        if($is_url_has_lang != $default_lang && $current_lang == $default_lang)
         {
             return $this->redirector->to($current_lang.'/'.implode('/', $segments));
         }
-
         // dd($locale);
         // If the locale is added to to skip_locales array continue without locale
         // if (in_array($locale, $this->app->config->get('app.skip_locales'))) {
@@ -44,10 +44,10 @@ class Language  {
         // } else {
         //     dd('aaaa');
         //     // If the locale does not exist in the locales array continue with the fallback_locale
-        //     if (! array_key_exists($locale, $this->app->config->get('app.locales'))) {
-        //         $segments = $request->segments();
         //         array_unshift($segments, $this->app->config->get('app.fallback_locale'));
         //         // $segments[0] = $this->app->config->get('app.fallback_locale');
+
+
         //         return $this->redirector->to(implode('/', $segments));
         //     }
         // }

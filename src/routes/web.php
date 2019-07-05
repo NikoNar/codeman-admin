@@ -201,9 +201,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
 		Route::post('/admin/media/delete', 'ImagesController@delete');
 
 
-
-
-
 	});
 });
 
