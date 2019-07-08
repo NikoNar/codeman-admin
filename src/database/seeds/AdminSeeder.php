@@ -23,10 +23,24 @@ class AdminSeeder extends Seeder
 //        $profile_pic = Avatar::create('Super Admin')->save(public_path().'/images/users/'.$profile_pic_filename);
 
         DB::table('languages')->insert([
-            ['name' =>'English',
-            'code' => 'en'],
-            ['name' =>'Armenian',
-                'code' => 'hy']
+            [
+                'name' =>'English',
+                'code' => 'en',
+                'script' => 'Latn',
+                'native' => 'English',
+                'regional' => 'en_GB',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' =>'Armenian',
+                'code' => 'hy',
+                'script' => 'Armn',
+                'native' => 'Հայերեն',
+                'regional' => 'hy_AM',
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
         ]);
 
 

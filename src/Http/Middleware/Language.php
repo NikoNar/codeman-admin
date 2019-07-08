@@ -26,16 +26,17 @@ class Language  {
      */
     public function handle($request, Closure $next)
     {
-        $default_lang = \Codeman\Admin\Models\Language::orderBy('order')->first()->code;
-        $segments = $request->segments();
-        $is_url_has_lang = $request->segment(1);
+//        $default_lang = \Codeman\Admin\Models\Language::orderBy('order')->first()->code;
+//        $segments = $request->segments();
+//        $is_url_has_lang = $request->segment(1);
         // $current_lang = \LaravelLocalization::getCurrentLocale();
-        $current_lang = session()->get('lang');
-        session()->put('prev_lang', $current_lang);
-        if($is_url_has_lang != $default_lang && $current_lang == $default_lang)
-        {
-            return $this->redirector->to($current_lang.'/'.implode('/', $segments));
-        }
+//        $current_lang = session()->get('lang');
+//        session()->put('prev_lang', $current_lang);
+//        dd($current_lang);
+//        if($is_url_has_lang != $default_lang && $current_lang == $default_lang)
+//        {
+//            return $this->redirector->to($current_lang.'/'.implode('/', $segments));
+//        }
         // dd($locale);
         // If the locale is added to to skip_locales array continue without locale
         // if (in_array($locale, $this->app->config->get('app.skip_locales'))) {

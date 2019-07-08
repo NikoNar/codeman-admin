@@ -14,12 +14,13 @@ class LanguagesController extends Controller
     public function changeLanguage($lang = null)
     {
 
-//dd();
         $default_language = Language::orderBy('order')->first()->code;
         $avail_langs = Language::pluck('code')->toArray();
+
         if(!$lang){
             $lang = $default_language;
         }
+
         $previous_url = url()->previous();
         $previous_url = explode('/', $previous_url);
         $base_url = url()->to('/');
@@ -48,6 +49,8 @@ class LanguagesController extends Controller
 //        dd($lang, $next_request, $previous_url, $default_language);
         if($lang == $default_language )
         {
+
+//            dd($next_request);
             return redirect()->to('/'.$next_request);
         }
         

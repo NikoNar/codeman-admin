@@ -294,6 +294,6 @@ $supportedLocales = [
 
 <select name="all_langs[]" id="all_langs" class="select2 form-control" multiple>
     @foreach($supportedLocales as $key => $val)
-        <option value="{{json_encode(['code'=> $key,'name' => $val['name']])}}"  @if(isset($selected_langs)&& in_array($key, $selected_langs) )selected @endif>{{$val['name']}}</option>
+        <option value="{{json_encode(['code'=> $key,'name' => $val['name'], 'script' => $val['script'], 'native' => $val['native'], 'regional' => $val['regional']])}}"  @if(isset($selected_langs)&& in_array($key, $selected_langs) )selected @endif>{{$val['name']}}</option>
     @endforeach
 </select>

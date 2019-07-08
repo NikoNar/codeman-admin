@@ -2,6 +2,7 @@
 namespace Codeman\Admin;
 
 use Codeman\Admin\Models\Module;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Codeman\Admin\Http\Middleware\Admin;
@@ -86,11 +87,35 @@ class AdminServiceProvider extends ServiceProvider
             $view->with('modules', $modules);
         });
 
+
 	}
 
 	public function register()
 	{
-		$this->app->bind(
+        $langs = DB::table('languages')->select('code', 'name', 'script', 'native', 'regional')->orderBy('order')->get()->keyBy('code');
+//        config(['app.locale' => 'en']);
+        if(count($langs) > 0){
+            $def_lang = $langs->first()->code;
+            config(['app.locale' => $def_lang]);
+        }
+        $locales = [];
+        foreach($langs as $key => $val){
+            $locales[$key] = (array) $val;
+        }
+
+        if(count($locales) > 0){
+            config([
+                'laravellocalization.supportedLocales' => $locales,
+
+                'laravellocalization.useAcceptLanguageHeader' => true,
+
+                'laravellocalization.hideDefaultLocaleInURL' => true
+            ]);
+        }
+
+
+
+        $this->app->bind(
 		    __DIR__.'\Interfaces\PageInterface',
 		    __DIR__.'\Controllers\PageController'
 		);

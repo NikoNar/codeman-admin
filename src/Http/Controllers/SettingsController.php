@@ -66,7 +66,7 @@ class SettingsController extends Controller
                 $updated[] = $all_langs[$key]['code'];
             }
         }
-        Language::wherenotIn('code', $updated)->delete();
+        Language::whereNotIn('code', $updated)->delete();
 
         if($request->has('default_lang')){
             config(['app.locale' => Language::where('id', $request->default_lang)->first()->code]);

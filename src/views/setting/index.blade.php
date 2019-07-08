@@ -38,7 +38,7 @@
 								    <span class="input-group-addon">
 								        <span class="fa fa-home"></span>
 								    </span>
-									{{ Form::select('index', $pages, isset($selected) && $selected != null ? $selected : null) }}
+									{{ Form::select('index', $pages, isset($selected) && $selected != null ? $selected : null, ['placeholder' => 'Please Select']) }}
 								</div>
 					    	</div>
 				    	</div>
