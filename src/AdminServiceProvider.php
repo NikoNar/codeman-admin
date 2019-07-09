@@ -8,7 +8,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Codeman\Admin\Http\Middleware\Admin;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Schema;
 /**
  * Codeman\Admin\
  */
