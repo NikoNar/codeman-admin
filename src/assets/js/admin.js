@@ -435,7 +435,6 @@ $(document).ready(function(){
                 if(data.success == true){
                     $('#category-add-edit').remove();
                     setTimeout(function(){
-                        console.log(data.html);
                         $('body').append(data.html);
                         $('#category-add-edit').modal('show');
                     },1000);
@@ -631,7 +630,6 @@ $(function() {
         if(id && type){
             if(!confirm("translate? All not saved data will be lost!")){
                 e.preventDefault();
-                alert('if');
                 $(this).val(def_lang);
                 $(this).select2('destroy');
                 $(this).select2();
@@ -645,7 +643,7 @@ $(function() {
                 // console.log('/admin/'+type+'/translate/'+id+'/'+lang);
                 // console.log(id, type);
             }
-        }else{
+        } else {
             if(type === 'categories') {
                 $.ajax({
                     type: 'GET',

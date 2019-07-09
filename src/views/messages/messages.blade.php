@@ -29,5 +29,3 @@
 	 <strong> Error !</strong> {!! Session::get('error') !!}</p>
 	</div>
 @endif
-{{-- 
-094 710010 --}}
