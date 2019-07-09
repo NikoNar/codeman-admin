@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Codeman\Admin\Http\Middleware\Admin;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 /**
  * Codeman\Admin\
  */
@@ -92,27 +93,28 @@ class AdminServiceProvider extends ServiceProvider
 
 	public function register()
 	{
-        $langs = DB::table('languages')->select('code', 'name', 'script', 'native', 'regional')->orderBy('order')->get()->keyBy('code');
+        if (!Schema::hasTable('languages')) {
+            $langs = DB::table('languages')->select('code', 'name', 'script', 'native', 'regional')->orderBy('order')->get()->keyBy('code');
 //        config(['app.locale' => 'en']);
-        if(count($langs) > 0){
-            $def_lang = $langs->first()->code;
-            config(['app.locale' => $def_lang]);
+            if(count($langs) > 0){
+                $def_lang = $langs->first()->code;
+                config(['app.locale' => $def_lang]);
+            }
+            $locales = [];
+            foreach($langs as $key => $val){
+                $locales[$key] = (array) $val;
+            }
+
+            if(count($locales) > 0){
+                config([
+                    'laravellocalization.supportedLocales' => $locales,
+
+                    'laravellocalization.useAcceptLanguageHeader' => true,
+
+                    'laravellocalization.hideDefaultLocaleInURL' => true
+                ]);
+            }
         }
-        $locales = [];
-        foreach($langs as $key => $val){
-            $locales[$key] = (array) $val;
-        }
-
-        if(count($locales) > 0){
-            config([
-                'laravellocalization.supportedLocales' => $locales,
-
-                'laravellocalization.useAcceptLanguageHeader' => true,
-
-                'laravellocalization.hideDefaultLocaleInURL' => true
-            ]);
-        }
-
 
 
         $this->app->bind(
