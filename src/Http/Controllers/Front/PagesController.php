@@ -27,10 +27,10 @@ class PagesController extends Controller
 {
 
     /**
-    	* Create a new controller instance.
-    	*
-    	* @return void
-    */
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct(Page $page, Pagemeta $pagemeta)
     {
 
@@ -38,18 +38,18 @@ class PagesController extends Controller
 //        dd(LaravelLocalization::getCurrentLocale());
 //        dd(session()->all(), 'const');
         $this->lang = \App::getLocale();
-    	// $this->lang = 'en';
+        // $this->lang = 'en';
         $this->page = $page;
-    	$this->pagemeta = $pagemeta;
+        $this->pagemeta = $pagemeta;
 //    	dd($this->lang);
     }
 
 
     /**
-    	* Show the application dashboard.
-    	*
-    	* @return \Illuminate\Http\Response
-    */
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index($slug = null)
     {
 //        dd(session()->get('prev_lang'), 'ctrl');
@@ -66,11 +66,15 @@ class PagesController extends Controller
         }
 
         if(!$slug){
-            $pageObject = $this->page->where('language_id', $this_lang_id)->where(function($query) use($index_page_id){
+            $pageObject = $this->page->where('language_id', $this_lang_id)->whereStatus('published')->where(function($query) use($index_page_id){
                 $query->where('id', $index_page_id)->orWhere('parent_lang_id', $index_page_id);
-            })->orWhere(function($query) use($this_lang_id){
-                $query->join('pages as p','pages.parent_lang_id', '=', 'p.parent_lang_id')->where('language_id', $this_lang_id);
-            })->whereStatus('published')->first();
+            })->first();
+            if(!$pageObject){
+                $pageObject = $this->page->where('language_id', $this_lang_id)->whereStatus('published')->where(function($query) use($this_lang_id){
+                    $query->join('pages as p','pages.parent_lang_id', '=', 'p.parent_lang_id')->where('language_id', $this_lang_id);
+                })->first();
+            }
+
         }
 
         if(!$pageObject){
@@ -86,6 +90,7 @@ class PagesController extends Controller
                     })->first();
                 } else {
                     $pageObject = $this->page->where('parent_lang_id', $prevPage->id)->where('language_id', $this_lang_id)->first();
+
                 }
 
                 if($pageObject){
@@ -141,46 +146,47 @@ class PagesController extends Controller
 
 
 
-    	if($pageObject){
-//            if(($pageObject->id == $index_page_id && $slug)  || $pageObject->parent_lang_id === $index_page_id && $slug){
-//                return redirect()->to('/');
-//            }
-                // For making a menu using parent and chiled pages
-	    	// $submenu = $this->page->where('parent_id', $pageObject->id)
-	    	// ->where('lang', $this->lang)
-	    	// ->select('id', 'order', 'title', 'slug', 'parent_id')
-	    	// ->orderBy('order', 'DESC')->get();
+        if($pageObject){
+            $idex = Page::where('id', $index_page_id)->first();
+            if(($pageObject->id == $index_page_id && $slug)  ||  ($pageObject->parent_lang_id == $index_page_id && $slug) || ($pageObject->parent_lang_id === $idex->parent_lang_id && $slug)){
+                return redirect()->to('/');
+            }
+            // For making a menu using parent and chiled pages
+            // $submenu = $this->page->where('parent_id', $pageObject->id)
+            // ->where('lang', $this->lang)
+            // ->select('id', 'order', 'title', 'slug', 'parent_id')
+            // ->orderBy('order', 'DESC')->get();
 
-	    	// $siblingmenu = null;
-	    	// $parentmenu = null;
-	    	// if($pageObject->parent_id){
-		    // 	$siblingmenu = $this->page->where('parent_id', $pageObject->parent_id)
-		    // 	->where('lang', $this->lang)
-		    // 	->select('id', 'order', 'title', 'slug', 'parent_id')
-		    // 	->orderBy('order', 'DESC')->get();
+            // $siblingmenu = null;
+            // $parentmenu = null;
+            // if($pageObject->parent_id){
+            // 	$siblingmenu = $this->page->where('parent_id', $pageObject->parent_id)
+            // 	->where('lang', $this->lang)
+            // 	->select('id', 'order', 'title', 'slug', 'parent_id')
+            // 	->orderBy('order', 'DESC')->get();
 
-		    // 	$parent_page = $this->page->where('id', $pageObject->parent_id)
-		    // 	->where('lang', $this->lang)
-		    // 	->select('id', 'order', 'title', 'slug', 'parent_id')
-		    // 	->orderBy('order', 'DESC')->first();
-		    // 	if(!empty($parent_page) && $parent_page->parent_id != null){
-		    // 		$parentmenu = $this->page->where('parent_id', $parent_page->parent_id)
-			   //  	->where('lang', $this->lang)
-			   //  	->select('id', 'order', 'title', 'slug', 'parent_id')
-			   //  	->orderBy('order', 'DESC')->get();
-		    // 	}
-	    	// }
-	    	// if($siblingmenu != null && !$siblingmenu->isEmpty()){
-	    	// 	if($siblingmenu->count() <= 1){
-	    	// 		$siblingmenu = null;
-	    	// 	}
-	    	// }
-                //END For making a menu using parent and chiled pages
+            // 	$parent_page = $this->page->where('id', $pageObject->parent_id)
+            // 	->where('lang', $this->lang)
+            // 	->select('id', 'order', 'title', 'slug', 'parent_id')
+            // 	->orderBy('order', 'DESC')->first();
+            // 	if(!empty($parent_page) && $parent_page->parent_id != null){
+            // 		$parentmenu = $this->page->where('parent_id', $parent_page->parent_id)
+            //  	->where('lang', $this->lang)
+            //  	->select('id', 'order', 'title', 'slug', 'parent_id')
+            //  	->orderBy('order', 'DESC')->get();
+            // 	}
+            // }
+            // if($siblingmenu != null && !$siblingmenu->isEmpty()){
+            // 	if($siblingmenu->count() <= 1){
+            // 		$siblingmenu = null;
+            // 	}
+            // }
+            //END For making a menu using parent and chiled pages
 
-	    	// if(!$submenu->isEmpty()){
-	    	// 	$pageObject = $this->page->where('slug', $submenu[0]->slug)->whereStatus('published')->first();
-	    	// }
-	    	$pagemetas = null;
+            // if(!$submenu->isEmpty()){
+            // 	$pageObject = $this->page->where('slug', $submenu[0]->slug)->whereStatus('published')->first();
+            // }
+            $pagemetas = null;
             $pagemetas = $this->getPageMetas($pageObject->id);
             if($pagemetas){
                 $pageObject->setAttribute('meta', $pagemetas);
@@ -219,24 +225,24 @@ class PagesController extends Controller
 //            dd(session()->all());
             if ($template && View::exists($template)) {
                 return view($template, [
-                'page' => $pageObject,
-                // 'submenu' => $submenu,
-                // 'siblingmenu' => $siblingmenu,
-                // 'parentmenu' => $parentmenu,
-            ] );
+                    'page' => $pageObject,
+                    // 'submenu' => $submenu,
+                    // 'siblingmenu' => $siblingmenu,
+                    // 'parentmenu' => $parentmenu,
+                ] );
             } else {
 
-            return view('default', [
-                'page' => $pageObject,
-                // 'submenu' => $submenu,
-                // 'siblingmenu' => $siblingmenu,
-                // 'parentmenu' => $parentmenu,
-            ] );
+                return view('default', [
+                    'page' => $pageObject,
+                    // 'submenu' => $submenu,
+                    // 'siblingmenu' => $siblingmenu,
+                    // 'parentmenu' => $parentmenu,
+                ] );
 
             }
-    	}
-    	// return redirect('/');
-    	abort(404);
+        }
+        // return redirect('/');
+        abort(404);
     }
 
     public function home(){
@@ -249,6 +255,6 @@ class PagesController extends Controller
 
     private function getPageMetas($page_id)
     {
-    	return $this->pagemeta->where('page_id', $page_id)->select('key', 'value')->pluck('value', 'key')->toArray();
+        return $this->pagemeta->where('page_id', $page_id)->select('key', 'value')->pluck('value', 'key')->toArray();
     }
 }
