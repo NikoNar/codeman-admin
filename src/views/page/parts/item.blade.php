@@ -16,7 +16,7 @@ if($page->thumbnail != ''){
 		{{ $page->title }}
 	</td>
 	<td>
-	<a href="{!! url(buildUrl($page, array())) !!}" target="_blunk"><i class="fa fa-link"></i> {!! url(buildUrl($page, array())) !!}</a></td>
+	<a href="{!! url($page->language->code.'/'.$page->slug) !!}" target="_blunk"><i class="fa fa-link"></i> {!! url($page->language->code.'/'.$page->slug) !!}</a></td>
 	<td class="text_capitalize">{{ $page->status }}</td>
 	<td>{{ date('m/d/Y g:i A', strtotime($page->created_at)) }}</td>
 	<td>{{ date('m/d/Y g:i A', strtotime($page->updated_at)) }}</td>

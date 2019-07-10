@@ -24,7 +24,7 @@
 			<div class='input-group'>
 			    <span class="input-group-addon">
 			    	@if(isset($page))
-			    		<a href="{!! url(buildUrl($page, array())) !!}" target="_blank">
+			    		<a href="{!! url($page->language->code.'/'.$page->slug) !!}" target="_blank">
 			    			<i class="fa fa-link"></i>
 			    		</a>
 			    	@else
@@ -34,7 +34,7 @@
 			     <span class="input-group-addon no-border-right">
 			        <i>
 			        	@if(isset($page))
-			        		{{ URL::to('/'.buildUrl($page, array(), false)) }}
+							{!! url($page->language->code.'/'.$page->slug) !!}
 			        	@else
 			        		{{ URL::to('/') }}
 			        	@endif

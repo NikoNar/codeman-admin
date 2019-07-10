@@ -214,6 +214,7 @@ class PagesController extends Controller
 //            dd($pageObject->id);
             session()->put('page_id', $pageObject->id);
             session()->put('model_type', 'page');
+//            session()->flush();
             session()->save();
 //            dd(session()->all());
             if ($template && View::exists($template)) {
