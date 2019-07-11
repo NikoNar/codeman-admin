@@ -229,6 +229,8 @@ class PagesController extends Controller
                     // 'submenu' => $submenu,
                     // 'siblingmenu' => $siblingmenu,
                     // 'parentmenu' => $parentmenu,
+
+                    
                 ] );
             } else {
 
