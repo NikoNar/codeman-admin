@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
 	protected $fillable = ['title', 'description', 'order'];
+	protected $table = 'cm_roles';
 
     public function users() {
     	return $this->belongsToMany('Codeman\Admin\Models\User', 'user_role');
