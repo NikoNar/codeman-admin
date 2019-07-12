@@ -175,142 +175,151 @@
             <!-- /.col -->
         </div>
         <!-- /.row -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Google Analytics Reports</h3>
-                        <div class="box-tools pull-right">
 
-                        </div>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <p class="text-center">
-                                    <strong>Users ({!! $dates[0] !!} - {!! $dates[count($dates) - 1] !!}) </strong>
-                                </p>
+{{--    UNCOMENT FOR ANALYTICS--}}
 
-                                <div class="chart">
-                                    <!-- Sales Chart Canvas -->
-                                    {{-- <canvas id="salesChart" width="1526" height="400"></canvas> --}}
-                                    <div class="chart" id="sessionsCharterContainer"
-                                         style="height: 400px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-                                    </div>
-                                </div>
-                                <!-- /.chart-responsive -->
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
-                    </div>
-                    <!-- ./box-body -->
-                    <div class="box-footer">
-                        <div class="row">
-                            <div class="col-sm-3 col-xs-6">
-                                <div class="description-block border-right">
-                                    {{-- <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span> --}}
-                                    <h5 class="description-header">{!! number_format($analyticStats['ga:users']) !!}</h5>
-                                    <span class="description-text"> Users </span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-sm-3 col-xs-6">
-                                <div class="description-block border-right">
-                                    {{-- <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span> --}}
-                                    <h5 class="description-header">{!! number_format($analyticStats['ga:pageviews']) !!}</h5>
-                                    <span class="description-text"> Page views</span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-sm-3 col-xs-6">
-                                <div class="description-block border-right">
-                                    {{-- <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 20%</span> --}}
-                                    <h5 class="description-header">{!! round($analyticStats['ga:bounceRate'],2) !!}
-                                        %</h5>
-                                    <span class="description-text">Bounce Rate</span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-sm-3 col-xs-6">
-                                <div class="description-block">
-                                    {{-- <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> 18%</span> --}}
-                                    <h5 class="description-header">
-                                        {!! number_format(date('i', gmdate($analyticStats['ga:avgSessionDuration']))) !!}
-                                        m
-                                        {!! number_format(date('s', gmdate($analyticStats['ga:avgSessionDuration']))) !!}
-                                        s
-                                    </h5>
-                                    <span class="description-text">Session Duration</span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                        </div>
-                        <!-- /.row -->
-                    </div>
-                    <!-- /.box-footer -->
-                </div>
-                <!-- /.box -->
-            </div>
-            <div class="col-md-8">
-                <section class="connectedSortable ui-sortable">
-                    <!-- Map box -->
-                    <div class="box box-solid bg-light-blue-gradient">
-                        <div class="box-header ui-sortable-handle" style="cursor: move;">
-                            <!-- tools box -->
-                            <div class="pull-right box-tools">
-                                {{-- <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" title="" data-original-title="Date range">
-                                  <i class="fa fa-calendar"></i></button>
-                                <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="" style="margin-right: 5px;" data-original-title="Collapse">
-                                  <i class="fa fa-minus"></i></button> --}}
-                            </div>
-                            <!-- /. tools -->
 
-                            <i class="fa fa-map-marker"></i>
+{{--        <div class="row">--}}
+{{--            <div class="col-md-12">--}}
+{{--                <div class="box">--}}
+{{--                    <div class="box-header with-border">--}}
+{{--                        <h3 class="box-title">Google Analytics Reports</h3>--}}
+{{--                        <div class="box-tools pull-right">--}}
 
-                            <h3 class="box-title">
-                                Visitors by country
-                            </h3>
-                        </div>
-                        <div class="box-body">
-                            <div id="world-map" style="height: 500px; width: 100%;"></div>
-                        </div>
-                        <!-- /.box-body -->
-                    </div>
-                    <!-- /.box -->
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <!-- /.box-header -->--}}
+{{--                    <div class="box-body">--}}
+{{--                        <div class="row">--}}
+{{--                            <div class="col-md-12">--}}
+{{--                                <p class="text-center">--}}
+{{--                                    <strong>Users ({!! $dates[0] !!} - {!! $dates[count($dates) - 1] !!}) </strong>--}}
+{{--                                </p>--}}
 
-                </section>
+{{--                                <div class="chart">--}}
+{{--                                    <!-- Sales Chart Canvas -->--}}
+{{--                                    --}}{{-- <canvas id="salesChart" width="1526" height="400"></canvas> --}}
+{{--                                    <div class="chart" id="sessionsCharterContainer"--}}
+{{--                                         style="height: 400px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <!-- /.chart-responsive -->--}}
+{{--                            </div>--}}
+{{--                            <!-- /.col -->--}}
+{{--                        </div>--}}
+{{--                        <!-- /.row -->--}}
+{{--                    </div>--}}
+{{--                    <!-- ./box-body -->--}}
+{{--                    <div class="box-footer">--}}
+{{--                        <div class="row">--}}
+{{--                            <div class="col-sm-3 col-xs-6">--}}
+{{--                                <div class="description-block border-right">--}}
+{{--                                    --}}{{-- <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span> --}}
+{{--                                    <h5 class="description-header">{!! number_format($analyticStats['ga:users']) !!}</h5>--}}
+{{--                                    <span class="description-text"> Users </span>--}}
+{{--                                </div>--}}
+{{--                                <!-- /.description-block -->--}}
+{{--                            </div>--}}
+{{--                            <!-- /.col -->--}}
+{{--                            <div class="col-sm-3 col-xs-6">--}}
+{{--                                <div class="description-block border-right">--}}
+{{--                                    --}}{{-- <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span> --}}
+{{--                                    <h5 class="description-header">{!! number_format($analyticStats['ga:pageviews']) !!}</h5>--}}
+{{--                                    <span class="description-text"> Page views</span>--}}
+{{--                                </div>--}}
+{{--                                <!-- /.description-block -->--}}
+{{--                            </div>--}}
+{{--                            <!-- /.col -->--}}
+{{--                            <div class="col-sm-3 col-xs-6">--}}
+{{--                                <div class="description-block border-right">--}}
+{{--                                    --}}{{-- <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 20%</span> --}}
+{{--                                    <h5 class="description-header">{!! round($analyticStats['ga:bounceRate'],2) !!}--}}
+{{--                                        %</h5>--}}
+{{--                                    <span class="description-text">Bounce Rate</span>--}}
+{{--                                </div>--}}
+{{--                                <!-- /.description-block -->--}}
+{{--                            </div>--}}
+{{--                            <!-- /.col -->--}}
+{{--                            <div class="col-sm-3 col-xs-6">--}}
+{{--                                <div class="description-block">--}}
+{{--                                    --}}{{-- <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> 18%</span> --}}
+{{--                                    <h5 class="description-header">--}}
+{{--                                        {!! number_format(date('i', gmdate($analyticStats['ga:avgSessionDuration']))) !!}--}}
+{{--                                        m--}}
+{{--                                        {!! number_format(date('s', gmdate($analyticStats['ga:avgSessionDuration']))) !!}--}}
+{{--                                        s--}}
+{{--                                    </h5>--}}
+{{--                                    <span class="description-text">Session Duration</span>--}}
+{{--                                </div>--}}
+{{--                                <!-- /.description-block -->--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <!-- /.row -->--}}
+{{--                    </div>--}}
+{{--                    <!-- /.box-footer -->--}}
+{{--                </div>--}}
+{{--                <!-- /.box -->--}}
+{{--            </div>--}}
+{{--            <div class="col-md-8">--}}
+{{--                <section class="connectedSortable ui-sortable">--}}
+{{--                    <!-- Map box -->--}}
+{{--                    <div class="box box-solid bg-light-blue-gradient">--}}
+{{--                        <div class="box-header ui-sortable-handle" style="cursor: move;">--}}
+{{--                            <!-- tools box -->--}}
+{{--                            <div class="pull-right box-tools">--}}
+{{--                                --}}{{-- <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" title="" data-original-title="Date range">--}}
+{{--                                  <i class="fa fa-calendar"></i></button>--}}
+{{--                                <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="" style="margin-right: 5px;" data-original-title="Collapse">--}}
+{{--                                  <i class="fa fa-minus"></i></button> --}}
+{{--                            </div>--}}
+{{--                            <!-- /. tools -->--}}
 
-            </div>
-            <div class="col-md-4">
-                <div class="box box-solid bg-teal-gradient">
-                    <div class="box-header ui-sortable-handle" style="cursor: move;">
-                        <i class="fa fa-th"></i>
+{{--                            <i class="fa fa-map-marker"></i>--}}
 
-                        <h3 class="box-title">Percentage of visitors by countries</h3>
+{{--                            <h3 class="box-title">--}}
+{{--                                Visitors by country--}}
+{{--                            </h3>--}}
+{{--                        </div>--}}
+{{--                        <div class="box-body">--}}
+{{--                            <div id="world-map" style="height: 500px; width: 100%;"></div>--}}
+{{--                        </div>--}}
+{{--                        <!-- /.box-body -->--}}
+{{--                    </div>--}}
+{{--                    <!-- /.box -->--}}
 
-                        <div class="box-tools pull-right">
-                            {{-- <button type="button" class="btn bg-teal btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn bg-teal btn-sm" data-widget="remove"><i class="fa fa-times"></i>
-                            </button> --}}
-                        </div>
-                    </div>
-                    <div class="box-body border-radius-none">
-                        <div class="chart" id="countriesSessionsPersentBarContainer"
-                             style="height: 500px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-                        </div>
-                    </div>
-                    <!-- /.box-body -->
-                </div>
-            </div>
-            <!-- /.col -->
-        </div>
-        @endsection
+{{--                </section>--}}
+
+{{--            </div>--}}
+{{--            <div class="col-md-4">--}}
+{{--                <div class="box box-solid bg-teal-gradient">--}}
+{{--                    <div class="box-header ui-sortable-handle" style="cursor: move;">--}}
+{{--                        <i class="fa fa-th"></i>--}}
+
+{{--                        <h3 class="box-title">Percentage of visitors by countries</h3>--}}
+
+{{--                        <div class="box-tools pull-right">--}}
+{{--                            --}}{{-- <button type="button" class="btn bg-teal btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>--}}
+{{--                            </button>--}}
+{{--                            <button type="button" class="btn bg-teal btn-sm" data-widget="remove"><i class="fa fa-times"></i>--}}
+{{--                            </button> --}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="box-body border-radius-none">--}}
+{{--                        <div class="chart" id="countriesSessionsPersentBarContainer"--}}
+{{--                             style="height: 500px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <!-- /.box-body -->--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <!-- /.col -->--}}
+{{--        </div>--}}
+
+
+
+    {{--    UNCOMENT FOR ANALYTICS-- END}}
+
+    @endsection
 
         @section('script')
             <script>

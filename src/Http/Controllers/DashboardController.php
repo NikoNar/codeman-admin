@@ -14,42 +14,47 @@ use Codeman\Admin\Models\Service;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use \Spatie\Analytics\Analytics;
-use \Spatie\Analytics\Period;
+//use \Spatie\Analytics\Analytics;  //////////////////////////////////////////////////////////UNCOMENT FOR ANALYTICS
+//use \Spatie\Analytics\Period;//////////////////////////////////////////////////////////UNCOMENT FOR ANALYTICS 
 use \Carbon\Carbon;
 // use App\Http\Controllers\Admin\JoomagREST;
 
 class DashboardController extends Controller
 {
-	public function __construct(Analytics $analytics){
-        // $this->middleware('admin');
-        $this->analytics = $analytics;
-	}
+//	public function __construct(Analytics $analytics){   //////////////////////////////////////////////////////////UNCOMENT FOR ANALYTICS
+//        // $this->middleware('admin');
+//        $this->analytics = $analytics;
+//	}
 
     public function index() {
         //retrieve visitors and pageview data for the current day and the last seven days
-        $analyticsData = $this->analytics->fetchVisitorsAndPageViews(Period::days(30));
+//        $analyticsData = $this->analytics->fetchVisitorsAndPageViews(Period::days(30)); //////////////////////////////////////////////////////////UNCOMENT FOR ANALYTICS
 
         //retrieve visitors and pageviews since the 6 months ago
         // $analyticsData = $this->analytics->fetchVisitorsAndPageViews(Period::months(1));
 
-        //retrieve sessions and pageviews with yearMonth dimension since 1 year ago 
-        $analyticStats = $this->analytics->performQuery(
-            Period::days(30),
-            'ga:sessions',
-            [
-                'metrics' => 'ga:users, ga:sessions, ga:bounceRate, ga:avgSessionDuration, ga:pageviews',
-            ]
-        );
-        // dd($analyticStats);
-        $analyticCountryStats = $this->analytics->performQuery(
-            Period::days(30),
-            'ga:sessions',
-            [
-                'metrics' => 'ga:sessions',
-                'dimensions' => 'ga:countryIsoCode, ga:country'
-            ]
-        );
+        //retrieve sessions and pageviews with yearMonth dimension since 1 year ago
+
+//        //////////////////////////////////////////////////////////UNCOMENT FOR ANALYTICS
+//        $analyticStats = $this->analytics->performQuery(
+//            Period::days(30),
+//            'ga:sessions',
+//            [
+//                'metrics' => 'ga:users, ga:sessions, ga:bounceRate, ga:avgSessionDuration, ga:pageviews',
+//            ]
+//        );
+//        // dd($analyticStats);
+//        $analyticCountryStats = $this->analytics->performQuery(
+//            Period::days(30),
+//            'ga:sessions',
+//            [
+//                'metrics' => 'ga:sessions',
+//                'dimensions' => 'ga:countryIsoCode, ga:country'
+//            ]
+//        );
+
+
+
         // $analytics_results = $this->parseResults($analyticsData, 30);
         $dates = [];
         $visitors = [];
@@ -58,19 +63,21 @@ class DashboardController extends Controller
         $countriesSessions = [];
         $countriesSessionsPersent = [];
 
-        foreach ($analyticsData as $key => $value) {
-            $date  = new Carbon($value['date']);
-            $sessionsCharterData[$key]['date'] = $date->format('Y-m-d'); 
-            $sessionsCharterData[$key]['visitors'] = $value['visitors']; 
-            $dates[] = $date->format('F d');
-            // $visitors[] = $value['visitors'];
-            // $pageViews[] = $value['pageViews'];
-        }
-        foreach ($analyticCountryStats as $key => $value) {
-            $countriesSessions[$value[0]] = $value[2]; 
-            $countriesSessionsPersent[$key]['country'] = $value[1]; 
-            $countriesSessionsPersent[$key]['persent'] = number_format($value[2]*100/$analyticCountryStats->totalsForAllResults['ga:sessions'], 2, '.', ''); 
-        }
+//        //////////////////////////////////////////////////////////UNCOMENT FOR ANALYTICS
+
+//        foreach ($analyticsData as $key => $value) {
+//            $date  = new Carbon($value['date']);
+//            $sessionsCharterData[$key]['date'] = $date->format('Y-m-d');
+//            $sessionsCharterData[$key]['visitors'] = $value['visitors'];
+//            $dates[] = $date->format('F d');
+//            // $visitors[] = $value['visitors'];
+//            // $pageViews[] = $value['pageViews'];
+//        }
+//        foreach ($analyticCountryStats as $key => $value) {
+//            $countriesSessions[$value[0]] = $value[2];
+//            $countriesSessionsPersent[$key]['country'] = $value[1];
+//            $countriesSessionsPersent[$key]['persent'] = number_format($value[2]*100/$analyticCountryStats->totalsForAllResults['ga:sessions'], 2, '.', '');
+//        }
         // dd($sessionsCharterData);
 
         $default_lang = Language::orderBy('order')->first();
