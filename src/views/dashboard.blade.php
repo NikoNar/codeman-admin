@@ -326,11 +326,11 @@
                         {{-- // let dates = {!! json_encode($dates) !!}; --}}
                         {{-- // let pageview = {!! json_encode($pageviews) !!}; --}}
                         {{-- // let visitors = {!! json_encode($visitors) !!}; --}}
-                let sessionsCharterData = {!! json_encode($sessionsCharterData) !!};
-                let countriesSessions = {!! json_encode($countriesSessions) !!};
-                let countriesSessionsPersent = {!! json_encode($countriesSessionsPersent) !!};
+{{--                let sessionsCharterData = {!! json_encode($sessionsCharterData) !!};--}}
+{{--                let countriesSessions = {!! json_encode($countriesSessions) !!};--}}
+{{--                let countriesSessionsPersent = {!! json_encode($countriesSessionsPersent) !!};--}}
 
-            </script>
+{{--            </script>--}}
 
 
             <script src="{!! asset('admin-panel/bower_components/chart.js/Chart.js' ) !!}"></script>

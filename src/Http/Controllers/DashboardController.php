@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 //use \Spatie\Analytics\Analytics;  //////////////////////////////////////////////////////////UNCOMENT FOR ANALYTICS
-//use \Spatie\Analytics\Period;//////////////////////////////////////////////////////////UNCOMENT FOR ANALYTICS 
+//use \Spatie\Analytics\Period;//////////////////////////////////////////////////////////UNCOMENT FOR ANALYTICS
 use \Carbon\Carbon;
 // use App\Http\Controllers\Admin\JoomagREST;
 

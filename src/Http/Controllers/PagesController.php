@@ -235,13 +235,17 @@ class PagesController extends Controller
         $templates = Module::where('module_type', 'template')->pluck('title', 'id')->toArray();
 		$page = $pageInterface->getById($id);
         $languages = Language::orderBy('order')->pluck('name','id')->toArray();
-		
+
 		if($page->template != null){
 			$template = $page->template;
+            $model = Module::where('id', $template)->first();
+        } elseif(request()->has('template')) {
+            $template = request()->get('template');
             $model = Module::where('id', $template)->first();
         } else {
 		    $model = null;
         }
+
         if($model){
             $add_opts = json_decode($model->additional_options);
             $additional_options = [];
@@ -254,17 +258,17 @@ class PagesController extends Controller
             $additional_options = [];
         }
 
-		$pagemetas = $pageInterface->getPageMetas($id);
-		$decoded_pagemetas = [];
-		foreach($pagemetas as $key => $value) {
+        $pagemetas = $pageInterface->getPageMetas($id);
+        $decoded_pagemetas = [];
+        foreach($pagemetas as $key => $value) {
 			if(isJson($value)){
-
 				$decoded_pagemetas[$key] = json_decode($value, true); 
 			} else {
 				$decoded_pagemetas[$key] = $value; 
 			}
 		}
-		$page->setAttribute('meta', $decoded_pagemetas);
+
+        $page->setAttribute('meta', $decoded_pagemetas);
 
         if(!$model || null == $relation_ids = json_decode($model->relations)){
             $slugs = [];
@@ -272,16 +276,22 @@ class PagesController extends Controller
             $selected_attachments = [];
 
         }else{
-            $meta_attachments = $decoded_pagemetas['attachments'];
-            $selected_attachments = [];
-            foreach($meta_attachments as $key => $val){
-                if($val != "all" || $val != ""){
-                    $selected_attachments = array_merge($selected_attachments, explode(',', $val));
+            if(key_exists('attachments', $decoded_pagemetas)){
+                $meta_attachments = $decoded_pagemetas['attachments'];
+                $selected_attachments = [];
+                foreach($meta_attachments as $key => $val){
+                    if($val != "all" || $val != ""){
+                        $selected_attachments = array_merge($selected_attachments, explode(',', $val));
+                    }
                 }
+                $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
+                $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->where('language_id', $page->language_id)->get();
+                $attachments = $relations->groupBy('type')->toArray();
+            } else {
+                $attachments = null;
+                $selected_attachments = null;
             }
-            $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
-            $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->where('language_id', $page->language_id)->get();
-            $attachments = $relations->groupBy('type')->toArray();
+
         }
 //		$pagemetas = $decoded_pagemetas;
 //		$page->setAttribute('meta', $decoded_pagemetas);
