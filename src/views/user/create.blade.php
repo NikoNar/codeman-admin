@@ -19,12 +19,32 @@
 @endsection
 @section('content')
 	<div class="box">
+		@isset($user)
+			<div class="box-header with-border">
+				<h3 class="box-title">Edit user</h3>
+
+				<a href="{{ route('user.create') }}" class="btn btn-primary btn-flat pull-right ">Add New</a>
+				@if(isset($parent_lang_id) || isset($user) && $user->lang == 'arm')
+					@if(isset($parent_lang_id))
+						<a href="{{ route('user.edit', $parent_lang_id) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to English</a>
+					@else
+						<a href="{{ route('user.edit', $user->parent_lang_id) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to English</a>
+					@endif
+				@else
+
+				@endif
+			</div>
+		@else
 	    <div class="box-header with-border">
 	        <h3 class="box-title">Add New User</h3>
 	    </div>
+		@endif
 	    <div class="box-body">
 	        @include('admin-panel::user.parts.forms._create_edit_form')
 	    </div>
+
+
+
 	    <!-- /.box-body -->
 	</div>
 @endsection
@@ -97,9 +117,9 @@
 
 	  			$('input[name="password"]').val(password);
 	  		});
-	  	});
-	</script>
-	
 
+
+
+	  	});
 	</script>
 @endsection()

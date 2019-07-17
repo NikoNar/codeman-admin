@@ -82,7 +82,7 @@
  		    <span class="input-group-addon">
  		        <span class="fa fa-user"></span>
  		    </span>
- 			{!! Form::text('role', null, ['class' => 'form-control']) !!}
+			{!! Form::select('role', ['Admin' => 'Admin', '' => 'Regular'], null, ['class' => 'form-control select2']); !!}
  		</div>
  	</div>
 
@@ -123,6 +123,43 @@
 		@endif
 	</div>
 </div>
-
+<div class="col-md-9 border-right">
+	<div class="form-group">
+		@isset($modules)
+			<table style="width: 100%;" class="table table-striped">
+				<tbody>
+				@foreach($modules as $module)
+						<tr>
+							<td>
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input module">
+									<label class="custom-control-label">{{$module}}</label>
+								</div>
+							</td>
+							<td>
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input" name="{{$module}}-create">
+									<label class="custom-control-label">{{$module}}-create</label>
+								</div>
+							</td>
+							<td>
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input" name="{{$module}}-edit">
+									<label class="custom-control-label">{{$module}}-edit</label>
+								</div>
+							</td>
+							<td>
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input" name="{{$module}}-delete">
+									<label class="custom-control-label">{{$module}}-delete</label>
+								</div>
+							</td>
+						</tr>
+				@endforeach
+				</tbody>
+			</table>
+		@endif
+	</div>
+</div>
 		
 {!! Form::close() !!}

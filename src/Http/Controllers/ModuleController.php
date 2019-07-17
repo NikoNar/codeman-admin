@@ -9,6 +9,11 @@ use Illuminate\Support\Str;
 
 class ModuleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:SuperAdmin');
+
+    }
     /**
      * Display a listing of the resource.
      *

@@ -81,6 +81,9 @@ class AdminServiceProvider extends ServiceProvider
 		$router = $this->app['router'];
     	$router->pushMiddlewareToGroup('admin', Http\Middleware\Admin::class);
     	$router->pushMiddlewareToGroup('language', Http\Middleware\Language::class);
+        $router->aliasMiddleware('role' , \Spatie\Permission\Middlewares\RoleMiddleware::class);
+        $router->aliasMiddleware('permission' , \Spatie\Permission\Middlewares\PermissionMiddleware::class);
+        $router->aliasMiddleware('role_or_permission' , \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class);
   //       $this->app->singleton('Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
 		// function($app){
   //           return  new Admin($app);

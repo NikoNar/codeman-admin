@@ -2,6 +2,7 @@
 
 namespace Codeman\Admin\Http\Controllers;
 
+use Codeman\Admin\Models\Module;
 use Illuminate\Http\Request;
 use Codeman\Admin\Http\Requests\UserRequest;
 use Codeman\Admin\Services\CRUDService;
@@ -47,8 +48,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        $modules = Module::pluck('slug')->toArray();
+        return view('admin-panel::user.create', compact('modules'));
 
-        return view('admin-panel::user.create');
 
     }
 
@@ -60,7 +62,7 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        // dd($request->all());
+//        dd($request->all());
         $profile_pic_filename = Str::random(32).'.png';
         $profile_pic = Avatar::create($request->name)->save(public_path().'/images/users/'.$profile_pic_filename);
         $user = new User;
@@ -69,6 +71,9 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = \Hash::make($request->password);
         $user->save();
+        if($request->role){
+            $user->assignRole($request->role);
+        }
         return redirect()->route('user.index')->with('success', 'User Created Successfully.');
     }
 
@@ -92,7 +97,7 @@ class UserController extends Controller
     public function edit($id)
     {
         
-        return view('admin-panel::user.edit', [ 
+        return view('admin-panel::user.create_edit', [
             'user' => $this->CRUD->getById($id),
             // 'categories' => Category::where('type', 'User')->get()
         ]);
@@ -144,7 +149,7 @@ class UserController extends Controller
         // dd($parent_lang_id);
         if($translate)
         {
-            return view('admin-panel::user.edit', [
+            return view('admin-panel::user.create_edit', [
                 'user' => $translate,
                 'parent_lang_id' => $parent_lang_id,
                 'categories' => Category::where('type', 'User')->get(),
