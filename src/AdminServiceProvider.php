@@ -48,6 +48,10 @@ class AdminServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->publishes([
+            __DIR__.'/config/auth.php' => config_path('auth.php'),
+        ], 'config');
+
+        $this->publishes([
             __DIR__.'/config/analytics.php' => config_path('analytics.php'),
         ], 'config');
 			

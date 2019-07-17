@@ -5,11 +5,12 @@ namespace Codeman\Admin\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable;
-
+    use Notifiable, HasRoles;
+    protected $guard = 'admin';
 
     // protected $fillable = [     // NOT NEEDED FOR SEED
     //         'name' ,
@@ -19,34 +20,34 @@ class User extends Authenticatable
     //         'remember_token',
     // ];
 
-    public function roles() {
-        return $this->belongsToMany('Codeman\Admin\Models\Role', 'user_role');
-    }
-
-
-
-    public function hasAnyRole($roles) {
-
-        if(is_array($roles)) {
-            foreach ($roles as $role) {
-                if($this->hasRole($role)){
-                    return true;
-                }
-            }
-        } else {
-            if($this->hasRole($roles)){
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    public function hasRole($role) {
-        if($this->roles()->where('title', $role)->first()) {
-            return true;
-        }
-         return false;
-    }
+//    public function roles() {
+//        return $this->belongsToMany('Codeman\Admin\Models\Role', 'user_role');
+//    }
+//
+//
+//
+//    public function hasAnyRole($roles) {
+//
+//        if(is_array($roles)) {
+//            foreach ($roles as $role) {
+//                if($this->hasRole($role)){
+//                    return true;
+//                }
+//            }
+//        } else {
+//            if($this->hasRole($roles)){
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
+//
+//
+//    public function hasRole($role) {
+//        if($this->roles()->where('title', $role)->first()) {
+//            return true;
+//        }
+//         return false;
+//    }
 }

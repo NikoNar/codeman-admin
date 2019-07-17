@@ -40,13 +40,16 @@
                             <i class="fa fa-plus"></i> Add New
                         </a>
                     </li>
+                    @role('SuperAdmin')
                     <li class="@if(Request::is('admin/pages/templates')) active @endif">
                         <a href="{{route('pages.templates')}}">
                             <i class="fa fa-wpforms"></i> Templates
                         </a>
                     </li>
+                    @endrole
                 </ul>
             </li>
+            @role('SuperAdmin')
             <li class="treeview @if(Request::is('admin/modules*')) active @endif">
                 <a href="#">
                     <i class="fa fa-database"></i>
@@ -65,6 +68,7 @@
                     </li>
                 </ul>
             </li>
+            @endrole
             @if(isset($modules) && count($modules) > 0)
                 <hr>
             @foreach($modules as $key => $module)
@@ -210,6 +214,7 @@
 {{--               </ul>--}}
 {{--           </li>--}}
             <hr>
+            @role('SuperAdmin')
            <li class="treeview @if(Request::is('admin/users*')) active @endif">
                 <a href="#">
                     <i class="fa fa-users"></i>
@@ -233,6 +238,7 @@
                     </li>
                 </ul>
             </li>
+            @endrole
 
             <li class="@if(Request::is('admin/menus*')) active @endif">
                 <a href="{!! route('menu-index') !!}">

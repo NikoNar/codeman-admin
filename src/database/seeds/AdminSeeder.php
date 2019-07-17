@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 use Avatar;
 use Illuminate\Support\Str;
 use Codeman\Admin\Models\User;
-use Codeman\Admin\Models\Role;
 
 class AdminSeeder extends Seeder
 {
@@ -55,14 +54,33 @@ class AdminSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        $role = Role::create([
-            'title' =>'SuperAdmin',
-            'description' => 'Has full access to any resource',
+        DB::table('users')->insert([
+            'name' =>'Admin',
+            'email' => 'admin@codeman.am',
+            'profile_pic' => 'aa.png',
+            'email_verified_at' => now(),
+            'password' => bcrypt('nimda123'),
+            'remember_token' => str_random(10),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
 
-        $user = User::whereEmail('superadmin@codeman.am')->first();
-        $user->roles()->attach($role);
+        if(null == \Spatie\Permission\Models\Role::where('name', 'SuperAdmin')->first()){
+            $role = \Spatie\Permission\Models\Role::create(['name' => 'SuperAdmin']);
+        }
+
+        if(null == \Spatie\Permission\Models\Role::where('name', 'Admin')->first()){
+            $role = \Spatie\Permission\Models\Role::create(['name' => 'Admin']);
+        }
+
+
+
+
+        $superadmin = User::whereEmail('superadmin@codeman.am')->first();
+        $admin = User::whereEmail('admin@codeman.am')->first();
+        $superadmin->assignRole('SuperAdmin');
+        $admin->assignRole('Admin');
 
         // DB::table('user_role')->insert([
         //     'user_id' => $user_id,

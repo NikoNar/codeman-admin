@@ -4,6 +4,7 @@ namespace Codeman\Admin\Http\Controllers;
 
 use Codeman\Admin\Models\Module;
 use Codeman\Admin\Models\Resource;
+use Codeman\Admin\Models\User;
 use Illuminate\Http\Request;
 use Codeman\Admin\Http\Requests\PageRequest;
 use Codeman\Admin\Http\Controllers\Controller;
@@ -12,6 +13,9 @@ use Codeman\Admin\Interfaces\PageInterface;
 use Codeman\Admin\Models\Page;
 use Codeman\Admin\Models\Language;
 use Illuminate\Support\Facades\Response;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+
 
 // use Settings;
 
@@ -27,7 +31,7 @@ class PagesController extends Controller
     public function __construct(Page $model)
     {
     	// $this->settings = $settings;
-    	// $this->middleware('admin');
+//    	 $this->middleware('auth:admin');
     	$this->CRUD = new CRUDService($model);
     	$this->model = $model;
         $this->languages = Language::orderBy('order')->pluck('name','id')->toArray();
@@ -40,7 +44,8 @@ class PagesController extends Controller
        */
     public function index()
     {
-    	return view('admin-panel::page.index', ['pages' => $this->CRUD->getAll() , 'dates' => $this->getDatesOfResources($this->model), 'languages' => $this->languages]);
+
+        return view('admin-panel::page.index', ['pages' => $this->CRUD->getAll() , 'dates' => $this->getDatesOfResources($this->model), 'languages' => $this->languages]);
     }
 
 	/**
