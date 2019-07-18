@@ -33,7 +33,6 @@ class PagesController extends Controller
      */
     public function __construct(Page $page, Pagemeta $pagemeta)
     {
-
 //        \App::setLocale('hy');
 //        dd(LaravelLocalization::getCurrentLocale());
 //        dd(session()->all(), 'const');
@@ -147,6 +146,7 @@ class PagesController extends Controller
 
 
         if($pageObject){
+//            dd($pageObject);
             $idex = Page::where('id', $index_page_id)->first();
             if(($pageObject->id == $index_page_id && $slug)  ||  ($pageObject->parent_lang_id == $index_page_id && $slug) || ($pageObject->parent_lang_id === $idex->parent_lang_id && $slug)){
                 return redirect()->to('/');

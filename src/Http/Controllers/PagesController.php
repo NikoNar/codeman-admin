@@ -55,6 +55,9 @@ class PagesController extends Controller
 	*/
 	public function create($lang = null, PageInterface $pageInterface)
 	{
+        if(!auth()->user()->can('create-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
 
 		$template = null;
         $languages = Language::orderBy('order')->pluck('name','id')->toArray();
@@ -112,6 +115,9 @@ class PagesController extends Controller
 	{
 		// $this->authorize('create', $this->model);
 //        dd($request->all());
+        if(!auth()->user()->can('create-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
 
         $inputs = $pageInterface->getMaxOrderNumber($request->all());
 //        dd('store');
@@ -141,6 +147,9 @@ class PagesController extends Controller
 	public function translate($id, $lang, PageInterface $pageInterface)
 	{
 
+        if(!auth()->user()->can('edit-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
 
         $template = null;
         $templates = Module::where('module_type', 'template')->pluck('title', 'id')->toArray();
@@ -236,6 +245,10 @@ class PagesController extends Controller
 	*/
 	public function edit($id, PageInterface $pageInterface)
 	{
+
+        if(!auth()->user()->can('edit-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
 		$template = null;
         $templates = Module::where('module_type', 'template')->pluck('title', 'id')->toArray();
 		$page = $pageInterface->getById($id);
@@ -328,6 +341,9 @@ class PagesController extends Controller
 //		 dd(request()->all());
 
 //        dd('update');
+        if(!auth()->user()->can('edit-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
 		
 		if(null != $page = $pageInterface->update($id, $request->all())){
 			if($request->has('meta'))
@@ -348,6 +364,9 @@ class PagesController extends Controller
 	*/
 	public function destroy($id, PageInterface $pageInterface)
 	{
+        if(!auth()->user()->can('delete-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
 		if($pageInterface->destroy($id)){
 			return redirect()->back()->with('success', 'Page Successfully Deleted.');
 		}

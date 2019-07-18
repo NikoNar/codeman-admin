@@ -73,12 +73,12 @@ class AdminServiceProvider extends ServiceProvider
 		AliasLoader::getInstance()->alias( 'Avatar' , 'Laravolt\Avatar\Facade');
 		AliasLoader::getInstance()->alias( 'Menu' , 'Codeman\Admin\Menu\Facades\Menu');
 
-        
-
-        
 
 
-		$router = $this->app['router'];
+
+
+
+        $router = $this->app['router'];
     	$router->pushMiddlewareToGroup('admin', Http\Middleware\Admin::class);
     	$router->pushMiddlewareToGroup('language', Http\Middleware\Language::class);
         $router->aliasMiddleware('role' , \Spatie\Permission\Middlewares\RoleMiddleware::class);

@@ -74,15 +74,17 @@
 	</div> -->
 </div>
 <div class="col-md-3">
- 	
 
+    @php
+        $role =(isset($user) && $user->hasRole('Admin'))? 'Admin' : 'Regular';
+    @endphp
  	<div class="form-group">
  		{!! Form::label('role', 'Role') !!}
  		<div class='input-group'>
  		    <span class="input-group-addon">
  		        <span class="fa fa-user"></span>
  		    </span>
-			{!! Form::select('role', ['Admin' => 'Admin', '' => 'Regular'], null, ['class' => 'form-control select2']); !!}
+			{!! Form::select('role',  ['Admin' => 'Admin', 'Regular' => 'Regular'], $role, ['class' => 'form-control select2']); !!}
  		</div>
  	</div>
 
@@ -126,38 +128,58 @@
 <div class="col-md-9 border-right">
 	<div class="form-group">
 		@isset($modules)
-			<table style="width: 100%;" class="table table-striped">
+			<table style="width: 100%; @if($role == "Admin") display:none @endif" class="table table-striped permissions">
 				<tbody>
+
+                <tr>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <label class="custom-control-label"><i class="fa fa-check"></i><input type="checkbox" class="custom-control-input module"><span class="text-capitalize ">Pages</span></label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <label class="custom-control-label"><input type="checkbox" class="custom-control-input option" name="create-page" @if(isset($user) && $user->hasPermissionTo('create-page'))checked @endif>create</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <label class="custom-control-label"><input type="checkbox" class="custom-control-input option" name="edit-page" @if(isset($user) && $user->hasPermissionTo('edit-page'))checked @endif>edit</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <label class="custom-control-label"><input type="checkbox" class="custom-control-input option" name="delete-page"@if(isset($user) && $user->hasPermissionTo('delete-page'))checked @endif>delete</label>
+                        </div>
+                    </td>
+                </tr>
 				@foreach($modules as $module)
 						<tr>
 							<td>
 								<div class="custom-control custom-checkbox">
-									<input type="checkbox" class="custom-control-input module">
-									<label class="custom-control-label">{{$module}}</label>
+									<label class="custom-control-label"><i class="fa fa-check"></i><input type="checkbox" class="custom-control-input module"><span class="text-capitalize ">{{$module}}</span></label>
 								</div>
 							</td>
 							<td>
 								<div class="custom-control custom-checkbox">
-									<input type="checkbox" class="custom-control-input" name="{{$module}}-create">
-									<label class="custom-control-label">{{$module}}-create</label>
+									<label class="custom-control-label"><input type="checkbox" class="custom-control-input option" name="create-{{$module}}" @if(isset($user) && $user->hasPermissionTo('create-'.$module))checked @endif>create</label>
 								</div>
 							</td>
 							<td>
 								<div class="custom-control custom-checkbox">
-									<input type="checkbox" class="custom-control-input" name="{{$module}}-edit">
-									<label class="custom-control-label">{{$module}}-edit</label>
+									<label class="custom-control-label"><input type="checkbox" class="custom-control-input option" name="edit-{{$module}}" @if(isset($user) && $user->hasPermissionTo('edit-'.$module))checked @endif>edit</label>
 								</div>
 							</td>
 							<td>
 								<div class="custom-control custom-checkbox">
-									<input type="checkbox" class="custom-control-input" name="{{$module}}-delete">
-									<label class="custom-control-label">{{$module}}-delete</label>
+									<label class="custom-control-label"><input type="checkbox" class="custom-control-input option" name="delete-{{$module}}" @if(isset($user) && $user->hasPermissionTo("delete-".$module))checked @endif>delete</label>
 								</div>
 							</td>
 						</tr>
 				@endforeach
 				</tbody>
 			</table>
+            {!! Form::hidden('permissions',null, ['id' => "permissions" ]) !!}
 		@endif
 	</div>
 </div>

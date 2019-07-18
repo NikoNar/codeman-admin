@@ -12,13 +12,13 @@ class User extends Authenticatable
     use Notifiable, HasRoles;
     protected $guard = 'admin';
 
-    // protected $fillable = [     // NOT NEEDED FOR SEED
-    //         'name' ,
-    //         'email',
-    //         'email_verified_at',
-    //         'password',
-    //         'remember_token',
-    // ];
+     protected $fillable = [     // NOT NEEDED FOR SEED
+             'name' ,
+             'email',
+             'email_verified_at',
+             'password',
+             'remember_token',
+     ];
 
 //    public function roles() {
 //        return $this->belongsToMany('Codeman\Admin\Models\Role', 'user_role');

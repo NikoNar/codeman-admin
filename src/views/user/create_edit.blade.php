@@ -118,8 +118,32 @@
 	  			$('input[name="password"]').val(password);
 	  		});
 
-
-
+	 		$('body').off('change', '#role').on('change', '#role', function(){
+	 			if($(this).val() != 'Admin'){
+	 				$('.permissions').show();
+				} else {
+					$('.permissions').hide();
+				}
+			});
+			$('body').off('change', 'input.module').on('change', 'input.module', function(){
+				if($(this).is(":checked")){
+					$(this).closest('tr').find('input[type = "checkbox"]').prop('checked', true);
+				} else {
+					$(this).closest('tr').find('input[type = "checkbox"]').prop('checked', false);
+				}
+			})
+			$('body').off('submit', 'form').on('submit', 'form', function(e){
+				e.preventDefault();
+				var permissions = [];
+				$('.option').each(function(){
+					if($(this).is(':checked')){
+						permissions.push($(this).attr('name'));
+					}
+				});
+				permissions = JSON.stringify(permissions);
+				$('#permissions').val(permissions);
+				$(this)[0].submit();
+			})
 	  	});
 	</script>
 @endsection()

@@ -12,6 +12,8 @@ use Codeman\Admin\Models\Category;
 use Illuminate\Support\Facades\Response;
 use Avatar;
 use Illuminate\Support\Str;
+
+
 class UserController extends Controller
 {
 
@@ -49,7 +51,7 @@ class UserController extends Controller
     public function create()
     {
         $modules = Module::pluck('slug')->toArray();
-        return view('admin-panel::user.create', compact('modules'));
+        return view('admin-panel::user.create_edit', compact('modules'));
 
 
     }
@@ -62,7 +64,6 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-//        dd($request->all());
         $profile_pic_filename = Str::random(32).'.png';
         $profile_pic = Avatar::create($request->name)->save(public_path().'/images/users/'.$profile_pic_filename);
         $user = new User;
@@ -74,6 +75,13 @@ class UserController extends Controller
         if($request->role){
             $user->assignRole($request->role);
         }
+        if($request->permissions){
+            $permissions = json_decode($request->permissions);
+            foreach($permissions as $permission){
+                $user->givePermissionTo($permission);
+            }
+        }
+
         return redirect()->route('user.index')->with('success', 'User Created Successfully.');
     }
 
@@ -96,9 +104,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        
+        $modules = Module::pluck('slug')->toArray();
         return view('admin-panel::user.create_edit', [
             'user' => $this->CRUD->getById($id),
+            'modules' => $modules,
             // 'categories' => Category::where('type', 'User')->get()
         ]);
     }
@@ -112,10 +121,19 @@ class UserController extends Controller
      */
     public function update(UserRequest $request,  $id)
     {
-        
         $this->CRUD->update($id, $request->all());
-        User::find($id)->categories()->sync($request->category_id);
-        return redirect()->route('user-edit', $id)->with('success', 'User Successfully Updated.');
+        $user = User::where('id', $id)->first();
+
+        if($request->role){
+            $user->syncRoles($request->role);
+        }
+        if($request->permissions){
+            $permissions = json_decode($request->permissions);
+            $user->syncPermissions($permissions);
+        }
+
+
+        return redirect()->route('user.edit', $id)->with('success', 'User Successfully Updated.');
     }
 
     /**

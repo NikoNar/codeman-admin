@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Avatar;
 use Illuminate\Support\Str;
 use Codeman\Admin\Models\User;
+use Spatie\Permission\Models\Permission;
 
 class AdminSeeder extends Seeder
 {
@@ -65,6 +66,10 @@ class AdminSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
+            Permission::create(['name' => 'create-page']);
+            Permission::create(['name' => 'edit-page']);
+            Permission::create(['name' => 'delete-page']);
+
 
         if(null == \Spatie\Permission\Models\Role::where('name', 'SuperAdmin')->first()){
             $role = \Spatie\Permission\Models\Role::create(['name' => 'SuperAdmin']);
@@ -72,6 +77,10 @@ class AdminSeeder extends Seeder
 
         if(null == \Spatie\Permission\Models\Role::where('name', 'Admin')->first()){
             $role = \Spatie\Permission\Models\Role::create(['name' => 'Admin']);
+        }
+
+        if(null == \Spatie\Permission\Models\Role::where('name', 'Regular')->first()){
+            $role = \Spatie\Permission\Models\Role::create(['name' => 'Regular']);
         }
 
 
