@@ -219,7 +219,7 @@ class ResourceController extends Controller
     public function update(ResourceRequest $request, $module,  $id)
     {
 //        dd($request->all());
-        if(!auth()->user()->can('update-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+        if(!auth()->user()->can('edit-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
 

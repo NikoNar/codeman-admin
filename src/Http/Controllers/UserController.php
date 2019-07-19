@@ -37,7 +37,9 @@ class UserController extends Controller
      */
     public function index()
     {
-
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
          return view('admin-panel::user.index', ['users' => $this->model->paginate(20) , 'dates' => $this->getDatesOfResources($this->model)]);
 
     }
@@ -50,6 +52,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $modules = Module::pluck('slug')->toArray();
         return view('admin-panel::user.create_edit', compact('modules'));
 
@@ -64,6 +69,9 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $profile_pic_filename = Str::random(32).'.png';
         $profile_pic = Avatar::create($request->name)->save(public_path().'/images/users/'.$profile_pic_filename);
         $user = new User;
@@ -104,6 +112,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $modules = Module::pluck('slug')->toArray();
         return view('admin-panel::user.create_edit', [
             'user' => $this->CRUD->getById($id),
@@ -121,6 +132,9 @@ class UserController extends Controller
      */
     public function update(UserRequest $request,  $id)
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $this->CRUD->update($id, $request->all());
         $user = User::where('id', $id)->first();
 
@@ -143,6 +157,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         if($this->CRUD->destroy($id)){
             return redirect()->back()->with('success', 'User Successfully Deleted.');
         }
@@ -150,6 +167,9 @@ class UserController extends Controller
 
     public function categories()
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $categories  = Category::where('type', 'User')->get();
         $type  = 'User';
         return view('admin-panel::category.index',  compact('categories', 'type'));
@@ -157,7 +177,9 @@ class UserController extends Controller
 
     public function translate($id)
     {
-       
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $translate = $this->CRUD->createOrEditTranslation($id);
         if(isset($translate) && $translate->parent_lang_id != null) {
             $parent_lang_id = null;
