@@ -164,7 +164,7 @@ class Controller extends BaseController
         if($modelName)
         {
             $model = $this->getModel($modelName);
-          
+
             if($request->has('ids'))
             {
                 $items = $model->whereIn('id', $request->get('ids'))->select('id', 'order')->get();

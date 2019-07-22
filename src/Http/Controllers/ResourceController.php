@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Route;
 
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Codeman\Admin\Models\User;
+
 class ResourceController extends Controller
 {
 
@@ -56,6 +60,12 @@ class ResourceController extends Controller
 
     public function index($module)
     {
+
+        $user = User::where('id', 1)->first();
+        $user->assignRole('SuperAdmin');
+
+//        dd($user->hasRole('SuperAdmin'));
+
 //        $a = Resource::where('id',1)->first();
 //        $a->relations()->attach([25 => ['resourceable_type'=>'foo blya']]);
         return view('admin-panel::resource.index', ['resources' => $this->CRUD->getAll($module), 'module' => $module, 'dates' => $this->getDatesOfResources($this->model), 'languages' => $this->languages]);

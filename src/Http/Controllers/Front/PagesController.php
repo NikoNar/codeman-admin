@@ -230,7 +230,7 @@ class PagesController extends Controller
                     // 'siblingmenu' => $siblingmenu,
                     // 'parentmenu' => $parentmenu,
 
-                    
+
                 ] );
             } else {
 
