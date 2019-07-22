@@ -149,8 +149,13 @@ class PagesController extends Controller
         if($pageObject){
 //            dd($pageObject);
             $idex = Page::where('id', $index_page_id)->first();
-            if(($pageObject->id == $index_page_id && $slug)  ||  ($pageObject->parent_lang_id == $index_page_id && $slug) || ($pageObject->parent_lang_id === $idex->parent_lang_id && $slug)){
-                return redirect()->to('/');
+            if(($pageObject->id == $index_page_id && $slug)  ||  ($pageObject->parent_lang_id == $index_page_id && $slug) /*|| ($pageObject->parent_lang_id === $idex->parent_lang_id && $slug)*/){
+                $lang_code = Language::where('id', $pageObject->language_id)->first()->code;
+                if($lang_code == $def_land_code){
+                    return redirect()->to('/');
+                } else {
+                    return redirect()->to('/'.$lang_code);
+                }
             }
             // For making a menu using parent and chiled pages
             // $submenu = $this->page->where('parent_id', $pageObject->id)
