@@ -6,9 +6,15 @@ use Codeman\Admin\Http\Requests\ModuleRequest;
 use Codeman\Admin\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
 
 class ModuleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:SuperAdmin');
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,6 +22,9 @@ class ModuleController extends Controller
      */
     public function index()
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $modules = Module::where('module_type', 'module')->paginate(15);
         return view('admin-panel::modules.index', compact('modules'));
     }
@@ -27,6 +36,9 @@ class ModuleController extends Controller
      */
     public function create()
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $relations = Module::where('module_type', 'module')->pluck('title', 'id');
         return view('admin-panel::modules.create_edit' , compact('relations'));
     }
@@ -39,6 +51,9 @@ class ModuleController extends Controller
      */
     public function store(ModuleRequest $request)
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
 //        dd($request->all());
         if(isset($request->options)){
             $request['options'] = json_encode($request->options);
@@ -50,6 +65,9 @@ class ModuleController extends Controller
 //        dd($request->all(0));
 //        $request['options'] = json_encode($request->options);
         $request['slug'] = Str::slug($request['title']);
+        Permission::create(['name' => 'create-'.$request['slug']]);
+        Permission::create(['name' => 'edit-'.$request['slug']]);
+        Permission::create(['name' => 'delete-'.$request['slug']]);
         $module = Module::create($request->all());
         return redirect()->route('modules.edit', $module->id)->with('success', 'Module Created Successfully.');
 
@@ -74,6 +92,9 @@ class ModuleController extends Controller
      */
     public function edit(Module $module)
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $add_opts = json_decode($module->additional_options);
         $additional_options = [];
         $relations = Module::where('module_type', 'module')->pluck('title', 'id');
@@ -94,6 +115,9 @@ class ModuleController extends Controller
      */
     public function update(Request $request, Module $module)
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
 //        dd($request->all());
         $relations = Module::pluck('title', 'id');
         if(isset($request->options)){
@@ -126,6 +150,9 @@ class ModuleController extends Controller
      */
     public function destroy(Module $module)
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $module->delete();
         /// detach
         return redirect()->back()->with('success', 'Module Successfully Deleted.');
@@ -133,7 +160,14 @@ class ModuleController extends Controller
 
     public function delete(Module $module, $id)
     {
-        $module->where('id', $id)->delete();
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
+        $module = $module->where('id', $id)->first();
+        Permission::where('name', 'create-'.$module->slug)->delete();
+        Permission::where('name', 'edit-'.$module->slug)->delete();
+        Permission::where('name', 'delete-'.$module->slug)->delete();
+        $module->delete();
         /// detach
         return redirect()->back()->with('success', 'Module Successfully Deleted.');
     }

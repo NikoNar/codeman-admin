@@ -4,10 +4,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
+
 class User extends Authenticatable
 {
     use Notifiable, HasRoles;
     protected $guard = 'admin';
+
     protected $fillable = [     // NOT NEEDED FOR SEED
         'name' ,
         'email',
@@ -15,6 +17,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
 //    public function roles() {
 //        return $this->belongsToMany('Codeman\Admin\Models\Role', 'user_role');
 //    }
@@ -45,4 +48,6 @@ class User extends Authenticatable
 //        }
 //         return false;
 //    }
+
 }
+

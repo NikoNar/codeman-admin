@@ -78,6 +78,9 @@ class ResourceController extends Controller
      */
     public function create($module)
     {
+        if(!auth()->user()->can('create-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $model = Module::where('title', $module)->first();
         if(null == $options =json_decode($model->options)){
             $options = [];
@@ -122,6 +125,9 @@ class ResourceController extends Controller
      */
     public function store(ResourceRequest $request,$module)
     {
+        if(!auth()->user()->can('create-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
 
 //        dd($request->all(), $module);
 //        dd($this->def_lang);
@@ -161,6 +167,9 @@ class ResourceController extends Controller
      */
     public function edit($module, $id)
     {
+        if(!auth()->user()->can('edit-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $model = Module::where('title', $module)->first();
         if(null == $options =json_decode($model->options)){
             $options = [];
@@ -220,6 +229,9 @@ class ResourceController extends Controller
     public function update(ResourceRequest $request, $module,  $id)
     {
 //        dd($request->all());
+        if(!auth()->user()->can('edit-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
 
         if($resource =  $this->CRUD->update($id, $request->all())) {
             if ($request->has('meta')) {
@@ -242,6 +254,9 @@ class ResourceController extends Controller
      */
     public function destroy($module, $id)
     {
+        if(!auth()->user()->can('delete-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         if($this->CRUD->destroy($id)){
             return redirect()->back()->with('success', Str::singular(ucwords($module)).' Successfully Deleted.');
         }
@@ -250,6 +265,9 @@ class ResourceController extends Controller
 
     public function translate($module, $id, $lang )
     {
+        if(!auth()->user()->can('update-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $translate = $this->CRUD->createOrEditResourceTranslation($module, $id, $lang );
         $model = Module::where('title', $module)->first();
 

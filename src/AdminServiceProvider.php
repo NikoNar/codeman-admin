@@ -48,6 +48,10 @@ class AdminServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->publishes([
+            __DIR__.'/config/auth.php' => config_path('auth.php'),
+        ], 'config');
+
+        $this->publishes([
             __DIR__.'/config/analytics.php' => config_path('analytics.php'),
         ], 'config');
 			
@@ -69,14 +73,17 @@ class AdminServiceProvider extends ServiceProvider
 		AliasLoader::getInstance()->alias( 'Avatar' , 'Laravolt\Avatar\Facade');
 		AliasLoader::getInstance()->alias( 'Menu' , 'Codeman\Admin\Menu\Facades\Menu');
 
-        
-
-        
 
 
-		$router = $this->app['router'];
+
+
+
+        $router = $this->app['router'];
     	$router->pushMiddlewareToGroup('admin', Http\Middleware\Admin::class);
     	$router->pushMiddlewareToGroup('language', Http\Middleware\Language::class);
+        $router->aliasMiddleware('role' , \Spatie\Permission\Middlewares\RoleMiddleware::class);
+        $router->aliasMiddleware('permission' , \Spatie\Permission\Middlewares\PermissionMiddleware::class);
+        $router->aliasMiddleware('role_or_permission' , \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class);
   //       $this->app->singleton('Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
 		// function($app){
   //           return  new Admin($app);

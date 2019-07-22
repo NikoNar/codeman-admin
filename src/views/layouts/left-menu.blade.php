@@ -215,7 +215,9 @@
             {{--           </li>--}}
             <hr>
             @hasanyrole('SuperAdmin|Admin')
+
             <li class="treeview @if(Request::is('admin/users*')) active @endif">
+
                 <a href="#">
                     <i class="fa fa-users"></i>
                     <span>Users</span>
@@ -231,11 +233,13 @@
                             <i class="fa fa-plus fz-12"></i> Add New
                         </a>
                     </li>
+
                     {{--                    <li class="@if(Request::is('admin/users/roles')) active @endif">--}}
                     {{--                        <a href="{!! route('roles.index') !!}">--}}
                     {{--                            <i class="fa fa-eye"></i> Roles--}}
                     {{--                        </a>--}}
                     {{--                    </li>--}}
+
                 </ul>
             </li>
             @endrole

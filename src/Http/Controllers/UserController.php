@@ -2,6 +2,7 @@
 
 namespace Codeman\Admin\Http\Controllers;
 
+use Codeman\Admin\Models\Module;
 use Illuminate\Http\Request;
 use Codeman\Admin\Http\Requests\UserRequest;
 use Codeman\Admin\Services\CRUDService;
@@ -11,6 +12,8 @@ use Codeman\Admin\Models\Category;
 use Illuminate\Support\Facades\Response;
 use Avatar;
 use Illuminate\Support\Str;
+
+
 class UserController extends Controller
 {
 
@@ -34,7 +37,9 @@ class UserController extends Controller
      */
     public function index()
     {
-
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
          return view('admin-panel::user.index', ['users' => $this->model->paginate(20) , 'dates' => $this->getDatesOfResources($this->model)]);
 
     }
@@ -47,8 +52,12 @@ class UserController extends Controller
      */
     public function create()
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
+        $modules = Module::pluck('slug')->toArray();
+        return view('admin-panel::user.create_edit', compact('modules'));
 
-        return view('admin-panel::user.create');
 
     }
 
@@ -60,7 +69,9 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        // dd($request->all());
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $profile_pic_filename = Str::random(32).'.png';
         $profile_pic = Avatar::create($request->name)->save(public_path().'/images/users/'.$profile_pic_filename);
         $user = new User;
@@ -69,6 +80,16 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = \Hash::make($request->password);
         $user->save();
+        if($request->role){
+            $user->assignRole($request->role);
+        }
+        if($request->permissions){
+            $permissions = json_decode($request->permissions);
+            foreach($permissions as $permission){
+                $user->givePermissionTo($permission);
+            }
+        }
+
         return redirect()->route('user.index')->with('success', 'User Created Successfully.');
     }
 
@@ -91,9 +112,13 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        
-        return view('admin-panel::user.edit', [ 
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
+        $modules = Module::pluck('slug')->toArray();
+        return view('admin-panel::user.create_edit', [
             'user' => $this->CRUD->getById($id),
+            'modules' => $modules,
             // 'categories' => Category::where('type', 'User')->get()
         ]);
     }
@@ -107,10 +132,22 @@ class UserController extends Controller
      */
     public function update(UserRequest $request,  $id)
     {
-        
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $this->CRUD->update($id, $request->all());
-        User::find($id)->categories()->sync($request->category_id);
-        return redirect()->route('user-edit', $id)->with('success', 'User Successfully Updated.');
+        $user = User::where('id', $id)->first();
+
+        if($request->role){
+            $user->syncRoles($request->role);
+        }
+        if($request->permissions){
+            $permissions = json_decode($request->permissions);
+            $user->syncPermissions($permissions);
+        }
+
+
+        return redirect()->route('user.edit', $id)->with('success', 'User Successfully Updated.');
     }
 
     /**
@@ -120,6 +157,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         if($this->CRUD->destroy($id)){
             return redirect()->back()->with('success', 'User Successfully Deleted.');
         }
@@ -127,6 +167,9 @@ class UserController extends Controller
 
     public function categories()
     {
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $categories  = Category::where('type', 'User')->get();
         $type  = 'User';
         return view('admin-panel::category.index',  compact('categories', 'type'));
@@ -134,7 +177,9 @@ class UserController extends Controller
 
     public function translate($id)
     {
-       
+        if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
         $translate = $this->CRUD->createOrEditTranslation($id);
         if(isset($translate) && $translate->parent_lang_id != null) {
             $parent_lang_id = null;
@@ -144,7 +189,7 @@ class UserController extends Controller
         // dd($parent_lang_id);
         if($translate)
         {
-            return view('admin-panel::user.edit', [
+            return view('admin-panel::user.create_edit', [
                 'user' => $translate,
                 'parent_lang_id' => $parent_lang_id,
                 'categories' => Category::where('type', 'User')->get(),

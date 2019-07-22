@@ -29,6 +29,8 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/admin/dashboard';
 
+
+
     /**
      * Create a new controller instance.
      *
@@ -36,7 +38,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except(['logout', 'postLogout']);
+        $this->middleware('guest:admin')->except(['logout', 'postLogout']);
         
         // $this->middleware('web')->except(['logout', 'postLogout']);
     }
