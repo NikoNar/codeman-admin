@@ -95,7 +95,8 @@ class ModuleController extends Controller
         if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
-        $add_opts = json_decode($module->additional_options);
+        $add_opts = json_decode($module->additional_options)? : array();
+
         $additional_options = [];
         $relations = Module::where('module_type', 'module')->pluck('title', 'id');
         foreach($add_opts as $key =>$val){

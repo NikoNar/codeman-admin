@@ -20,6 +20,7 @@ use Codeman\Admin\Models\File;
 use Illuminate\Support\Facades\View;
 use DB;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Codeman\Admin\Services\CRUDService;
 // use App\Models\Product;
 // use App\Models\Category;
 
@@ -204,10 +205,31 @@ class PagesController extends Controller
                 $attachments = json_decode($pagemetas['attachments'], true);
                 foreach($attachments as $type => $val){
                     if($val == 'all'){
-                        $pageObject[$type] = Resource::where('type', $type)->get();
+                        $resource = Resource::where('type', $type)->get();
                     } else {
-                        $pageObject[$type] = Resource::whereIn('id', explode(',', $val))->get();
+                        $resource = Resource::whereIn('id', explode(',', $val))->get();
                     }
+
+                    $resourseWithMetas = [];
+                    foreach($resource as $item){
+                        // dd($item->id);
+                        $CRUD = new CRUDService($resource);
+                        $resourcemetas = $CRUD->getPageMetas($item->id);
+                        $decoded_resourcemetas = [];
+                        foreach($resourcemetas as $key => $value) {
+                            if(isJson($value)){
+                                $decoded_resourcemetas[$key] = json_decode($value, true);
+                            } else {
+                                $decoded_resourcemetas[$key] = $value;
+                            }
+                        }
+                        $item->setAttribute('meta', $decoded_resourcemetas);
+                        $resourseWithMetas[] = $item;
+
+                    }
+
+
+                    $pageObject[$type] = $resourseWithMetas;
                 }
 
             }
