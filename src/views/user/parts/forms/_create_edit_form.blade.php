@@ -32,7 +32,7 @@
 		    <span class="input-group-addon">
 		        <span class="fa fa-key"></span>
 		    </span>
-			{!! Form::text('password', null, ['class' => 'form-control']) !!}
+			{!! Form::password('password',  ['class' => 'form-control']) !!}
 			<span class="input-group-addon" style="padding: 0">
 		        <button type="button"  id="generate-password" class="btn btn-danger btn-sm btn-flat" style="height: 32px;">Generate Password</button>
 		    </span>

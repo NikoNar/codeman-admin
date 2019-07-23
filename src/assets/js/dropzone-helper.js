@@ -48,12 +48,11 @@ Dropzone.options.realDropzone = {
         return _results;
     },
     success: function(file,done) {
-        // console.log(file);
-        // console.log(done);
+        console.table(done.image);
         if(done && done.image){
             var item = '';
 
-            var multi = $('#media-search').hasClass('multiple')? '<div class="item multiple"   data-id="'+done.image.filename+'">' : '<div class="item"   data-id="'+done.image.filename+'">';
+            var multi = $('#media-search').hasClass('multiple')? '<div class="item multiple"   data-id="'+done.image.filename+'" data-index="'+done.image.id+'">' : '<div class="item"   data-id="'+done.image.filename+'">';
 
             item += multi;
             item += '<div class="actions">';
@@ -140,7 +139,3 @@ $('body').off('click', '.close-upload-file').on('click', '.close-upload-file', f
 $('body').off('click', '.dz-choose-file-btn').on('click', '.dz-choose-file-btn', function(e){
     $('form.dropzone').trigger('click');
 });
-
-
-
-

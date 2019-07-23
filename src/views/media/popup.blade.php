@@ -1,3 +1,4 @@
+multiple
 <div id="media-popup" class="modal fade" role="dialog">
 	<div class="modal-dialog modal-lg">
 		<!-- Modal content-->

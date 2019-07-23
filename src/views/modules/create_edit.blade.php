@@ -140,15 +140,21 @@
 		$(".btn-add-panel").on("click", function (e) {
 			e.preventDefault();
 			if($('.clone-hint').length > 0){
-				var type = $('.template').last().prev().find('.input_type').val();
-				var label = $('.template').last().prev().find('.type_label').val();
+				if($('.clone-hint').length > 1){
+					alert('exo');
+					var type = $('.clone-hint').last().find('.input_type').val();
+					var label = $('.clone-hint').last().find('.type_label').val();
+				} else{
+					var type = $('.template').last().prev().find('.input_type').val();
+					var label = $('.template').last().prev().find('.type_label').val();
+				}
 			} else {
 				var type = $('.template').last().find('.input_type').val();
 				var label = $('.template').last().find('.type_label').val();
 			}
 
 			if(type == '' && label == ''){
-				alert('please fill th form');
+				alert('please fill the form');
 				return
 			}
 
