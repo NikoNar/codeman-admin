@@ -77,7 +77,7 @@ multiple
 
 													@default
 													@if(!is_url($image->filename))
-														<img src="{!! url('/media/icon_size').'/'.$image->filename !!}" alt="" class="thumbnail img-responsive">
+														<img src="{!! url('/media/full_size').'/'.$image->filename !!}" alt="" class="thumbnail img-responsive">
 													@else
 														<img src="{!! $image->filename !!}" alt="" class="thumbnail img-responsive">
 													@endif

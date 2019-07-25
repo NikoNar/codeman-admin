@@ -35,7 +35,7 @@
                         @if(is_url($image['url']))
                             <img src="{!! $image['url'] !!}" class="thumbnail">
                         @else
-                            <img src="{!! url('media/icon_size').'/'.$image['url'] !!}" class="thumbnail">
+                            <img src="{!! url('media/full_size').'/'.$image['url'] !!}" class="thumbnail">
                         @endif
                         <input name="thumbnail-alt" class="form-control" value="{!! $image['alt'] !!}" placeholder="Alt Name">
                     </div>

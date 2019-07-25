@@ -198,7 +198,6 @@ class PagesController extends Controller
                 $pageObject->setAttribute('meta', $pagemetas);
             }
 
-
             if(!empty($pageObject)){
                 $content = json_decode($pageObject->description);
             }
@@ -250,6 +249,8 @@ class PagesController extends Controller
 //            session()->flush();
             session()->save();
 //            dd(session()->all());
+//            dd($template);
+
             if ($template && View::exists($template)) {
                 return view($template, [
                     'page' => $pageObject,

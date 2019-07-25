@@ -192,7 +192,7 @@ class ResourceController extends Controller
             }
         }
 
-        $add_opts = json_decode($model->additional_options);
+        $add_opts = json_decode($model->additional_options)? : array();
         $additional_options = [];
         foreach($add_opts as $key =>$val){
             $arr =[];
