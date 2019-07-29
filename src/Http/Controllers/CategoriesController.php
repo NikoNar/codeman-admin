@@ -84,7 +84,6 @@ class CategoriesController extends Controller
             $category = $category->create($request->except('selected'));
             if(isset($request['selected'])){
              $keys =explode(',', $request['selected']);
-
                 array_push($keys, $category->id);
                 $categories = Category::where(['type' =>$category->type, 'language_id' =>$category->language_id ])->get();
                 $returnHTML = view('admin-panel::components.categories', [

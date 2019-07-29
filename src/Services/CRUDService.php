@@ -217,6 +217,8 @@ class CRUDService implements CrudInterface
 //        dd( $model->categories()->exists());
         if(isset($inputs['category_id'])){
 	        $model->categories()->sync($inputs['category_id']);
+        } else {
+            $model->categories()->sync([]);
         }
 		return $model->update($inputs);
 
