@@ -226,7 +226,7 @@ class PagesController extends Controller
 
             return view('admin-panel::page.create_edit', [
                 'page' => $translate,
-                'parents' => $pageInterface->getAllPagesTitlesArray(),
+                'parents' => $pageInterface->getAllPagesTitlesArray($translate->language_id),
                 'template' 	=> $additional_options,
                 'templates' 	=> $templates,
                 'attachments' => $attachments,
@@ -319,11 +319,11 @@ class PagesController extends Controller
                 'attachments' => $attachments,
                 'selected_attachments' => $selected_attachments,
                 'page' => $page,
-                'parents' => $pageInterface->getAllPagesTitlesArray($id),
+                'parents' => $pageInterface->getAllPagesTitlesArray($page->language_id,$id),
                 'languages' => $languages
             ]);
         }else{
-            return view('admin-panel::page.create_edit', ['page' => $page, 'parents' => $pageInterface->getAllPagesTitlesArray($id),'languages' => $languages,'templates' => $templates]);
+            return view('admin-panel::page.create_edit', ['page' => $page, 'parents' => $pageInterface->getAllPagesTitlesArray($page->language_id,$id),'languages' => $languages,'templates' => $templates]);
         }
     }
 

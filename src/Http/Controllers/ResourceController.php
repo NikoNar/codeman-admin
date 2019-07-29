@@ -99,7 +99,7 @@ class ResourceController extends Controller
 
 //        $types = Resource::groupBy('type')->pluck('type', 'id');
         $categories = Category::where(['language_id'=> $this->def_lang->id, 'type'=>$module])->get();
-        $add_opts = json_decode($model->additional_options);
+        $add_opts = json_decode($model->additional_options)? :array();
         $additional_options = [];
         foreach($add_opts as $key =>$val){
             $arr =[];
@@ -192,7 +192,7 @@ class ResourceController extends Controller
             }
         }
 
-        $add_opts = json_decode($model->additional_options);
+        $add_opts = json_decode($model->additional_options)? : array();
         $additional_options = [];
         foreach($add_opts as $key =>$val){
             $arr =[];
@@ -347,7 +347,9 @@ class ResourceController extends Controller
 
     public function categories($module)
     {
-        $categories  = Category::where('type', $this->module)->get();
+        $default_lang = Language::orderBy('order')->first();
+        $def_land_id  = $default_lang->id;
+        $categories  = Category::where('type', $this->module)->where('language_id', $def_land_id)->orderBy('order', 'DESC')->get();
         $type  = $module;
         return view('admin-panel::category.index',  compact('categories', 'type'));
     }

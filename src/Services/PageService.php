@@ -81,12 +81,22 @@ class PageService implements PageInterface
 	*
 	* @return Array
 	*/
-	public function getAllPagesTitlesArray($current_page_id = null)
+	public function getAllPagesTitlesArray($lang = null, $current_page_id = null)
 	{
 		if( $current_page_id ) {
-			return $this->page->where('id', '!=', $current_page_id )->pluck('title', 'id')->toArray();
+		    $pagesTitles =  $this->page->where('id', '!=', $current_page_id );
+		    if($lang){
+                $pagesTitles =  $pagesTitles->where('language_id', $lang);
+            }
+            $pagesTitles = $pagesTitles->pluck('title', 'id')->toArray();
+            return $pagesTitles;
 		}else{
-			return $this->page->all()->pluck('title', 'id')->toArray();
+            $pagesTitles =  $this->page;
+            if($lang){
+                $pagesTitles = $pagesTitles->where('language_id', $lang);
+            }
+            $pagesTitles = $pagesTitles->get()->pluck('title', 'id')->toArray();
+			return $pagesTitles;
 		}
 	}
 
