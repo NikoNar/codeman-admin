@@ -28,6 +28,11 @@ class Resource extends Model
         return $this->belongsToMany('Codeman\Admin\Models\Resource', 'resourceables', 'resource_id', 'resourceable_id');
     }
 
+    public function relations_rev()
+    {
+        return $this->belongsToMany('Codeman\Admin\Models\Resource', 'resourceables', 'resourceable_id', 'resource_id');
+    }
+
 
 
 }

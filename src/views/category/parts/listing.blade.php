@@ -12,7 +12,9 @@
 	</thead>
 	<tbody>
 		@foreach($categories as $key => $category)
+			@if(!$category->parent_id)
 			@include('admin-panel::category.parts.item')
+			@endif
 			{{-- @php $level = 0 @endphp --}}
 			{{-- @if($category->slug == 'մաշկի-խնամք')
 			{!! dd($category->catChilds) !!} 

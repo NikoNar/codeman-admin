@@ -141,7 +141,6 @@
 			e.preventDefault();
 			if($('.clone-hint').length > 0){
 				if($('.clone-hint').length > 1){
-					alert('exo');
 					var type = $('.clone-hint').last().find('.input_type').val();
 					var label = $('.clone-hint').last().find('.type_label').val();
 				} else{
