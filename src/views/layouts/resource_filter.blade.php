@@ -30,16 +30,16 @@
     		</div>
     	</div>
     @endif()
-    @if(isset($categories) && !empty($categories))
-        <div class="col-md-3 pull-right no-padding" style="margin-left: 15px;">
-            <div class="input-group">
-                <div class="input-group-addon input-group-blue">
-                    <i class="fa fa-tags"></i>
-                </div>
-                @include('admin-panel::layouts.parts.categories_dropdown')
-            </div>
-        </div>
-    @endif
+{{--    @if(isset($categories) && !empty($categories))--}}
+{{--        <div class="col-md-3 pull-right no-padding" style="margin-left: 15px;">--}}
+{{--            <div class="input-group">--}}
+{{--                <div class="input-group-addon input-group-blue">--}}
+{{--                    <i class="fa fa-tags"></i>--}}
+{{--                </div>--}}
+{{--                @include('admin-panel::layouts.parts.categories_dropdown')--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    @endif--}}
     @if(isset($brands) && !empty($brands))
         @include('admin-panel::feedproduct.parts.brands_dropdown')
     @endif

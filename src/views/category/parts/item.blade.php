@@ -10,12 +10,12 @@
 	</td>
 	<td> {{ $category->content }} </td>
 	<td> {{ $category->type }} </td>
-{{--	<td> {{ $category->type }} </td>--}}
+	{{--	<td> {{ $category->type }} </td>--}}
 	<td>{{ date('m/d/Y g:i A', strtotime($category->created_at)) }}</td>
 	<td>{{ date('m/d/Y g:i A', strtotime($category->updated_at)) }}</td>
 	<td class="action">
-{{--		<a href="#" title="Edit" data-id="{{ $category->id }}" data-type="{{ $type }}" class="btn btn-xs btn-warning edit-category"><i class="fa fa-edit"></i></a>--}}
-		<a href="{{ route('categories.edit', [$category->id, $type]) }}"   class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>
+		{{--		<a href="#" title="Edit" data-id="{{ $category->id }}" data-type="{{ $type }}" class="btn btn-xs btn-warning edit-category"><i class="fa fa-edit"></i></a>--}}
+		<a href="{{ route('categories.edit', [$category->id, $category->type]) }}"   class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>
 		<a href="{{ route('categories.destroy', $category->id ) }}" title="Delete" class="btn btn-xs btn-danger confirm-del"><i class="fa fa-trash"></i></a>
 	</td>
 </tr>

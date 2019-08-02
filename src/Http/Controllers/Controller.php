@@ -117,6 +117,7 @@ class Controller extends BaseController
             }else{
                 $result = $result->paginate(10);
             }
+//            dd($result);
             if(request()->ajax()){
                 $viewDirection = 'admin-panel::'.strtolower($modelName).'.parts.listing';
                 $returnHTML =  view($viewDirection, [str_plural(strtolower($modelName)) => $result, 'module' =>$type]);

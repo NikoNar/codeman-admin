@@ -182,10 +182,16 @@ class CategoriesController extends Controller
         }
 
 
-
         if ($translate) {
+            $parent = $translate->parent_id;
+            if($parent){
+                $parentTrans = Category::where('language_id', $lang)->where('parent_lang_id', $parent)->get();
+            } else {
+                $parentTrans = null;
+            }
             return view('admin-panel::category.create_edit', [
                 'category' => $translate,
+                'categories' => $parentTrans,  //parent category
                 'parent_lang_id' => $parent_lang_id,
                 'order' => $this->model->max('order')+1,
                 'languages' => $this->languages,

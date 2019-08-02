@@ -350,8 +350,9 @@ class ResourceController extends Controller
         $default_lang = Language::orderBy('order')->first();
         $def_land_id  = $default_lang->id;
         $categories  = Category::where('type', $this->module)->where('language_id', $def_land_id)->orderBy('order', 'DESC')->get();
+        $languages = Language::orderBy('order')->pluck('name','id')->toArray();
         $type  = $module;
-        return view('admin-panel::category.index',  compact('categories', 'type'));
+        return view('admin-panel::category.index',  compact('categories', 'type', 'languages'));
     }
 
 }

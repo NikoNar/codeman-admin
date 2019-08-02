@@ -52,6 +52,9 @@ class PagesController extends Controller
      */
     public function index($slug = null)
     {
+        if($slug == 'products'){
+            return redirect()->route('products');
+        }
 //        dd(session()->get('prev_lang'), 'ctrl');
         $pageObject = null;
         $index_page_id = Setting::select('value')->where('key', 'index')->first()['value'];
