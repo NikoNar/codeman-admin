@@ -143,7 +143,6 @@
 		@include('admin-panel::components.languages')
 	@endif
 
-
 	@if(in_array('categories', $options))
 		@include('admin-panel::components.categories')
 	@endif

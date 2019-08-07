@@ -620,7 +620,25 @@ $(function() {
 
     // Translations
 
+    $('body').off('change', '.menu_languages').on('change', '.menu_languages', function(e) {
+        var id = $('input[name="menu_id"]').val();
+        var default_lang = $('#def_lang').val();
+        if(id){
+            if(!confirm("translate? All not saved data will be lost!")){
+                e.preventDefault();
+                $(this).val(default_lang);
+                $(this).select2('destroy');
+                $(this).select2();
+            } else {
+                var lang = $('.menu_languages').val();
+                window.location.href='/admin/menus?menu='+id+'&language='+lang;
+
+            }
+        }
+    });
+
     var def_lang = $('.languages').val();
+
 
     $('body').off('change', '.languages').on('change', '.languages', function(e){
         var id = $('input[name="resource_id"]').val();

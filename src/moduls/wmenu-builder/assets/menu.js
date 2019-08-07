@@ -15,9 +15,9 @@ function getmenus() {
 		};
 		var textoiner = $(this).find(".item-edit").text();
 		var id = this.id.split("-");
-		var textoexplotado = textoiner.split("|"); 
-		var padre = 0;  
-		if (!!textoexplotado[textoexplotado.length-2] && textoexplotado[textoexplotado.length-2]!= id[2]) {  
+		var textoexplotado = textoiner.split("|");
+		var padre = 0;
+		if (!!textoexplotado[textoexplotado.length-2] && textoexplotado[textoexplotado.length-2]!= id[2]) {
 			padre = textoexplotado[textoexplotado.length-2]
 		}
 		arraydata.push({
@@ -58,45 +58,45 @@ function getmenus() {
 
 function addcustommenu(type) {
 
-    var data = {};
-    var spinner = '';
-    if (type === "pages") {
-        spinner = $("#pages_spinner");
-        pages = [];
-        $('.pages_for_menu input:checked').each(function () {
-            pages.push({
-                labelmenu: $(this).attr('name'),
-                linkmenu: $(this).data('url'),
-                idmenu: $("#idmenu").val()
-            });
-        });
-        data.pages = pages;
+	var data = {};
+	var spinner = '';
+	if (type === "pages") {
+		spinner = $("#pages_spinner");
+		pages = [];
+		$('.pages_for_menu input:checked').each(function () {
+			pages.push({
+				labelmenu: $(this).attr('name'),
+				linkmenu: $(this).data('url'),
+				idmenu: $("#idmenu").val()
+			});
+		});
+		data.pages = pages;
 
-    } else if (type === "custom") {
-        spinner = $("#spincustomu");
-        data = {
-            labelmenu: $("#custom-menu-item-name").val(),
-            linkmenu: $("#custom-menu-item-url").val(),
-            idmenu: $("#idmenu").val()
-        };
-    }
-    spinner.show();
+	} else if (type === "custom") {
+		spinner = $("#spincustomu");
+		data = {
+			labelmenu: $("#custom-menu-item-name").val(),
+			linkmenu: $("#custom-menu-item-url").val(),
+			idmenu: $("#idmenu").val()
+		};
+	}
+	spinner.show();
 
-    $.ajax({
-        data: data,
-        url: addcustommenur,
-        type: 'POST',
-        success: function (response) {
-            window.location = "";
-        },
-        complete: function () {
-            spinner.hide();
-        }
-    });
+	$.ajax({
+		data: data,
+		url: addcustommenur,
+		type: 'POST',
+		success: function (response) {
+			window.location = "";
+		},
+		complete: function () {
+			spinner.hide();
+		}
+	});
 }
 
 function updateitem(id = 0) {
-	
+
 	if(id){
 		var label = $("#idlabelmenu_" + id).val()
 		var clases = $("#clases_menu_" + id).val()
@@ -105,7 +105,9 @@ function updateitem(id = 0) {
 			label : label,
 			clases : clases,
 			url : url,
-			id : id
+			id : id,
+			language_id : $("#language_id").val()
+
 		}
 	}else{
 		var arr_data = [];
@@ -118,7 +120,8 @@ function updateitem(id = 0) {
 				id : id,
 				label : label,
 				class : clases,
-				link : url
+				link : url,
+				language_id : $("#language_id").val()
 			});
 		});
 
@@ -134,23 +137,23 @@ function updateitem(id = 0) {
 			}
 		},
 		success : function(response) {
-						},
+		},
 		complete: function(){
 			if(id){
 				$("#spincustomu2").hide();
 			}
 		}
-					});
+	});
 }
 
 function actualizarmenu() {
-
 	$.ajax({
 		dataType : "json",
 		data : {
 			arraydata : arraydata,
 			menuname : $("#menu-name").val(),
-			idmenu : $("#idmenu").val()
+			idmenu : $("#idmenu").val(),
+			language_id : $("#language_id").val(),
 		},
 
 		url : generatemenucontrolr,
@@ -161,7 +164,7 @@ function actualizarmenu() {
 		success : function(response) {
 
 			console.log("aqu llega")
-			
+
 		},
 		complete: function(){
 			$("#spincustomu2").hide();
@@ -231,6 +234,7 @@ function createnewmenu() {
 
 			data : {
 				menuname : $("#menu-name").val(),
+				language_id : $("#language_id").val(),
 			},
 
 			url :createnewmenur,
@@ -252,24 +256,24 @@ function createnewmenu() {
 
 function insertParam(key, value)
 {
-    key = encodeURI(key); value = encodeURI(value);
+	key = encodeURI(key); value = encodeURI(value);
 
-    var kvp = document.location.search.substr(1).split('&');
+	var kvp = document.location.search.substr(1).split('&');
 
-    var i=kvp.length; var x; while(i--) 
-    {
-        x = kvp[i].split('=');
+	var i=kvp.length; var x; while(i--)
+{
+	x = kvp[i].split('=');
 
-        if (x[0]==key)
-        {
-            x[1] = value;
-            kvp[i] = x.join('=');
-            break;
-        }
-    }
+	if (x[0]==key)
+	{
+		x[1] = value;
+		kvp[i] = x.join('=');
+		break;
+	}
+}
 
-    if(i<0) {kvp[kvp.length] = [key,value].join('=');}
+	if(i<0) {kvp[kvp.length] = [key,value].join('=');}
 
-    //this will reload the page, it's likely better to store this until finished
-    document.location.search = kvp.join('&'); 
+	//this will reload the page, it's likely better to store this until finished
+	document.location.search = kvp.join('&');
 }

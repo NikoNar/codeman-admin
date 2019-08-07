@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('admin-panel::layouts.app')
 
 @section('style')
 @endsection
@@ -17,7 +17,7 @@
             		<div class="box-body no-padding" style="">
 
               			<ul id="unused-menu-items" class="nav nav-pills nav-stacked">
-              				@foreach($pages as $key => $page) 
+              				@foreach($pages as $key => $page)
               						<li class="dd-item active" data-id="{{$key }}">
               						   <a href="javascript:void(0)"> <div class="dd-handle">
               						    	{!! $page !!}
@@ -62,7 +62,7 @@
 	   		        <div class="box-body">
 	   		        	<h4> Menu Structure <small>Drag each item into the order you prefer. Click the arrow on the right of the item to reveal additional configuration options.</small>
 	   		        	</h4>
-						
+
 						<div class="dd" id="nestable">
 						    <ol class="dd-list " id="used-menu-items">
 						      <p class="drug-drop-info"><i class="fa fa-arrows"></i>Drug and Drop Menu Items</p>
@@ -86,7 +86,7 @@
 	            			<div class="form-group">
 	            				<input type="text" name="title" id="menu-item-title" class="form-control" placeholder="Title">
 	            			</div>
-	            			
+
 	            			<div class="form-group">
 	            				<input type="text" name="url" id="menu-item-url" class="form-control" placeholder="Url">
 	            			</div>

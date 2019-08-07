@@ -117,11 +117,13 @@ class Controller extends BaseController
             }else{
                 $result = $result->paginate(10);
             }
-//            dd($result);
+            if($modelName == 'Category'){
+                $result = $result->groupBy('parent_id');
+            }
             if(request()->ajax()){
                 $viewDirection = 'admin-panel::'.strtolower($modelName).'.parts.listing';
                 $returnHTML =  view($viewDirection, [str_plural(strtolower($modelName)) => $result, 'module' =>$type]);
-                 $returnHTML = $returnHTML->render();
+                $returnHTML = $returnHTML->render();
                 return response()->json(array('success' => true, 'html' => $returnHTML));
             }
             $viewDirection = 'admin-panel::'.strtolower($modelName).'.index';

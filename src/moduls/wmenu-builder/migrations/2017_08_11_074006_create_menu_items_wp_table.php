@@ -17,6 +17,8 @@ class CreateMenuItemsWpTable extends Migration
             $table->increments('id');
             $table->string('label');
             $table->string('link');
+            $table->string('type')->nullable();
+            $table->string('type_id')->nullable();
             $table->integer('parent')->unsigned()->default(0);
             $table->integer('sort')->default(0);
             $table->string('class')->nullable();

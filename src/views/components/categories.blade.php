@@ -12,6 +12,11 @@
             @else
                 @if(isset($resource) &&  null != $resource_categories = $resource->categories()->get()->pluck('id')->toArray())
                     @if(!empty($resource_categories))
+                        @if(isset($translated_categories) && !empty($translated_categories))
+                            @php
+                            $resource_categories = $translated_categories
+                            @endphp
+                        @endif
                         @include('admin-panel::layouts.parts.categories_dropdown', ['multiple' => 'multiple', 'selected' => $resource_categories])
                     @else
                         @include('admin-panel::layouts.parts.categories_dropdown', ['multiple' => 'multiple'])

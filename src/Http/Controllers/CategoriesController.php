@@ -35,8 +35,7 @@ class CategoriesController extends Controller
        */
     public function index(Category $model)
     {
-    	$categories = $model->where('parent_id', '=', 0)->orderBy('order', 'DESC')->get();
-    	// dd($categories);
+    	$categories = $model->orderBy('order', 'DESC')->get()->groupBy('parent_id');
     	// $allCategories = $model->pluck('title_en','id')->all();
     	return view('admin-panel::category.index', ['categories' => $categories, 'languages' => true]);
     }
@@ -80,10 +79,22 @@ class CategoriesController extends Controller
 	{
 //	    dd($request->all());
         $request['slug'] = getUniqueSlug($category, $request['title']);
+        if($request['parent_id'] == 0){
+            $request['level'] = 1;
+        } else {
+            $request['level'] = Category::find($request['parent_id'])->level + 1;
+        }
+
         if($request->ajax()) {
             $category = $category->create($request->except('selected'));
+            if($category['parent_id'] == 0){
+                $category->node = $category->id;
+            } else {
+                $category->node = Category::find($category['parent_id'])->node;
+            }
+            $category ->update();
             if(isset($request['selected'])){
-             $keys =explode(',', $request['selected']);
+             $keys = explode(',', $request['selected']);
                 array_push($keys, $category->id);
                 $categories = Category::where(['type' =>$category->type, 'language_id' =>$category->language_id ])->get();
                 $returnHTML = view('admin-panel::components.categories', [
@@ -97,6 +108,13 @@ class CategoriesController extends Controller
             return  response()->json(array('success' => 'Category successfully created.', 'html' => $returnHTML));
         } else {
             $category = $category->create($request->all());
+            if($category['parent_id'] == 0){
+                $category->node = $category->id;
+                $category ->update();
+            } else {
+                $category->node = Category::find($category['parent_id'])->node;
+                $category ->update();
+            }
             return redirect()->route('categories.edit', [ $category->id, $request['type']])->with('success', "Category Created Successfully.");
 
         }
@@ -148,9 +166,41 @@ class CategoriesController extends Controller
 	*/
 	public function update($id, Request $request, Category $category)
 	{
-		$request['slug'] = getUniqueSlug($category, $request['title_en'], $id);
-		$category->find($id)->update($request->all());
-		return redirect()->back()->with('success', 'Category successfully updated.');
+        $category = $category->find($id);
+        $request['slug'] = getUniqueSlug($category, $request['title'], $id);
+
+
+        if($request['parent_id'] == 0){
+            $request['level'] = 1;
+        } else {
+            if($category->parent_id == $request['parent_id']) {
+                $request['level'] = Category::find($category->parent_id)->level + 1;
+            } else {
+                $request['level'] = Category::find($request['parent_id'])->level + 1;
+            }
+        }
+
+        if($category['parent_id'] == 0){
+            $request['node'] = $category->id;
+        } else {
+            if($category->parent_id == $request['parent_id']) {
+                $request['node'] = Category::find($category->parent_id)->node;
+            } else {
+                $request['node'] = Category::find($request['parent_id'])->node;
+            }
+        }
+
+        $category->update($request->all());
+        if(count($category->catChilds)){
+            foreach($category->catChilds as $child){
+                $child->node = $category->node;
+                $child->level = $category->level + 1;
+                $child->update();
+            }
+        }
+
+
+        return redirect()->back()->with('success', 'Category successfully updated.');
 	}
 
 	/**

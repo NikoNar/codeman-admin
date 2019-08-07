@@ -265,12 +265,7 @@ class PagesController extends Controller
                 ] );
             } else {
 
-                return view('default', [
-                    'page' => $pageObject,
-                    // 'submenu' => $submenu,
-                    // 'siblingmenu' => $siblingmenu,
-                    // 'parentmenu' => $parentmenu,
-                ] );
+                return View::exists('default')? view('default', ['page' => $pageObject,]) : abort(404);
 
             }
         }

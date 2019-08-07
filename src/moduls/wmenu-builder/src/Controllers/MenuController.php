@@ -3,6 +3,8 @@
 namespace Codeman\Admin\Menu\Controllers;
 
 use Codeman\Admin\Menu\Facades\Menu;
+use Codeman\Admin\Models\Language;
+use Codeman\Admin\Models\Page;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -14,11 +16,11 @@ class MenuController extends Controller
 
     public function createnewmenu()
     {
-
         $menu = new Menus();
         $menu->name = request()->input("menuname");
+        $menu->language_id = request()->input("language_id");
         $menu->save();
-        return json_encode(array("resp" => $menu->id));
+        return json_encode(array("resp" => $menu->id, "language" =>$menu->language_id));
     }
 
     public function deleteitemmenu()
@@ -52,6 +54,8 @@ class MenuController extends Controller
                 $menuitem->label = $value['label'];
                 $menuitem->link = $value['link'];
                 $menuitem->class = $value['class'];
+                $menuitem->language_id = $value['language_id'];
+
                 $menuitem->save();
             }
         } else {
@@ -59,6 +63,7 @@ class MenuController extends Controller
             $menuitem->label = request()->input("label");
             $menuitem->link = request()->input("url");
             $menuitem->class = request()->input("clases");
+            $menuitem->language_id = request()->input("language_id");
             $menuitem->save();
         }
     }
@@ -89,6 +94,7 @@ class MenuController extends Controller
     {
         $menu = Menus::find(request()->input("idmenu"));
         $menu->name = request()->input("menuname");
+        $menu->language_id = request()->input("language_id");
         $menu->save();
         if (is_array(request()->input("arraydata"))) {
             foreach (request()->input("arraydata") as $value) {
@@ -101,6 +107,29 @@ class MenuController extends Controller
             }
         }
         echo json_encode(array("resp" => 1));
+
+    }
+
+    public function translate($id, $lang_id)
+    {
+        $menu = new Menus();
+        $menuitems = new MenuItems();
+        $menulist = $menu->select(['id', 'name'])->get();
+        $menulist = $menulist->pluck('name', 'id')->prepend('Select menu', 0)->all();
+        $pages = Page::all();
+        $languages = Language::orderBy('order')->pluck('name','id')->toArray();
+
+
+
+            $menu = Menus::find($id);
+            $menus = $menuitems->getall(request()->input("menu"));
+
+            $data = ['menus' => $menus, 'indmenu' => $menu, 'menulist' => $menulist, "pages" => $pages];
+            return view('admin-panel::menus.index', $data, compact('languages'));
+
+
+
+        return view('admin-panel::menus.index', compact('languages', 'menu','menuitems'));
 
     }
 }

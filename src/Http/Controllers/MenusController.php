@@ -2,6 +2,7 @@
 
 namespace Codeman\Admin\Http\Controllers;
 
+use Codeman\Admin\Models\Language;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Codeman\Admin\Interfaces\MenuInterface;
@@ -28,8 +29,9 @@ class MenusController extends Controller
            */
         public function index(MenuInterface $menuInterface, PageInterface $pageInterface)
         {
+            $languages = Language::orderBy('order')->pluck('name','id')->toArray();
             // return view('admin.menus.index', ['menus' => $menuInterface->getAll()]);
-        	return view('admin-panel::menus.index');
+        	return view('admin-panel::menus.index', compact('languages'));
         }
 
     	/**

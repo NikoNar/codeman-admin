@@ -211,7 +211,7 @@ class PagesController extends Controller
                 $selected_attachments = [];
 
             }else{
-                $meta_attachments = $decoded_pagemetas['attachments'];
+                $meta_attachments = array_key_exists('attachments',$decoded_pagemetas) ? $decoded_pagemetas['attachments'] :array();
                 $selected_attachments = [];
                 foreach($meta_attachments as $key => $val){
                     if($val != "all" || $val != ""){
@@ -222,7 +222,6 @@ class PagesController extends Controller
                 $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->where('language_id', $translate->language_id)->get();
                 $attachments = $relations->groupBy('type')->toArray();
             }
-
 
             return view('admin-panel::page.create_edit', [
                 'page' => $translate,

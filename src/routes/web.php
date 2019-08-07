@@ -155,7 +155,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 		Route::post('admin/menus/store', 'MenusController@store')->name('menu-store');
 		Route::get('admin/menus/show/{id}', 'MenusController@show')->name('menu-show');
 		Route::put('admin/menus/update/{id}', 'MenusController@update')->name('menu-update');
-		Route::get('admin/menus/translate/{id}', 'MenusController@translate')->name('menu-translate');
+		Route::get('admin/menus/translate/{id}/{lnag}', '\Codeman\Admin\Menu\Controllers\MenuController@translate')->name('menu-translate');
 		Route::get('admin/menus/destroy/{id}', 'MenusController@destroy')->name('menu-destroy');
 
 

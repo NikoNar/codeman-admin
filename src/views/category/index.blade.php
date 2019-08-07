@@ -76,7 +76,7 @@
 				@include('admin-panel::category.parts.listing')
 			</div>
 
-			<input type="hidden" name="modelName" id="modelName" value="{!! isset($categories) && !$categories->isEmpty() ? class_basename($categories[0]) : null !!}" >
+			<input type="hidden" name="modelName" id="modelName" value="Category" >
 
 		</div>
 		<!-- /.box-footer-->

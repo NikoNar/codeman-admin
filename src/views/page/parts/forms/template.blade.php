@@ -24,7 +24,7 @@
 @endforeach
 @isset($attachments)
         @php
-            if(isset($page)){
+            if(isset($page) && array_key_exists('attachments',$page->meta )){
                 $full = array_keys($page->meta['attachments'], 'all');
             } else {
                  $full = [];
