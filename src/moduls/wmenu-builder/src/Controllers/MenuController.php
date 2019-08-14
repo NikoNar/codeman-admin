@@ -49,6 +49,7 @@ class MenuController extends Controller
     {
         $arraydata = request()->input("arraydata");
         if (is_array($arraydata)) {
+            dd($arraydata);
             foreach ($arraydata as $value) {
                 $menuitem = MenuItems::find($value['id']);
                 $menuitem->label = $value['label'];
@@ -63,7 +64,6 @@ class MenuController extends Controller
             $menuitem->label = request()->input("label");
             $menuitem->link = request()->input("url");
             $menuitem->class = request()->input("clases");
-            $menuitem->language_id = request()->input("language_id");
             $menuitem->save();
         }
     }

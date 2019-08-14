@@ -65,9 +65,17 @@ class ModuleController extends Controller
 //        dd($request->all(0));
 //        $request['options'] = json_encode($request->options);
         $request['slug'] = Str::slug($request['title']);
-        Permission::create(['name' => 'create-'.$request['slug']]);
+        if(Permission::where(['name' => 'create-'.$request['slug']])->first() === null){
+            Permission::create(['name' => 'create-'.$request['slug']]);
+        };
+        if(Permission::where(['name' => 'edit-'.$request['slug']])->first() === null){
         Permission::create(['name' => 'edit-'.$request['slug']]);
-        Permission::create(['name' => 'delete-'.$request['slug']]);
+        };
+        if(Permission::where(['name' => 'delete-'.$request['slug']])->first() === null){
+            Permission::create(['name' => 'delete-'.$request['slug']]);
+        };
+
+
         $module = Module::create($request->all());
         return redirect()->route('modules.edit', $module->id)->with('success', 'Module Created Successfully.');
 

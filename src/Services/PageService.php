@@ -189,8 +189,9 @@ class PageService implements PageInterface
 
 	public function createUpdateMeta($page_id, $inputs)
 	{
-		$pagemetas = $this->pagemeta->where('page_id', $page_id)->get();
-		if( isset($pagemetas) && !$pagemetas->isEmpty() && isset($inputs) && !empty($inputs) ) {
+        $pagemetas = $this->pagemeta->where('page_id', $page_id)->get();
+//        dd($page_id,$inputs);
+        if( isset($pagemetas) && !$pagemetas->isEmpty() && isset($inputs) && !empty($inputs) ) {
 			$newInputs = array();
 			$updateInputs = array();
 			$updateInputsIds = array();

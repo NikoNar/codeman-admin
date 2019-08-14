@@ -250,6 +250,7 @@ class PagesController extends Controller
         }
         $template = null;
         $templates = Module::where('module_type', 'template')->pluck('title', 'id')->toArray();
+
         $page = $pageInterface->getById($id);
         $languages = Language::orderBy('order')->pluck('name','id')->toArray();
 

@@ -337,7 +337,10 @@ class ResourceController extends Controller
             }
             if(!$trans_cat_id){
                 $trans_cat_parent = Category::find($category)->parent_lang_id;
-                $trans_cat_id = Category::where('parent_lang_id' , $trans_cat_parent)->where('language_id', $lang)->first()->id;
+                $trans_cat = Category::where('parent_lang_id' , $trans_cat_parent)->where('language_id', $lang)->first();
+                if($trans_cat){
+                    $trans_cat_id =  $trans_cat->id;
+                }
             }
             if($trans_cat_id){
                 $translated_categories[] = $trans_cat_id;

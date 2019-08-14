@@ -2,7 +2,7 @@
 
 namespace Codeman\Admin\Services;
 
-use Codeman\Admin\Interfaces\CrudInterface;
+use Codeman\Admin\Interfaces\CRUDInterface;
 use Codeman\Admin\Models\BaseModel;
 use Codeman\Admin\Models\Language;
 use Codeman\Admin\Models\Page;
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Image;
 use Illuminate\Support\Str;
 
-class CRUDService implements CrudInterface
+class CRUDService implements CRUDInterface
 {
 	/**
 	 * The object of model class.

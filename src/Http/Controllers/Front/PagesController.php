@@ -197,6 +197,7 @@ class PagesController extends Controller
             // }
             $pagemetas = null;
             $pagemetas = $this->getPageMetas($pageObject->id);
+//            dd($pageObject->id);
             if($pagemetas){
                 $pageObject->setAttribute('meta', $pagemetas);
             }
@@ -206,7 +207,7 @@ class PagesController extends Controller
             }
 
             // dd(json_decode($pageObject->description));
-            // dd($pageObject);
+//             dd($pageObject);
 
             if(array_key_exists('attachments', $pagemetas) && !empty($pagemetas['attachments'])){
                 $attachments = json_decode($pagemetas['attachments'], true);

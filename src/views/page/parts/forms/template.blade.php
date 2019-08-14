@@ -23,7 +23,7 @@
     @endif
 @endforeach
 @isset($attachments)
-        @php
+    @php
             if(isset($page) && array_key_exists('attachments',$page->meta )){
                 $full = array_keys($page->meta['attachments'], 'all');
             } else {
