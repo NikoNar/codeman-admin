@@ -231,6 +231,7 @@ class PagesController extends Controller
                                 $decoded_resourcemetas[$key] = $value;
                             }
                         }
+                        
                         $item->setAttribute('meta', $decoded_resourcemetas);
                         $resourseWithMetas[] = $item;
 
