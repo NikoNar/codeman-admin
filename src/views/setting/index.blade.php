@@ -27,6 +27,20 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="col-md-3 no-padding-left" style="height: 34px; line-height: 34px;">
+							{!! Form::label('site_email', 'Site Email:') !!}
+						</div>
+						<div class="col-md-9">
+							<div class="form-group">
+								<div class='input-group'>
+								    <span class="input-group-addon">
+								        <span class="fa fa-envelope"></span>
+								    </span>
+									{!! Form::text('site_email', null, ['class' => 'form-control', 'placeholder' => env('APP_EMAIL')]) !!}
+								</div>
+							</div>
+						</div>
 						
 
 						<div class="col-md-3 no-padding-left" style="height: 34px; line-height: 34px;">	
@@ -397,7 +411,7 @@
 
 						<div class="col-md-12 no-padding-left">
 							<div class="col-md-3 " style="height: 34px; line-height: 34px;">
-								{!! Form::label('banner', 'Banner:') !!}
+								{!! Form::label('banner', 'Main Banner:') !!}
 							</div>
 							<div class="col-md-4">
 								<div class="form-group">
@@ -422,6 +436,18 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="col-md-12">
+							<div class="form-group">
+								<div class='input-group'>
+									<div class="form-group">
+										{!! Form::label('product_banner', 'Product Page Banner'); !!}
+										{!! Form::textarea('product_banner', null, ['class' => 'form-control ckeditor', 'id' => 'product_banner', 'name' =>  'product_banner']); !!}
+									</div>
+								</div>
+							</div>
+						</div>
+
 						<div class="clearfix"></div>
 
 

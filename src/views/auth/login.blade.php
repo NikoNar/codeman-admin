@@ -74,8 +74,8 @@
                     <div style="position: absolute; bottom: 0; right: 0;padding: 10px;">
                         <p>© Copyright 2017-{{date('Y')}} CODEMAN. All rights reserved. </p>
                     </div>
-                    
-                    
+
+
 
                     
                 </form>

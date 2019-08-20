@@ -117,18 +117,19 @@
 </div>
 <div class="col-md-3">
 	<div class="form-group">
-		{!! Form::label('created_at', 'Published Date'); !!}
+		{!! Form::label('created_at', 'Published / Updated Date'); !!}
+{{--		{{dd($resource)}}--}}
 		<div class="clearfix"></div>
         <div class='input-group col-md-6 pull-left'>
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
             </span>
-        	{!! Form::text('published_date', null, ['class' => 'form-control', 'id' => 'datepicker']) !!}
+        	{!! Form::text('created_at', null, ['class' => 'form-control', 'id' => 'datepicker']) !!}
         </div>
         <div class="input-group bootstrap-timepicker col-md-6 pull-left">
-        	{!! Form::text('published_time', null, ['class' => 'form-control timepicker', 'id' => 'timepicker']) !!}
+        	{!! Form::text('updated_at', null, ['class' => 'form-control timepicker', 'id' => 'timepicker']) !!}
         	<div class="input-group-addon">
-        		<i class="fa fa-clock-o"></i>
+        		<i class="glyphicon glyphicon-calendar"></i>
         	</div>
         </div>
 		<div class="clearfix"></div>

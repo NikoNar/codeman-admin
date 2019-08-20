@@ -14,7 +14,7 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
 		{ name: 'links' },
 		{ name: 'insert',       groups:['insert', 'media'] },
-		{ name: 'insert',       groups:['insert', 'wrap'] },
+		// { name: 'insert',       groups:['insert', 'wrap'] },
 		{ name: 'forms' },
 		{ name: 'tools' },
 		{ name: 'document',	   	groups: [ 'mode', 'document', 'doctools' ] },
@@ -37,7 +37,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.colorButton_enableMore = '#3e59ae';
 	config.colorButton_colors = '222,d7af37,d00';
 	config.format_tags = 'p;h1;h2;h3;h4;h5;h6;pre';
-	config.extraPlugins = 'btgrid,font,image2,justify,colorbutton,colordialog,embedsemantic,iframe,smiley,letterspacing,lineheight,texttransform,liststyle,simplebutton,media,wrap';
+	config.extraPlugins = 'btgrid,font,image2,justify,colorbutton,colordialog,embedsemantic,iframe,smiley,letterspacing,lineheight,texttransform,liststyle,simplebutton,media';
 	config.allowedContent = true;
 
 	// Simplify the dialog windows.

@@ -52,12 +52,13 @@
 	<div class="clearfix"></div>
 	<br>
 	{{-- @include('admin-panel::layouts.content-builder.index') --}}
-
+@if(isset($page) && $templates[$page->template] != 'index')
 	<div class="form-group">
 		{!! Form::label('content', 'Content'); !!}
 		{!! Form::textarea('content', null, ['class' => 'form-control', 'id' => 'content', 'name' =>  'content']); !!}
 	</div>
 	<div class="clearfix"></div>
+@endif
 	@if(isset($template) && $template != '')
 		<hr>
 		<div id="extended_template">
@@ -117,7 +118,29 @@
 			{!! Form::select('parent_id', [null => 'Select Parent Page'] + $parents, null, ['class' => 'form-control select2']); !!}
 		</div>
 	@endif
-{{--	<div class="form-group">--}}
+	<div class="form-group">
+		{!! Form::label('thumbnail', 'Featured Image'); !!}
+		<div class="fileupload fileupload-new" data-provides="fileupload">
+			<div class="fileupload-preview thumbnail" style="width: 100%;">
+				@if(isset($page) && !empty($page->thumbnail))
+					<img src="{{$page->thumbnail}}" class="img-responsive" alt="" onerror="imgError(this);" id="thumbnail-image">
+				@else
+					<img src="{{ asset('admin-panel/images/no-image.jpg')}}" class="img-responsive" alt="No Featured Image" onerror="imgError(this);" id="thumbnail-image">
+				@endif
+			</div>
+			<div>
+		    	<span class="btn btn-file btn-primary btn-flat col-md-6 media-open">
+		    		<span class="fileupload-new">Select image</span>
+					{{-- {!! Form::file('thumbnail', null, ['class' => 'form-control']); !!} --}}
+					{!! Form::hidden('thumbnail', null, ['id' => 'thumbnail']); !!}
+				</span>
+				<a href="javascript:void(0)" class="btn fileupload-exists btn-danger btn-flat col-md-6" data-dismiss="fileupload" id="remove-thumbnail">Remove</a>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+
+	{{--	<div class="form-group">--}}
 {{--		{!! Form::label('thumbnail', 'Featured Image'); !!}--}}
 {{--		<div class="fileupload fileupload-new" data-provides="fileupload">--}}
 {{--			<div class="fileupload-preview thumbnail" style="width: 100%;">--}}

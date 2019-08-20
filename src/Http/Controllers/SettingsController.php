@@ -54,8 +54,14 @@ class SettingsController extends Controller
      */
     public function createOrUpdate(Request $request)
     {
+
+//        dd($request->all());
         if($request->site_name == null){
             $request['site_name']  = env('APP_NAME');
+        }
+
+        if($request->site_email == null){
+            $request['site_email']  = env('APP_EMAIL');
         }
         $updated = [];
         if(null != $all_langs = $request->all_langs){

@@ -116,6 +116,7 @@ class UserController extends Controller
             abort(403);
         }
         $modules = Module::pluck('slug')->toArray();
+//        dd($modules);
         return view('admin-panel::user.create_edit', [
             'user' => $this->CRUD->getById($id),
             'modules' => $modules,
