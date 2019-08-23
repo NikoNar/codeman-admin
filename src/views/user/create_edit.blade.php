@@ -66,7 +66,7 @@
 	<!-- iCheck 1.0.1 -->
 	<script src="{{ asset('admin-panel/plugins/iCheck/icheck.min.js') }}"></script>
 
-	 {!! JsValidator::formRequest('Codeman\Admin\Http\Requests\userRequest') !!} 
+	 {!! JsValidator::formRequest('Codeman\Admin\Http\Requests\UserRequest') !!}
 
 	<script>
 	  	$(document).ready(function(){

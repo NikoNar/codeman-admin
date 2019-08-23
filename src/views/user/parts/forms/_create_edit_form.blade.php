@@ -153,6 +153,7 @@
                         </div>
                     </td>
                 </tr>
+
 				@foreach($modules as $module)
 						<tr>
 							<td>

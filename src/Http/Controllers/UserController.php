@@ -115,7 +115,7 @@ class UserController extends Controller
         if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
-        $modules = Module::pluck('slug')->toArray();
+        $modules = Module::where('module_type', 'module')->pluck('slug')->toArray();
 //        dd($modules);
         return view('admin-panel::user.create_edit', [
             'user' => $this->CRUD->getById($id),
@@ -136,8 +136,13 @@ class UserController extends Controller
         if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
-        $this->CRUD->update($id, $request->all());
         $user = User::where('id', $id)->first();
+        if($request->password){
+            $request['password'] = \Hash::make($request->password);
+            $user->update($request->all());
+        } else {
+            $user->update($request->except('password'));
+        }
 
         if($request->role){
             $user->syncRoles($request->role);

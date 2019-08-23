@@ -52,7 +52,7 @@
 	<div class="clearfix"></div>
 	<br>
 	{{-- @include('admin-panel::layouts.content-builder.index') --}}
-@if(isset($page) && $templates[$page->template] != 'index')
+@if(isset($page) && $page->template != null && $templates[$page->template] != 'index')
 	<div class="form-group">
 		{!! Form::label('content', 'Content'); !!}
 		{!! Form::textarea('content', null, ['class' => 'form-control', 'id' => 'content', 'name' =>  'content']); !!}
