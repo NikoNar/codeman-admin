@@ -101,6 +101,7 @@ class WMenu
     {
         if(Menus::byNameAndLang($name, $lang)){
             $menu_id = Menus::byNameAndLang($name, $lang)->id;
+//            dd(self::get($menu_id));
             return self::get($menu_id);
         }
     }

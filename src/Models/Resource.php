@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Resource extends Model
 {
     protected $resource_type;
-    protected $fillable = [ 'parent_lang_id', 'title', 'slug', 'type', 'status', 'content', 'thumbnail', 'meta-title', 'meta-description', 'meta-keywords', 'order', 'language_id' ];
+    protected $fillable = [ 'parent_lang_id', 'title', 'slug', 'type', 'status', 'content', 'thumbnail', 'meta-title', 'meta-description', 'meta-keywords', 'order', 'language_id','created_at' ];
 
 
     public function language()

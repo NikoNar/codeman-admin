@@ -89,45 +89,73 @@
 					</div>
 					
 					<div class="col-md-12">
-						<h4>Social Icons</h4>
+						<h4>Social links</h4>
 						<hr>
-						<div class="social-icons-group">
-							@if(isset($settings) && isset($settings['social']))
-								@foreach($settings['social'] as $key => $value)
-									<div class="item">
-										<div class="col-md-4">
-											<div class="form-group">
-												<div class='input-group'>
-												    <span class="input-group-addon">
-												        <span class="fa {{ $value->name }}"></span>
-												    </span>
-												    <select name="social[{{$key}}][name]" class="social_icon_name">
-														@include('admin-panel::layouts.parts._fontawesom_dropdown',['selected' => $value->name])
-												    </select>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-7">
-											<div class="form-group">
-												<div class='input-group'>
-												    <span class="input-group-addon">
-												        <span class="fa fa-link"></span>
-												    </span>
-													{!! Form::text('social['.$key.'][url]', $value->url ?? null,  ['class' => 'form-control social_icon_url', 'placeholder' => 'Socioal Site Url', 'required']) !!}
-												</div>
-											</div>
-										</div>
-										<div class="col-md-1">
-											<div class="form-group">
-												<span class="fa fa-minus btn btn-danger btn-flat remove-row"></span>
-											</div>
-										</div>
-									</div>
 
-								@endforeach
-							@endif
+						<div class="col-md-3 no-padding-left" style="height: 34px; line-height: 34px;">
+							{!! Form::label('facebook', 'Facebook:') !!}
 						</div>
-						<a class="btn btn-success btn-flat pull-right add-social-row"> Add New Social Icon</a>
+						<div class="col-md-9">
+							<div class="form-group">
+								<div class='input-group'>
+								    <span class="input-group-addon">
+								        <span class="fa fa-facebook"></span>
+								    </span>
+									{!! Form::text('facebook', null, ['class' => 'form-control']) !!}
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-3 no-padding-left" style="height: 34px; line-height: 34px;">
+							{!! Form::label('insta', 'Instagram:') !!}
+						</div>
+						<div class="col-md-9">
+							<div class="form-group">
+								<div class='input-group'>
+								    <span class="input-group-addon">
+								        <span class="fa fa-instagram"></span>
+								    </span>
+									{!! Form::text('insta', null, ['class' => 'form-control']) !!}
+								</div>
+							</div>
+						</div>
+{{--						<div class="social-icons-group">--}}
+{{--							@if(isset($settings) && isset($settings['social']))--}}
+{{--								@foreach($settings['social'] as $key => $value)--}}
+{{--									<div class="item">--}}
+{{--										<div class="col-md-4">--}}
+{{--											<div class="form-group">--}}
+{{--												<div class='input-group'>--}}
+{{--												    <span class="input-group-addon">--}}
+{{--												        <span class="fa {{ $value->name }}"></span>--}}
+{{--												    </span>--}}
+{{--												    <select name="social[{{$key}}][name]" class="social_icon_name">--}}
+{{--														@include('admin-panel::layouts.parts._fontawesom_dropdown',['selected' => $value->name])--}}
+{{--												    </select>--}}
+{{--												</div>--}}
+{{--											</div>--}}
+{{--										</div>--}}
+{{--										<div class="col-md-7">--}}
+{{--											<div class="form-group">--}}
+{{--												<div class='input-group'>--}}
+{{--												    <span class="input-group-addon">--}}
+{{--												        <span class="fa fa-link"></span>--}}
+{{--												    </span>--}}
+{{--													{!! Form::text('social['.$key.'][url]', $value->url ?? null,  ['class' => 'form-control social_icon_url', 'placeholder' => 'Socioal Site Url', 'required']) !!}--}}
+{{--												</div>--}}
+{{--											</div>--}}
+{{--										</div>--}}
+{{--										<div class="col-md-1">--}}
+{{--											<div class="form-group">--}}
+{{--												<span class="fa fa-minus btn btn-danger btn-flat remove-row"></span>--}}
+{{--											</div>--}}
+{{--										</div>--}}
+{{--									</div>--}}
+
+{{--								@endforeach--}}
+{{--							@endif--}}
+{{--						</div>--}}
+{{--						<a class="btn btn-success btn-flat pull-right add-social-row"> Add New Social Icon</a>--}}
 						
 						<div class="clearfix"></div>
 					</div>
@@ -365,6 +393,7 @@
 								</div>
 							</div>
 						</div>
+
 						<div class="col-md-12">
 							<div class="form-group">
 								<div class='input-group'>

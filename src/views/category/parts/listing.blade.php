@@ -70,4 +70,4 @@
 	</tbody>
 </table>
 <div class="clearfix"></div>
-{{-- <div class="pull-right">{!! $categories->links() !!}</div> --}}
+{{-- <div class="pull-right">{!! $categories->links() !!}</div>--}}
