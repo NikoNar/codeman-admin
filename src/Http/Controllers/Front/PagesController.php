@@ -3,6 +3,7 @@
 namespace Codeman\Admin\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Codeman\Admin\Models\Language;
 use Codeman\Admin\Models\Module;
 use Codeman\Admin\Models\Resource;
@@ -213,14 +214,13 @@ class PagesController extends Controller
                 $attachments = json_decode($pagemetas['attachments'], true);
                 foreach($attachments as $type => $val){
                     if($val == 'all'){
-                        $resource = Resource::where('type', $type)->get();
+                        $resource = Resource::where('type', $type)->where('status', 'published')->orderBy('order')->get();
                     } else {
-                        $resource = Resource::whereIn('id', explode(',', $val))->get();
+                        $resource = Resource::whereIn('id', explode(',', $val))->where('status', 'published')->orderBy('order')->get();
                     }
 
                     $resourseWithMetas = [];
                     foreach($resource as $item){
-                        // dd($item->id);
                         $CRUD = new CRUDService($resource);
                         $resourcemetas = $CRUD->getPageMetas($item->id);
                         $decoded_resourcemetas = [];
@@ -231,7 +231,7 @@ class PagesController extends Controller
                                 $decoded_resourcemetas[$key] = $value;
                             }
                         }
-                        
+
                         $item->setAttribute('meta', $decoded_resourcemetas);
                         $resourseWithMetas[] = $item;
 

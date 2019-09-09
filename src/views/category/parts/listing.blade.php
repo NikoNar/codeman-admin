@@ -1,4 +1,4 @@
-<table id="" class="table table-bordered table-striped">
+<table id="sortable-table" class="table table-bordered table-striped">
 	<thead>
 		<tr>
 			<th width="3%" class="no-sort reorder"><input type="checkbox" name="checked" onClick="checkAll(this)"></th>
