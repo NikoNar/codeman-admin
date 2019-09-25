@@ -8,7 +8,7 @@
 		</a>
 		{{ $category->title }}
 	</td>
-	<td> {{ $category->content }} </td>
+	<td> {{ $category->status }} </td>
 	<td> {{ $category->type }} </td>
 	{{--	<td> {{ $category->type }} </td>--}}
 	<td>{{ date('m/d/Y g:i A', strtotime($category->created_at)) }}</td>

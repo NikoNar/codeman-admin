@@ -2,12 +2,14 @@
 
 namespace Codeman\Admin\Http\Controllers;
 
+use Codeman\Admin\Http\Requests\CategoryRequest;
 use Codeman\Admin\Models\Language;
 use Codeman\Admin\Models\Module;
 use Illuminate\Http\Request;
 use Codeman\Admin\Http\Controllers\Controller;
 
 use Codeman\Admin\Models\Category;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 
@@ -26,6 +28,7 @@ class CategoriesController extends Controller
         $this->model = $category;
     	// $this->middleware('admin');
         $this->languages = Language::orderBy('order')->pluck('name','id')->toArray();
+        $this->def_lang = Language::orderBy('order')->first();
     }
 
     /**
@@ -45,7 +48,7 @@ class CategoriesController extends Controller
 	*
 	* @return Response
 	*/
-	public function create( Request $request,  Category $model, $type)
+	public function create(Request $request,  Category $model, $type)
 	{
         if($request->ajax()) {
             $categories = $model->where('type', $type)->where('parent_id', '<=', 0)->orderBy('order', 'DESC')->get();
@@ -59,7 +62,7 @@ class CategoriesController extends Controller
             ])->render();
             return response()->json(array('success' => true, 'html' => $returnHTML));
         }else{
-            $categories = $model->where('type', $type)->where('parent_id', '<=', 0)->orderBy('order', 'DESC')->get();
+            $categories = $model->where('type', $type)->where('parent_id', '<=', 0)->where('language_id', $this->def_lang->id)->orderBy('order', 'DESC')->get();
             return view('admin-panel::category.create_edit', [
                 'categories' => $categories,
                 'type' => $type,
@@ -75,9 +78,15 @@ class CategoriesController extends Controller
 	*
 	* @return Response
 	*/
-	public function store( Request $request, Category $category )
+	public function store(CategoryRequest $request, Category $category )
 	{
 //	    dd($request->all());
+        if (strpos($request->created_at, '/') !== false) {
+            $request['created_at'] = Carbon::createFromFormat('d/m/Y', $request->created_at);
+        } else {
+            $request['created_at'] = Carbon::now();
+
+        }
         $request['slug'] = getUniqueSlug($category, $request['title']);
         if($request['parent_id'] == 0){
             $request['level'] = 1;
@@ -96,15 +105,15 @@ class CategoriesController extends Controller
             if(isset($request['selected'])){
              $keys = explode(',', $request['selected']);
                 array_push($keys, $category->id);
-                $categories = Category::where(['type' =>$category->type, 'language_id' =>$category->language_id ])->get();
+                $categories  = Category::where('type', $category->type)->where('language_id', $category->language_id)->orderBy('order', 'DESC')->get()->groupBy('parent_id');
                 $returnHTML = view('admin-panel::components.categories', [
                     'render' => true,
                     'categories' => $categories,
                     'selected' => $keys,
                     'module' => $category->type
                 ])->render();
-            }
 
+            }
             return  response()->json(array('success' => 'Category successfully created.', 'html' => $returnHTML));
         } else {
             $category = $category->create($request->all());
@@ -164,11 +173,13 @@ class CategoriesController extends Controller
 	* @param  int  $id
 	* @return Response
 	*/
-	public function update($id, Request $request, Category $category)
+	public function update($id, CategoryRequest $request, Category $category)
 	{
         $category = $category->find($id);
         $request['slug'] = getUniqueSlug($category, $request['title'], $id);
-
+        if (strpos($request->created_at, '/') !== false) {
+            $request['created_at'] = Carbon::createFromFormat('d/m/Y', $request->created_at);
+        }
 
         if($request['parent_id'] == 0){
             $request['level'] = 1;

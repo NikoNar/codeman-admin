@@ -742,3 +742,8 @@ span.twitter-typeahead{
 .navbar-nav>.user-menu>.dropdown-menu>li.user-header>p{
 	color: #fff;
 }
+#myUL{
+	max-height: 300px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}

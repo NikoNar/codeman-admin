@@ -11,11 +11,12 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <strong class="relation_name">All</strong>
-                                <ul id="" class="draggables connectedSortable">
+                                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+                                <ul id="myUL" class="draggables connectedSortable">
                                     @foreach($items as $key => $arr)
                                         @if(isset($attached_relations) && !empty($attached_relations))
                                             @if(!in_array($arr['id'], $attached_relations))
-                                                <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>
+                                                <li class="ui-state-default" data-id="{{$arr['id']}}"><a href="javascript:void(0)">{{$arr['title']}}</a></li>
                                             @endif
                                         @else
                                             <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>

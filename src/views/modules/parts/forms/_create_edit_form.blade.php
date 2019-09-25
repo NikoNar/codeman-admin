@@ -73,9 +73,9 @@
 						@if(isset($module) &&  null != $module_relations = json_decode($module->relations))
 						@endif
 						@foreach($relations as $id => $name)
-								@if(isset($module) && $module->id == $id)
-									@continue
-								@endif
+{{--								@if(isset($module) && $module->id == $id)--}}
+{{--									@continue--}}
+{{--								@endif--}}
 							<option value="{{$id}}" @if(isset($module_relations)&& in_array($id, $module_relations) )selected @endif>{{$name}}</option>
 						@endforeach
 					</select>
@@ -145,6 +145,7 @@
 									<option value="gallery" @if($arr['type'] == 'gallery') selected @endif>Gallery</option>
 									<option value="editor" @if($arr['type'] == 'editor') selected @endif>Editor</option>
 									<option value="color" @if($arr['type'] == 'color') selected @endif>Color</option>
+									<option value="datepicker" @if($arr['type'] == 'datepicker') selected @endif>Datepicker</option>
 								</select>
 							</div>
 						</div>
@@ -222,6 +223,7 @@
 									<option value="gallery">Gallery</option>
 									<option value="editor">Editor</option>
 									<option value="color">Color</option>
+									<option value="datepicker">Datepicker</option>
 								</select>
 							</div>
 						</div>
@@ -297,6 +299,7 @@
 									<option value="gallery">Gallery</option>
 									<option value="editor">Editor</option>
 									<option value="color">Color</option>
+									<option value="datepicker">Datepicker</option>
 								</select>
 							</div>
 						</div>

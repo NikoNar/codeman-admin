@@ -1,5 +1,7 @@
 <?php
 // dd(auth()->check());
+use Spatie\Sitemap\SitemapGenerator;
+
 Route::middleware('web')->group(function () {
  	
 	Route::namespace('Codeman\Admin\Http\Controllers')->group(function () {
@@ -70,6 +72,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 
 
+        Route::get('generatesitemap', function () {
+            SitemapGenerator::create(env('APP_URL'))->writeToFile('sitemap.xml');
+            return redirect()->back();
+        })->name('sitemap.generate');
 
 		// Route::get('admin/joomag', 'DashboardController@api');
 

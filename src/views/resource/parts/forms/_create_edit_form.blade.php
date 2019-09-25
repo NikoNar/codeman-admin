@@ -87,6 +87,9 @@
 				@case('editor')
 					@include('admin-panel::resource.parts.options.ckeditor', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type']])
 				@break
+				@case('datepicker')
+					@include('admin-panel::resource.parts.options.datepicker', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type']])
+				@break
 				@default
 					@include('admin-panel::resource.parts.options.input', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type'], 'options'=>explode(',', $val['type_options'])])
 				@break
@@ -117,17 +120,18 @@
 </div>
 <div class="col-md-3">
 	<div class="form-group">
-		{!! Form::label('created_at', 'Published / Updated Date'); !!}
-{{--		{{dd($resource)}}--}}
+		{!! Form::label('created_at', 'Created'); !!}
+		{!! Form::label('updated_at', 'Updated',['class'=>'pull-right']); !!}
 		<div class="clearfix"></div>
-        <div class='input-group col-md-6 pull-left'>
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-            </span>
-        	{!! Form::text('created_at', null, ['class' => 'form-control', 'id' => 'datepicker']) !!}
+        <div class='input-group col-md-6 pull-left date'>
+			<div class="input-group-addon">
+				<i class="fa fa-calendar"></i>
+			</div>
+			<input type="text" name="created_at" class="form-control pull-right datepicker" value="{{isset($resource)?$resource->created_at : null}}" autocomplete="off">
         </div>
+
         <div class="input-group bootstrap-timepicker col-md-6 pull-left">
-        	{!! Form::text('updated_at', null, ['class' => 'form-control timepicker', 'id' => 'timepicker']) !!}
+        	{!! Form::text('updated_at', null, ['class' => 'form-control timepicker', 'disabled' =>'disabled']) !!}
         	<div class="input-group-addon">
         		<i class="glyphicon glyphicon-calendar"></i>
         	</div>

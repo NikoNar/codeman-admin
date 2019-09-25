@@ -475,6 +475,7 @@
 									</div>
 								</div>
 							</div>
+							<a href="{{route('sitemap.generate')}}" class="btn btn-success pull-right">Generate Site Map</a>
 						</div>
 
 						<div class="clearfix"></div>

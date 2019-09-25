@@ -4,7 +4,7 @@ namespace Codeman\Admin\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContactUsRequest extends FormRequest
+class CategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,7 @@ class ContactUsRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required|string',
-            'email'=>'required|email',
-            'message'=>'required|string',
+            'title'=>'required|string',
         ];
     }
 }

@@ -10,6 +10,7 @@ use Codeman\Admin\Http\Requests\ResourceRequest;
 use Codeman\Admin\Services\CRUDService;
 use Codeman\Admin\Http\Controllers\Controller;
 use Codeman\Admin\Models\Resource;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Route;
@@ -128,6 +129,12 @@ class ResourceController extends Controller
         if(!auth()->user()->can('create-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
+        if (strpos($request->created_at, '/') !== false) {
+            $request['created_at'] = Carbon::createFromFormat('d/m/Y', $request->created_at);
+        } else {
+            $request['created_at'] = Carbon::now();
+
+        }
 
 //        dd($request->all(), $module);
 //        dd($this->def_lang);
@@ -229,6 +236,9 @@ class ResourceController extends Controller
     public function update(ResourceRequest $request, $module,  $id)
     {
 //        dd($request->all());
+        if (strpos($request->created_at, '/') !== false) {
+            $request['created_at'] = Carbon::createFromFormat('d/m/Y', $request->created_at);
+        }
         if(!auth()->user()->can('edit-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }

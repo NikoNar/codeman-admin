@@ -3,7 +3,7 @@
 		<tr>
 			<th width="3%" class="no-sort reorder"><input type="checkbox" name="checked" onClick="checkAll(this)"></th>
 			<th>Name</th>
-			<th>Description</th>
+			<th>Status</th>
 {{--			<th>Type</th>--}}
 			<th width="15%">Created Date</th>
 			<th width="15%">Last Time Update</th>
@@ -47,7 +47,7 @@
 			<i class="fa fa-camera"></i>
 			<input name="thumbnail" type="hidden" value="">
 		</a>'.$category->title.'</td>';
-                        $html .='<td>'.$category->content.'</td>';
+                        $html .='<td>'.$category->status.'</td>';
                         $html .='<td>'.date('m/d/Y g:i A', strtotime($category->created_at)).'</td>';
                         $html .='<td>'.date('m/d/Y g:i A', strtotime($category->updated_at)).'</td>';
 

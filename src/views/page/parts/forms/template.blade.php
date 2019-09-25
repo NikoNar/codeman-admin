@@ -49,14 +49,15 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <strong class="relation_name">{{$model}}</strong>
-                                <ul id="" class="draggables connectedSortable">
+                                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+                                <ul id="myUL" class="draggables connectedSortable select2">
                                     @foreach($items as $key => $arr)
                                         @if(isset($selected_attachments) && !empty($selected_attachments))
                                             @if(!in_array($arr['id'], $selected_attachments))
-                                                <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>
+                                                <li class="ui-state-default" data-id="{{$arr['id']}}"><a href="javascript:void(0)">{{$arr['title']}}</a></li>
                                             @endif
                                         @else
-                                            <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>
+                                            <li class="ui-state-default" data-id="{{$arr['id']}}"><a href="javascript:void(0)">{{$arr['title']}}</a></li>
                                         @endif
                                     @endforeach
                                 </ul>
@@ -67,7 +68,7 @@
                                     @foreach($items as $key => $arr)
                                         @if(isset($selected_attachments) && !empty($selected_attachments))
                                             @if(in_array($arr['id'], $selected_attachments))
-                                                <li class="ui-state-default" data-id="{{$arr['id']}}">{{$arr['title']}}</li>
+                                                <li class="ui-state-default" data-id="{{$arr['id']}}"><a href="javascript:void(0)">{{$arr['title']}}</a></li>
                                             @endif
                                         @endif
                                     @endforeach

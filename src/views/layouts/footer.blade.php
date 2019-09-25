@@ -36,6 +36,9 @@
 <script src="{{ asset('admin-panel/bower_components/select2/dist/js/select2.full.min.js') }}"></script>
 <!-- Query string -->
 {{-- <script src="{{ asset('admin-panel/query-string/index.js') }}"></script> --}}
+  <script src="{{ asset('admin-panel/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+
+
 
   <script src="{{ asset('admin-panel/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ asset('admin-panel/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
@@ -47,6 +50,12 @@
             headers:
             { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
         });
+  $(function () {
+      //Date picker
+      $('.datepicker').datepicker({
+          autoclose: true
+      })
+  })
 </script>
 
 @yield('script')

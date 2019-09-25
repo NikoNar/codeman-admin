@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $fillable = ['id','parent_id', 'title', 'content', 'type', 'language_id', 'slug', 'parent_lang_id',  'order', 'thumbnail', 'level', 'node'];
+    protected $fillable = ['id','parent_id', 'title', 'content', 'type', 'language_id', 'slug', 'parent_lang_id',  'order', 'thumbnail', 'level', 'node', 'status'];
     protected $table = "cm_categories";
 
     /**
@@ -21,7 +21,7 @@ class Category extends Model
 
     public function catChilds($id = null)
     {
-        return $this->hasMany('Codeman\Admin\Models\Category','parent_id','id')->orderBy('order', 'DESC');
+        return $this->hasMany('Codeman\Admin\Models\Category','parent_id','id')->where('status','published')->orderBy('order', 'DESC');
     }
 
     // public function products()

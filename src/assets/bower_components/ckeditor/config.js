@@ -31,13 +31,13 @@ CKEDITOR.editorConfig = function( config ) {
 	// not needed in the Standard(s) toolbar.
 	config.removeButtons = 'Underline,Subscript,Superscript';
 	config.imageBrowser_listUrl = app.ajax_url+'/admin/media/json';
-	config.contentsCss = '../../../gaiff/css/fonts.css';
+	// config.contentsCss = '../../../gaiff/css/fonts.css';
 	config.font_names = 'Lato Bold/lato-bold;Lato Bold Italic/lato-bold-italic;Lato Black/lato-black;Lato Regular/lato-regular;Lato Italic/lato-italic;Lato Light/lato-light;Playfair Bold/playfair-bold;Playfair Regular/playfair-regular;Sourcesans Semibold/sourcesans-semibold;DejaVu Sans Condensed/DejaVu Sans Condensed;DejaVu Sans Condensed Bold/DejaVu Sans Condensed Bold;Bodoni/Bodoni;Bodoni-Bold/Bodoni-Bold';
 	// Set the most common block elements.
 	// config.colorButton_enableMore = '#3e59ae';
 	config.colorButton_colors = '222,d7af37,d00';
 	config.format_tags = 'p;h1;h2;h3;h4;h5;h6;pre';
-	config.extraPlugins = 'btgrid,font,image2,justify,colorbutton,colordialog,embedsemantic,iframe,smiley,letterspacing,lineheight,texttransform,liststyle,simplebutton,media';
+	config.extraPlugins = 'btgrid,font,image2,justify,colorbutton,colordialog,embedsemantic,iframe,smiley,letterspacing,lineheight,texttransform,liststyle,simplebutton,media,tableselection';
 	config.allowedContent = true;
 
 	// Simplify the dialog windows.

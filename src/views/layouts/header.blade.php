@@ -33,6 +33,7 @@
   
   <link rel="stylesheet" href="{{ asset('admin-panel/css/admin.css') }}">
   <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/datatables.net-bs/css/dataTables.bootstrap.css') }}">
+  <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
 
 
   <script> app = {ajax_url : '{!! url('/') !!}'}</script>

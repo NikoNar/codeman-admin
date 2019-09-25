@@ -20,7 +20,7 @@
 	</div>
 
 	{!! Form::label('content', 'Description'); !!}
-	{!! Form::text('content', null, ['class' => 'form-control']); !!}
+	{!! Form::textarea('content', null, ['class' => 'form-control ckeditor']); !!}
 	<div class="">
 		@include('admin-panel::layouts.parts._parent_category')
 	</div>
@@ -30,18 +30,20 @@
 </div>
 <div class="col-md-3">
 	<div class="form-group">
-		{!! Form::label('created_at', 'Published Date'); !!}
+		{!! Form::label('created_at', 'Created'); !!}
+		{!! Form::label('updated_at', 'Updated',['class'=>'pull-right']); !!}
 		<div class="clearfix"></div>
-		<div class='input-group col-md-6 pull-left'>
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-            </span>
-			{!! Form::text('published_date', null, ['class' => 'form-control', 'id' => 'datepicker']) !!}
-		</div>
-		<div class="input-group bootstrap-timepicker col-md-6 pull-left">
-			{!! Form::text('published_time', null, ['class' => 'form-control timepicker', 'id' => 'timepicker']) !!}
+		<div class='input-group col-md-6 pull-left date'>
 			<div class="input-group-addon">
-				<i class="fa fa-clock-o"></i>
+				<i class="fa fa-calendar"></i>
+			</div>
+			<input type="text" name="created_at" class="form-control pull-right datepicker" value="{{isset($category)?$category->created_at : null}}" autocomplete="off">
+		</div>
+
+		<div class="input-group bootstrap-timepicker col-md-6 pull-left">
+			{!! Form::text('updated_at', null, ['class' => 'form-control timepicker', 'disabled' =>'disabled']) !!}
+			<div class="input-group-addon">
+				<i class="glyphicon glyphicon-calendar"></i>
 			</div>
 		</div>
 		<div class="clearfix"></div>
