@@ -37,26 +37,30 @@
 <!-- Query string -->
 {{-- <script src="{{ asset('admin-panel/query-string/index.js') }}"></script> --}}
   <script src="{{ asset('admin-panel/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
-
+  <script src="{{ asset('admin-panel/plugins/bootstrap-iconpicker-1.10.0/dist/js/bootstrap-iconpicker.bundle.min.js') }}"></script>
 
 
   <script src="{{ asset('admin-panel/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ asset('admin-panel/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
 
+
+  <script type="text/javascript" src="{{asset('admin-panel/bower_components/moment/min/moment.min.js')}}"></script>
+  <script type="text/javascript" src="{{asset('admin-panel/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js')}}"></script>
+
 <script src="{{ asset('admin-panel/js/admin.js') }}"></script>
   <script src="{{ asset('admin-panel/js/colors.js') }}"></script>
 <script>
-  $.ajaxSetup({
-            headers:
-            { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
-        });
-  $(function () {
-      //Date picker
-      $('.datepicker').datepicker({
-          autoclose: true
-      })
-  })
+    $.ajaxSetup({
+        headers:
+            {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+    });
+
 </script>
+  <script type="text/javascript">
+      $(function () {
+          $('.datetimepicker-simple').datetimepicker();
+      });
+  </script>
 
 @yield('script')
 @yield('after-script')

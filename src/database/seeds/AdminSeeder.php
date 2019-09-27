@@ -50,7 +50,7 @@ class AdminSeeder extends Seeder
             'profile_pic' => 'sa.png',
             'email_verified_at' => now(),
             'password' => bcrypt('nimda_@26'),
-            'remember_token' => str_random(10),
+            'remember_token' => \Illuminate\Support\Str::random(10),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -61,7 +61,7 @@ class AdminSeeder extends Seeder
             'profile_pic' => 'aa.png',
             'email_verified_at' => now(),
             'password' => bcrypt('nimda123'),
-            'remember_token' => str_random(10),
+            'remember_token' =>\Illuminate\Support\Str::random(10),
             'created_at' => now(),
             'updated_at' => now(),
         ]);

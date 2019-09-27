@@ -42,32 +42,20 @@
 	<div class="clearfix"></div>
 	<br>
 
-
-
 	<div class="form-group">
-		{!! Form::label('icon', 'Font-Awsome Icon') !!}
+		{!! Form::label('icon', 'Icon') !!}
 		<div class='input-group'>
-{{--		    <span class="input-group-addon">--}}
-{{--				@isset($module)--}}
-{{--					{!! $module->icon !!}--}}
-{{--				@else--}}
-{{--		        <span class="fas fa-image"></span>--}}
-{{--				@endif--}}
-{{--		    </span>--}}
-			<div class="input-group iconpicker-container">
-				{!! Form::text('icon', null, ['class' => 'form-control icp icp-auto iconpicker-element iconpicker-input', 'data-placement' =>"bottomRight"]) !!}
-{{--				<input data-placement="bottomRight" class="form-control icp icp-auto iconpicker-element iconpicker-input" value="fas fa-archive" type="text">--}}
-				<span class="input-group-addon"><i class="fa fa-adn"></i></span>
-			</div>
+			<button class="btn btn-primary" role="iconpicker" name="icon" @isset($module) data-icon="{{$module->icon}}@endif"></button>
 		</div>
 	</div>
+
 
 		<div class="form-group hide-relations">
 			{!! Form::label('relations[]', 'Relations') !!}
 			<div class="form-group">
 				<div class='input-group'>
 					<span class="input-group-addon">
-						<span class="fa fa-chain"></span>
+						<i class="fas fa-link"></i>
 					</span>
 					<select name="relations[]" id="relations" class="select2 form-control" multiple>
 						@if(isset($module) &&  null != $module_relations = json_decode($module->relations))
@@ -146,6 +134,7 @@
 									<option value="editor" @if($arr['type'] == 'editor') selected @endif>Editor</option>
 									<option value="color" @if($arr['type'] == 'color') selected @endif>Color</option>
 									<option value="datepicker" @if($arr['type'] == 'datepicker') selected @endif>Datepicker</option>
+									<option value="iconpicker" @if($arr['type'] == 'iconpicker') selected @endif>Iconpicker</option>
 								</select>
 							</div>
 						</div>
@@ -224,6 +213,7 @@
 									<option value="editor">Editor</option>
 									<option value="color">Color</option>
 									<option value="datepicker">Datepicker</option>
+									<option value="iconpicker">Iconpicker</option>
 								</select>
 							</div>
 						</div>
@@ -300,6 +290,7 @@
 									<option value="editor">Editor</option>
 									<option value="color">Color</option>
 									<option value="datepicker">Datepicker</option>
+									<option value="iconpicker">Iconpicker</option>
 								</select>
 							</div>
 						</div>
@@ -364,52 +355,54 @@
 	</div>
 </div>
 <div class="col-md-3">
-	<div class="form-group">
-		{!! Form::label('created_at', 'Published Date'); !!}
-		<div class="clearfix"></div>
-        <div class='input-group col-md-6 pull-left'>
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
-            </span>
-        	{!! Form::text('published_date', null, ['class' => 'form-control', 'id' => 'datepicker']) !!}
+	{!! Form::label('created_at', 'Published Date'); !!}
+@include('admin-panel::components.datetimepicker', ['name' => 'created_at', 'value'=> @isset($module)? $module->created_at : null])
+{{--	<div class="form-group">--}}
+{{--		{!! Form::label('created_at', 'Published Date'); !!}--}}
+{{--		<div class="clearfix"></div>--}}
+{{--        <div class='input-group col-md-6 pull-left'>--}}
+{{--            <span class="input-group-addon">--}}
+{{--                <span class="glyphicon glyphicon-calendar"></span>--}}
+{{--            </span>--}}
+{{--        	{!! Form::text('published_date', null, ['class' => 'form-control', 'id' => 'datepicker']) !!}--}}
+{{--        </div>--}}
+{{--        <div class="input-group bootstrap-timepicker col-md-6 pull-left">--}}
+{{--        	{!! Form::text('published_time', null, ['class' => 'form-control timepicker', 'id' => 'timepicker']) !!}--}}
+{{--        	<div class="input-group-addon">--}}
+{{--        		<i class="fa fa-clock-o"></i>--}}
+{{--        	</div>--}}
+{{--        </div>--}}
+{{--		<div class="clearfix"></div>--}}
+{{--	</div>--}}
+
+<div class="form-group">
+    {!! Form::label('status', 'Status'); !!}
+    {!! Form::select('status', ['published' => 'Published', 'draft' => 'Draft'], null, ['class' => 'form-control select2']); !!}
+</div>
+
+
+<div class="">
+    @if(isset($order) && !empty($order))
+        <div class="form-group">
+            {!! Form::label('order', 'Order'); !!}
+            {!! Form::number('order', $order, ['class' => 'form-control']) !!}
         </div>
-        <div class="input-group bootstrap-timepicker col-md-6 pull-left">
-        	{!! Form::text('published_time', null, ['class' => 'form-control timepicker', 'id' => 'timepicker']) !!}
-        	<div class="input-group-addon">
-        		<i class="fa fa-clock-o"></i>
-        	</div>
+    @else
+        <div class="form-group">
+            {!! Form::label('order', 'Order'); !!}
+            {!! Form::number('order', null, ['class' => 'form-control']) !!}
         </div>
-		<div class="clearfix"></div>
-	</div>
-
-	<div class="form-group">
-		{!! Form::label('status', 'Status'); !!}
-		{!! Form::select('status', ['published' => 'Published', 'draft' => 'Draft'], null, ['class' => 'form-control select2']); !!}
-	</div>
-
-
-	<div class="">
-		@if(isset($order) && !empty($order))
-			<div class="form-group">
-				{!! Form::label('order', 'Order'); !!}
-				{!! Form::number('order', $order, ['class' => 'form-control']) !!}
-			</div>
-		@else
-			<div class="form-group">
-				{!! Form::label('order', 'Order'); !!}
-				{!! Form::number('order', null, ['class' => 'form-control']) !!}
-			</div>
-		@endif
-	</div>
-	<div class="clearfix"></div>
-	<hr>
-	<div class="form-group">
-		@if(isset($module))
-			{!! Form::submit('Update', ['class' => 'btn btn-success form-control btn-flat']); !!}
-		@else
-			{!! Form::submit('Publish', ['class' => 'btn btn-success form-control btn-flat']); !!}
-		@endif
-	</div>
+    @endif
+</div>
+<div class="clearfix"></div>
+<hr>
+<div class="form-group">
+    @if(isset($module))
+        {!! Form::submit('Update', ['class' => 'btn btn-success form-control btn-flat']); !!}
+    @else
+        {!! Form::submit('Publish', ['class' => 'btn btn-success form-control btn-flat']); !!}
+    @endif
+</div>
 </div>
 
 

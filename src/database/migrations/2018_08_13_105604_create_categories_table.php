@@ -26,6 +26,7 @@ class CreateCategoriesTable extends Migration
             $table->integer('order')->default(0);
             $table->string('thumbnail')->nullable();
             $table->integer('language_id')->nullable();
+            $table->string('status')->default('published');
             $table->timestamps();
         });
     }

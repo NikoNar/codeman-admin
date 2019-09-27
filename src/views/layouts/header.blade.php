@@ -11,8 +11,10 @@
   <!-- Bootstrap 3.3.7 -->
   <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/font-awesome/css/font-awesome.min.css') }}">
-{{--  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" integrity="hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">--}}
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"/>
+{{--  <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/font-awesome/css/font-awesome.min.css') }}">--}}
+{{--  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" integrity="hWVjflwFxL6sNzn
+tih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">--}}
   <!-- Ionicons -->
 {{--  <script src="https://kit.fontawesome.com/a43a26e945.js"></script>--}}
   <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/Ionicons/css/ionicons.min.css') }}">
@@ -34,6 +36,8 @@
   <link rel="stylesheet" href="{{ asset('admin-panel/css/admin.css') }}">
   <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/datatables.net-bs/css/dataTables.bootstrap.css') }}">
   <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('admin-panel/plugins/bootstrap-iconpicker-1.10.0/dist/css/bootstrap-iconpicker.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css')}}" />
 
 
   <script> app = {ajax_url : '{!! url('/') !!}'}</script>

@@ -55,7 +55,7 @@ class SettingsController extends Controller
     public function createOrUpdate(Request $request)
     {
 
-//        dd($request->all());
+        dd($request->all());
         if($request->site_name == null){
             $request['site_name']  = env('APP_NAME');
         }

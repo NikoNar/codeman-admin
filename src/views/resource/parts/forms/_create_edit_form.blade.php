@@ -90,6 +90,9 @@
 				@case('datepicker')
 					@include('admin-panel::resource.parts.options.datepicker', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type']])
 				@break
+				@case('iconpicker')
+				@include('admin-panel::resource.parts.options.iconpicker', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type']])
+				@break
 				@default
 					@include('admin-panel::resource.parts.options.input', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type'], 'options'=>explode(',', $val['type_options'])])
 				@break
