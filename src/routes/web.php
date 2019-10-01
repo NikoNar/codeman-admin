@@ -168,6 +168,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 		// Settings Controller
 		Route::get('admin/settings', 'SettingsController@index')->name('setting.index');
+		Route::get('admin/settings/{type}/{index}', 'SettingsController@type')->name('setting.type');
 		Route::post('admin/settings/update', 'SettingsController@createOrUpdate')->name('setting.update');
 
 

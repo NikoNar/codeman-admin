@@ -33,7 +33,8 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        $settings = $this->settings->pluck('value', 'key');
+        $settings = $this->settings->where('type', null)->pluck('value', 'key');
+        $additional_settings = $this->settings->where('type', '!=', null)->get();
         $pages = Page::where('language_id', $this->def_lang->id)->pluck('title','id');
         $languages = Language::pluck('name', 'id');
         $selected_langs = Language::pluck('code')->toArray();
@@ -44,7 +45,15 @@ class SettingsController extends Controller
             }
         }
 
-        return view('admin-panel::setting.index', ['settings' => $settings, 'pages'=> $pages, 'languages'=> $languages, 'selected_langs' => $selected_langs ]);
+        return view('admin-panel::setting.index', ['settings' => $settings, 'pages'=> $pages, 'languages'=> $languages, 'selected_langs' => $selected_langs, 'additional_settings' =>$additional_settings]);
+    }
+
+
+
+    public function type($type, $index){
+        $html = view('admin-panel::components.'.$type, ['name'=>"data[".$index."][val]",'index'=>$index])->render();
+        return response()->json(array('success' => true, 'html' => $html));
+
     }
 
     /**
@@ -54,8 +63,6 @@ class SettingsController extends Controller
      */
     public function createOrUpdate(Request $request)
     {
-
-        dd($request->all());
         if($request->site_name == null){
             $request['site_name']  = env('APP_NAME');
         }
@@ -87,12 +94,12 @@ class SettingsController extends Controller
             }
 
         }
-
+//dd($request->data);
         // $index = $request->home_page;
         if($request->has('_token')){
             unset($request['_token']);
 
-            foreach ($request->all() as $key => $value) {
+            foreach ($request->except('data') as $key => $value) {
                 if(is_array($value)) {
                     // dd($request->all());
                     $value = json_encode($value);
@@ -100,6 +107,16 @@ class SettingsController extends Controller
 //                 dd($key, $value);
                 $this->settings->updateOrCreate(['key' => $key], ['key' => $key, 'value' => $value]);
             }
+
+            $updated_keys = [];
+        if($request->data){
+//            dd($request->data);
+            foreach ($request->data as $key => $data) {
+               $item = $this->settings->updateOrCreate(['key' => $data['key']], ['key' => $data['key'], 'value' =>array_key_exists('val', $data)? $data['val']: null, 'type'=>$data['type']]);
+               $updated_keys[] = $item->id;
+            }
+        }
+        $this->settings->where('type', '!=', null)->whereNotIn('id', $updated_keys)->delete();
 
         }
 

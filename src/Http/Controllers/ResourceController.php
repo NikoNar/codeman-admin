@@ -129,12 +129,7 @@ class ResourceController extends Controller
         if(!auth()->user()->can('create-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
-        if (strpos($request->created_at, '/') !== false) {
-            $request['created_at'] = Carbon::createFromFormat('d/m/Y', $request->created_at);
-        } else {
-            $request['created_at'] = Carbon::now();
 
-        }
 
 //        dd($request->all(), $module);
 //        dd($this->def_lang);

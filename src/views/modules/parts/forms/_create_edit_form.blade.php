@@ -356,7 +356,7 @@
 </div>
 <div class="col-md-3">
 	{!! Form::label('created_at', 'Published Date'); !!}
-@include('admin-panel::components.datetimepicker', ['name' => 'created_at', 'value'=> @isset($module)? $module->created_at : null])
+	@include('admin-panel::components.timestamps',['value'=>isset($module)?$module->created_at : null, 'updated'=>isset($module)?$module->updated_at->diffForHumans() : null ])
 {{--	<div class="form-group">--}}
 {{--		{!! Form::label('created_at', 'Published Date'); !!}--}}
 {{--		<div class="clearfix"></div>--}}

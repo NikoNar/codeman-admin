@@ -1,4 +1,6 @@
 <div class="form-group">
+    @if(isset($value))
     {!! Form::label('content', 'Content'); !!}
-    {!! Form::textarea('content', null, ['class' => 'form-control ckeditor']); !!}
+    @endif
+    {!! Form::textarea('content', isset($value)? $value:null, ['class' => 'form-control ckeditor', 'id' => isset($index)? 'editor-'.$index: 'editor']); !!}
 </div>

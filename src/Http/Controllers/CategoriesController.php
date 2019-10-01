@@ -81,12 +81,12 @@ class CategoriesController extends Controller
 	public function store(CategoryRequest $request, Category $category )
 	{
 //	    dd($request->all());
-        if (strpos($request->created_at, '/') !== false) {
-            $request['created_at'] = Carbon::createFromFormat('d/m/Y', $request->created_at);
-        } else {
-            $request['created_at'] = Carbon::now();
-
-        }
+//        if (strpos($request->created_at, '/') !== false) {
+//            $request['created_at'] = Carbon::createFromFormat('d/m/Y', $request->created_at);
+//        } else {
+//            $request['created_at'] = Carbon::now();
+//
+//        }
         $request['slug'] = getUniqueSlug($category, $request['title']);
         if($request['parent_id'] == 0){
             $request['level'] = 1;
@@ -177,9 +177,9 @@ class CategoriesController extends Controller
 	{
         $category = $category->find($id);
         $request['slug'] = getUniqueSlug($category, $request['title'], $id);
-        if (strpos($request->created_at, '/') !== false) {
-            $request['created_at'] = Carbon::createFromFormat('d/m/Y', $request->created_at);
-        }
+//        if (strpos($request->created_at, '/') !== false) {
+//            $request['created_at'] = Carbon::createFromFormat('d/m/Y', $request->created_at);
+//        }
 
         if($request['parent_id'] == 0){
             $request['level'] = 1;

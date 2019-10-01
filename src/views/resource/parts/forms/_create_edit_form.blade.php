@@ -124,21 +124,23 @@
 <div class="col-md-3">
 	<div class="form-group">
 		{!! Form::label('created_at', 'Created'); !!}
-		{!! Form::label('updated_at', 'Updated',['class'=>'pull-right']); !!}
-		<div class="clearfix"></div>
-        <div class='input-group col-md-6 pull-left date'>
-			<div class="input-group-addon">
-				<i class="fa fa-calendar"></i>
-			</div>
-			<input type="text" name="created_at" class="form-control pull-right datepicker" value="{{isset($resource)?$resource->created_at : null}}" autocomplete="off">
-        </div>
+		@include('admin-panel::components.timestamps',['value'=>isset($resource)?$resource->created_at : null, 'updated'=>isset($resource)?$resource->updated_at->diffForHumans() : null ])
 
-        <div class="input-group bootstrap-timepicker col-md-6 pull-left">
-        	{!! Form::text('updated_at', null, ['class' => 'form-control timepicker', 'disabled' =>'disabled']) !!}
-        	<div class="input-group-addon">
-        		<i class="glyphicon glyphicon-calendar"></i>
-        	</div>
-        </div>
+		{{--		{!! Form::label('updated_at', 'Updated',['class'=>'pull-right']); !!}--}}
+{{--		<div class="clearfix"></div>--}}
+{{--        <div class='input-group col-md-6 pull-left date'>--}}
+{{--			<div class="input-group-addon">--}}
+{{--				<i class="fa fa-calendar"></i>--}}
+{{--			</div>--}}
+{{--			<input type="text" name="created_at" class="form-control pull-right datepicker" value="{{isset($resource)?$resource->created_at : null}}" autocomplete="off">--}}
+{{--        </div>--}}
+
+{{--        <div class="input-group bootstrap-timepicker col-md-6 pull-left">--}}
+{{--        	{!! Form::text('updated_at', null, ['class' => 'form-control timepicker', 'disabled' =>'disabled']) !!}--}}
+{{--        	<div class="input-group-addon">--}}
+{{--        		<i class="glyphicon glyphicon-calendar"></i>--}}
+{{--        	</div>--}}
+{{--        </div>--}}
 		<div class="clearfix"></div>
 	</div>
 
