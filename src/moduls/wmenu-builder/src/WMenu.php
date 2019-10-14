@@ -7,6 +7,7 @@ use Codeman\Admin\Models\Language;
 use Codeman\Admin\Models\Page;
 use Codeman\Admin\Menu\Models\Menus;
 use Codeman\Admin\Menu\Models\MenuItems;
+use Illuminate\Support\Facades\DB;
 
 class WMenu
 {
@@ -15,17 +16,17 @@ class WMenu
     {
         $menu = new Menus();
         $menuitems = new MenuItems();
-        $menulist = $menu->select(['id', 'name'])->get();
+        $menulist = $menu->select(DB::raw('CONCAT(name,"(", lang, ")") AS name, id'))->get();
         $menulist = $menulist->pluck('name', 'id')->prepend('Select menu', 0)->all();
 
-        $languages = Language::orderBy('order')->pluck('name','id')->toArray();
+        $languages = Language::orderBy('order')->pluck('name','code')->toArray();
 
 //        if ((request()->has("action") && empty(request()->input("menu"))) || request()->input("menu") == '0') {
 //            return view('vendor.harimayco-menu.menu-html')->with(["menulist" => $menulist, 'languages' => $languages]);
 //        } else {
 //            $menu = Menus::find(request()->input("menu"));
 //            $menus = $menuitems->getall(request()->input("menu"));
-//            $pages = Page::where('lnaguage_id', $menu->language_id)->get();
+//            $pages = Page::where('lnaguage_id', $menu->lang)->get();
 //
 //            $data = ['menus' => $menus, 'indmenu' => $menu, 'menulist' => $menulist, "pages" => $pages];
 //            return view('vendor.harimayco-menu.menu-html', $data, compact('languages'));
@@ -36,18 +37,18 @@ class WMenu
         } else {
             if(!empty(request()->input("language"))){
                 $original = Menus::find(request()->input("menu"));
-                $menu = Menus::where('language_id', request()->input("language"))->where(function($q) use($original){
+                $menu = Menus::where('lang', request()->input("language"))->where(function($q) use($original){
                   $q->where('parent_lang_id', request()->input("menu"))->orWhere('id', $original->parent_lang_id);
                 })->first();
                 if(!$menu){
-                    $menu = Menus::where('parent_lang_id', $original->parent_lang_id)->where('language_id', request()->input("language"))->first();
+                    $menu = Menus::where('parent_lang_id', $original->parent_lang_id)->where('lang', request()->input("language"))->first();
                 }
 //                $menus = $menuitems->getall(request()->input("menu"));
                 if(!$menu){
                     $menu = new Menus();
                     $menu->name = $original->name;
                     $menu->parent_lang_id = $original->parent_lang_id ? $original->parent_lang_id : $original->id  ;
-                    $menu->language_id = request()->input("language");
+                    $menu->lang = request()->input("language");
                     $menu->save();
                     $menus = null;
                 }
@@ -57,9 +58,8 @@ class WMenu
                 $menu = Menus::find(request()->input("menu"));
                 $menus = $menuitems->getall(request()->input("menu"));
             }
-
             if($menu){
-                $pages = Page::where('language_id', $menu->language_id)->get();
+                $pages = Page::where('lang', $menu->lang)->get();
             } else {
                 $pages = null;
             }

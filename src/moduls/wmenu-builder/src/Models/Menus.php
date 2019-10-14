@@ -21,8 +21,7 @@ class Menus extends Model
 
     public static function byNameAndLang($name, $lang)
     {
-        $language_id = Language::where('code', $lang)->first()->id;
-        return self::where('name', '=', $name)->where('language_id', $language_id)->first();
+        return self::where('name', '=', $name)->where('lang', $lang)->first();
     }
 
 }

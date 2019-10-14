@@ -18,9 +18,9 @@ class MenuController extends Controller
     {
         $menu = new Menus();
         $menu->name = request()->input("menuname");
-        $menu->language_id = request()->input("language_id");
+        $menu->lang = request()->input("language");
         $menu->save();
-        return json_encode(array("resp" => $menu->id, "language" =>$menu->language_id));
+        return json_encode(array("resp" => $menu->id, "language" =>$menu->lang));
     }
 
     public function deleteitemmenu()
@@ -49,13 +49,12 @@ class MenuController extends Controller
     {
         $arraydata = request()->input("arraydata");
         if (is_array($arraydata)) {
-            dd($arraydata);
             foreach ($arraydata as $value) {
                 $menuitem = MenuItems::find($value['id']);
                 $menuitem->label = $value['label'];
                 $menuitem->link = $value['link'];
                 $menuitem->class = $value['class'];
-                $menuitem->language_id = $value['language_id'];
+//                $menuitem->lang = $value['language'];
 
                 $menuitem->save();
             }
@@ -70,7 +69,6 @@ class MenuController extends Controller
 
     public function addcustommenu()
     {
-
         if (request()->has('pages')) {
             foreach (request()->pages as $page) {
                 $menuitem = new MenuItems();
@@ -94,7 +92,7 @@ class MenuController extends Controller
     {
         $menu = Menus::find(request()->input("idmenu"));
         $menu->name = request()->input("menuname");
-        $menu->language_id = request()->input("language_id");
+        $menu->lang = request()->input("language");
         $menu->save();
         if (is_array(request()->input("arraydata"))) {
             foreach (request()->input("arraydata") as $value) {
@@ -117,7 +115,7 @@ class MenuController extends Controller
         $menulist = $menu->select(['id', 'name'])->get();
         $menulist = $menulist->pluck('name', 'id')->prepend('Select menu', 0)->all();
         $pages = Page::all();
-        $languages = Language::orderBy('order')->pluck('name','id')->toArray();
+        $languages = Language::orderBy('order')->pluck('name','code')->toArray();
 
 
 

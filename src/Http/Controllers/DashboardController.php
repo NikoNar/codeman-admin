@@ -81,16 +81,16 @@ class DashboardController extends Controller
         // dd($sessionsCharterData);
 
         $default_lang = Language::orderBy('order')->first();
-        $def_land_id  = $default_lang->id;
+        $lang  = $default_lang->code;
         $resources = DB::table('resources')
             ->select('type', 'icon',  DB::raw('count(*) as total'))
-            ->where('language_id', $def_land_id)
+            ->where('lang', $lang)
             ->leftJoin('modules', 'resources.type', '=', 'modules.slug')
             ->groupBy('type', 'icon')
             ->get();
     	return view('admin-panel::dashboard',
         [
-            'pages_count' => Page::where('language_id', $def_land_id)->count(),
+            'pages_count' => Page::where('lang', $lang)->count(),
             'resources' => $resources,
             'sessionsCharterData' => $sessionsCharterData,
             'dates' => $dates,

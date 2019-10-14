@@ -21,7 +21,7 @@
             		<i class="fa fa-language"></i>
             	</div>
                 @if(isset($languages) && !empty($languages))
-                    {!! Form::select('language_id', $languages, isset($language_id) ? $language_id : null, ['class' => 'form-control select2 ', 'name'=>'language']); !!}
+                    {!! Form::select('language', $languages, isset($language) ? $language : null, ['class' => 'form-control select2 ', 'name'=>'language']); !!}
                 @endif
 {{--            	<select name="language" id="language" class="form-control pull-left">--}}
 {{--            		<option value="en">English</option>--}}

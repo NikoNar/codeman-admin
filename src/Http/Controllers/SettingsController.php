@@ -35,8 +35,8 @@ class SettingsController extends Controller
     {
         $settings = $this->settings->where('type', null)->pluck('value', 'key');
         $additional_settings = $this->settings->where('type', '!=', null)->get();
-        $pages = Page::where('language_id', $this->def_lang->id)->pluck('title','id');
-        $languages = Language::pluck('name', 'id');
+        $pages = Page::where('lang', $this->def_lang->code)->pluck('title','id');
+        $languages = Language::pluck('name', 'code');
         $selected_langs = Language::pluck('code')->toArray();
         foreach ($settings as $key => $value) {
 
@@ -82,11 +82,11 @@ class SettingsController extends Controller
         Language::whereNotIn('code', $updated)->delete();
 
         if($request->has('default_lang')){
-            config(['app.locale' => Language::where('id', $request->default_lang)->first()->code]);
+            config(['app.locale' => Language::where('code', $request->default_lang)->first()->code]);
             $min = 0;
-            Language::where('id', $request->default_lang)
+            Language::where('code', $request->default_lang)
                 ->update(['order' => $min]);
-            $others = Language::where('id', '!=', $request->default_lang)->get();
+            $others = Language::where('code', '!=', $request->default_lang)->get();
             $min++;
             foreach($others as $lang){
                 $lang->update(['order' => $min]);

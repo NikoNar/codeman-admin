@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
 {
-    protected $fillable = ['parent_id', 'lang', 'parent_lang_id', 'title', 'slug', 'status', 'content', 'thumbnail', 'template', 'meta-title', 'meta-description', 'meta-keywords', 'order', 'language_id' ];
+    protected $fillable = ['parent_id', 'lang', 'parent_lang_id', 'title', 'slug', 'status', 'content', 'thumbnail', 'template', 'meta-title', 'meta-description', 'meta-keywords', 'order' ];
  
 	public function parent()
 	{
@@ -25,6 +25,6 @@ class Page extends Model
 
     public function language()
     {
-        return $this->belongsTo('Codeman\Admin\Models\Language');
+        return $this->belongsTo('Codeman\Admin\Models\Language', 'lang', 'code');
     }
 }

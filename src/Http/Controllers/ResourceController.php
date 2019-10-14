@@ -37,7 +37,7 @@ class ResourceController extends Controller
         // $this->middleware('admin');
         $this->CRUD = new CRUDService($model);
         $this->model = $model;
-        $this->languages = Language::orderBy('order')->pluck('name','id')->toArray();
+        $this->languages = Language::orderBy('order')->pluck('name','code')->toArray();
         $this->def_lang = Language::orderBy('order')->first();
         $this->module = Route::current()->parameter('resource');
         $this->check_resource($this->module);
@@ -99,7 +99,7 @@ class ResourceController extends Controller
 
 
 //        $types = Resource::groupBy('type')->pluck('type', 'id');
-        $categories = Category::where(['language_id'=> $this->def_lang->id, 'type'=>$module])->get()->groupBy('parent_id');
+        $categories = Category::where(['lang'=> $this->def_lang->code, 'type'=>$module])->get()->groupBy('parent_id');
         $add_opts = json_decode($model->additional_options)? :array();
         $additional_options = [];
         foreach($add_opts as $key =>$val){
@@ -133,8 +133,8 @@ class ResourceController extends Controller
 
 //        dd($request->all(), $module);
 //        dd($this->def_lang);
-        if(!$request->has('language_id')){
-            $request['language_id'] = $this->def_lang->id;
+        if(!$request->has('lang')){
+            $request['lang'] = $this->def_lang->code;
         }
         if($resource =  $this->CRUD->store($request->all())){
             if($request->has('meta'))
@@ -207,7 +207,7 @@ class ResourceController extends Controller
         $attached_relations = array_column($resource->relations->toArray(), 'id');
 //        dd($attached_relations);
 //        foreach($attached_relations as $key =>)
-        if(null == $relations = Resource::select('id', 'title', 'type')->where('language_id', $resource->language_id)->whereIn('type', $slugs)->get()->groupBy('type')->toArray()){
+        if(null == $relations = Resource::select('id', 'title', 'type')->where('lang', $resource->lang)->whereIn('type', $slugs)->get()->groupBy('type')->toArray()){
             $relations = [];
 //            $slugs = is_array($slugs)? $slugs : $slugs->toArray();
 //            foreach($slugs as $key=>$val){
@@ -217,7 +217,7 @@ class ResourceController extends Controller
         }
 
         $resource->setAttribute('meta', $resourcemetas);
-        $categories = Category::where(['language_id'=>$resource->language_id, 'type'=>$module])->get()->groupBy('parent_id');
+        $categories = Category::where(['lang'=>$resource->langu, 'type'=>$module])->get()->groupBy('parent_id');
         return view('admin-panel::resource.create_edit', [ 'resource' => $resource, 'module' => $module, 'options' => $options, 'additional_options' => $additional_options, 'relations' => $relations,'languages' => $this->languages, 'order' => $this->CRUD->getMaxOrderNumber(),'categories' => $categories, 'attached_relations' => $attached_relations ]);
     }
 
@@ -321,7 +321,7 @@ class ResourceController extends Controller
 
         $attached_relations = array_column($resource->relations->toArray(), 'id');
 //        foreach($attached_relations as $key =>)
-        if(null == $relations = Resource::select('id', 'title', 'type')->where('language_id', $resource->language_id)->whereIn('type', $slugs)->get()->groupBy('type')->toArray()){
+        if(null == $relations = Resource::select('id', 'title', 'type')->where('lang', $resource->lang)->whereIn('type', $slugs)->get()->groupBy('type')->toArray()){
             $relations = [];
 //            $slugs = is_array($slugs)? $slugs : $slugs->toArray();
 //            foreach($slugs as $key=>$val){
@@ -331,10 +331,10 @@ class ResourceController extends Controller
         }
 
         $translate->setAttribute('meta', $resourcemetas);
-        $categories = Category::where(['language_id'=>$translate->language_id, 'type'=>$module])->get()->groupBy('parent_id');
+        $categories = Category::where(['lang'=>$translate->lang, 'type'=>$module])->get()->groupBy('parent_id');
         $translated_categories = [];
         foreach($resource->categories->pluck('id')->toArray() as $key => $category){
-            $trans_cat = Category::where('parent_lang_id' , $category)->where('language_id', $lang)->first();
+            $trans_cat = Category::where('parent_lang_id' , $category)->where('lang', $lang)->first();
             if($trans_cat){
                 $trans_cat_id = $trans_cat->id;
             } else{
@@ -342,7 +342,7 @@ class ResourceController extends Controller
             }
             if(!$trans_cat_id){
                 $trans_cat_parent = Category::find($category)->parent_lang_id;
-                $trans_cat = Category::where('parent_lang_id' , $trans_cat_parent)->where('language_id', $lang)->first();
+                $trans_cat = Category::where('parent_lang_id' , $trans_cat_parent)->where('lang', $lang)->first();
                 if($trans_cat){
                     $trans_cat_id =  $trans_cat->id;
                 }
@@ -374,8 +374,7 @@ class ResourceController extends Controller
     public function categories($module)
     {
         $default_lang = Language::orderBy('order')->first();
-        $def_land_id  = $default_lang->id;
-        $categories  = Category::where('type', $this->module)->where('language_id', $def_land_id)->orderBy('order', 'DESC')->get()->groupBy('parent_id');
+        $categories  = Category::where('type', $this->module)->where('lang', $default_lang->code)->orderBy('order', 'DESC')->get()->groupBy('parent_id');
         $languages = Language::orderBy('order')->pluck('name','id')->toArray();
         $type  = $module;
         return view('admin-panel::category.index',  compact('categories', 'type', 'languages'));

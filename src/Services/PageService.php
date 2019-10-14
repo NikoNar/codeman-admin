@@ -83,17 +83,18 @@ class PageService implements PageInterface
 	*/
 	public function getAllPagesTitlesArray($lang = null, $current_page_id = null)
 	{
+
 		if( $current_page_id ) {
 		    $pagesTitles =  $this->page->where('id', '!=', $current_page_id );
 		    if($lang){
-                $pagesTitles =  $pagesTitles->where('language_id', $lang);
+                $pagesTitles =  $pagesTitles->where('lang', $lang);
             }
             $pagesTitles = $pagesTitles->pluck('title', 'id')->toArray();
             return $pagesTitles;
 		}else{
             $pagesTitles =  $this->page;
             if($lang){
-                $pagesTitles = $pagesTitles->where('language_id', $lang);
+                $pagesTitles = $pagesTitles->where('lang', $lang);
             }
             $pagesTitles = $pagesTitles->get()->pluck('title', 'id')->toArray();
 			return $pagesTitles;
@@ -117,7 +118,7 @@ class PageService implements PageInterface
 //		return $page;
 
 
-        $page = $this->page->where(['id' => $id, 'language_id' => $lang])->orWhere(['id' => $id])->first();
+        $page = $this->page->where(['id' => $id, 'lang' => $lang])->orWhere(['id' => $id])->first();
 
         if(!$page){
             return ['status' => 'redirect', 'route' => route('page-create', $lang) ];
@@ -125,28 +126,28 @@ class PageService implements PageInterface
 
         if($page->language_id != $lang && isset($page->parent_lang_id)){
 
-            $parent_page = $this->page->where(['id' => $page->parent_lang_id, 'language_id' => $lang])->first();
+            $parent_page = $this->page->where(['id' => $page->parent_lang_id, 'lang' => $lang])->first();
 
             if($parent_page){
                 return ['status' => 'redirect', 'route' => route('page-edit', $parent_page->id)];
-            }else if(null != $trans_page = $this->page->where(['parent_lang_id' => $page->parent_lang_id, 'language_id' => $lang])->first()){
+            }else if(null != $trans_page = $this->page->where(['parent_lang_id' => $page->parent_lang_id, 'lang' => $lang])->first()){
                 return ['status' => 'redirect', 'route' => route('page-edit', $trans_page->id)];
             }else{
                 $trans_page = $this->page->where('id', $page->parent_lang_id)->first();
-                $trans_page['language_id'] = $lang;
+                $trans_page['lang'] = $lang;
                 return $trans_page;
             }
 
             
-        } else if($page->language_id != $lang && !isset($page->parent_lang_id)) {
-            $parent_page = $this->page->where(['parent_lang_id' => $page->id, 'language_id' => $lang])->first();
+        } else if($page->lang != $lang && !isset($page->parent_lang_id)) {
+            $parent_page = $this->page->where(['parent_lang_id' => $page->id, 'lang' => $lang])->first();
             if($parent_page ){
                 return ['status' => 'redirect', 'route' => route('page-edit', $parent_page->id)];
             }
-            $page['language_id'] = $lang;
+            $page['lang'] = $lang;
             return $page;
         }else{
-            $page['language_id'] = $lang;
+            $page['lang'] = $lang;
             return $page;
         }
 	}
@@ -180,10 +181,9 @@ class PageService implements PageInterface
 	*/
 	private function createInputs( $inputs)
 	{
-		$inputs['slug'] = getUniqueSlug($this->page, $inputs['title']);
-		$inputs['meta-title'] =  isset($inputs['meta-title']) ? $inputs['meta-title'] : $inputs['title'];
-		// $inputs['thumbnail'] = isset($inputs['thumbnail']) ? $this->uploadImage(request()->file('thumbnail')) : null;
-
+        $inputs['slug'] = getUniqueSlug($this->page, $inputs['title']);
+        $inputs['meta-title'] =  isset($inputs['meta-title']) ? $inputs['meta-title'] : $inputs['title'];
+        // $inputs['thumbnail'] = isset($inputs['thumbnail']) ? $this->uploadImage(request()->file('thumbnail')) : null;
 		return $inputs;
 	}
 

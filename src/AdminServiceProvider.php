@@ -2,6 +2,7 @@
 namespace Codeman\Admin;
 
 use Codeman\Admin\Models\Module;
+use Codeman\Admin\Models\Setting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -15,6 +16,7 @@ class AdminServiceProvider extends ServiceProvider
 {
 	public function boot()
 	{
+
 		
 		$this->loadRoutesFrom(__DIR__.'/routes/web.php');
 		$this->loadViewsFrom(__DIR__.'/views', 'admin-panel');
@@ -95,6 +97,11 @@ class AdminServiceProvider extends ServiceProvider
             $view->with('modules', $modules);
         });
 
+
+        View::composer('*', function ($view) {
+            $settings = Setting::pluck('value', 'key');
+            $view->with(['cm_settings'=> $settings]);
+        });
 
 	}
 

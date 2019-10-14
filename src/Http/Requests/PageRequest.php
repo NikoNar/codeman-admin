@@ -27,14 +27,14 @@ class PageRequest extends FormRequest
     {
         if($this->get('_method') == 'PUT'){
             $slug = $this->get('slug');
-            $lang  = $this->get('language_id');
+            $lang  = $this->get('lang');
             return [
                 'title'  => 'required',
                 'slug'   => [
                     'required',
                     Rule::unique('pages')->where(function ($query) use($slug, $lang) {
                         return $query->where('slug', '!=', $slug)
-                            ->where('language_id', '!=', $lang);
+                            ->where('lang', '!=', $lang);
                     })
                 ],
                 'status' => 'required',

@@ -103,17 +103,16 @@ $currentUrl = url()->current();
 															<input name="menu-name" id="menu-name" type="text" class="menu-name regular-text menu-item-textbox" title="Enter menu name" value="@if(isset($indmenu)){{$indmenu->name}}@endif">
 															<input type="hidden" id="idmenu" value="@if(isset($indmenu)){{$indmenu->id}}@endif" />
 														</label>
-														<label class="menu-name-label" for="language_id"> <span></span>
+														<label class="menu-name-label" for="lang"> <span></span>
 															@if(isset($languages) && !empty($languages))
 																@isset($indmenu)
 																	<input type="hidden" name="menu_id" value="{{$indmenu->id}}">
 																	@php
 																		reset($languages);
 																	@endphp
-
 																	<input type="hidden" id="def_lang" value="{{key($languages)}}">
 																@endif
-																{!! Form::select('language_id', $languages, isset($indmenu->language_id) ? $indmenu->language_id : null, ['class' => 'form-control select2 menu_languages', 'id'=>'language_id']); !!}
+																{!! Form::select('lang', $languages, isset($indmenu->lang) ? $indmenu->lang : null, ['class' => 'form-control select2 menu_languages', 'id'=>'language']); !!}
 															@endif
 														</label>
 

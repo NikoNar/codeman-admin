@@ -18,7 +18,7 @@ class CreateResourcesTable extends Migration
             $table->string('title');
             $table->string('slug');
             $table->string('type');
-            $table->integer('language_id');
+            $table->string('lang');
             $table->integer('parent_lang_id')->nullable();
             $table->enum('status', ['published','draft'] );
             $table->string('thumbnail')->nullable();
@@ -27,7 +27,7 @@ class CreateResourcesTable extends Migration
             $table->string('meta-title')->nullable();
             $table->longText('meta-description')->nullable();
             $table->text('meta-keywords')->nullable();
-            $table->unique(['slug', 'language_id']);
+            $table->unique(['slug', 'lang']);
             $table->timestamps();
         });
     }

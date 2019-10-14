@@ -102,8 +102,8 @@
 	<div class="form-group col-md-6">
 		<div class="form-group">
 			@if(isset($languages) && !empty($languages))
-				{!! Form::label('language_id', 'Language'); !!}
-				{!! Form::select('language_id', $languages, isset($language_id) ? $language_id : null, ['class' => 'form-control select2', 'data-resource' => isset($module)? $module : '']); !!}
+				{!! Form::label('lang', 'Language'); !!}
+				{!! Form::select('lang', $languages, isset($language_id) ? $language_id : null, ['class' => 'form-control select2', 'data-resource' => isset($module)? $module : '']); !!}
 			@endif
 		</div>	</div>
 	<div class="clearfix"></div>

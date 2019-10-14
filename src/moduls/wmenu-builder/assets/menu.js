@@ -96,8 +96,8 @@ function addcustommenu(type) {
 }
 
 function updateitem(id = 0) {
-
 	if(id){
+		alert();
 		var label = $("#idlabelmenu_" + id).val()
 		var clases = $("#clases_menu_" + id).val()
 		var url = $("#url_menu_" + id).val()
@@ -106,7 +106,7 @@ function updateitem(id = 0) {
 			clases : clases,
 			url : url,
 			id : id,
-			language_id : $("#language_id").val()
+			languag : $("#language").val()
 
 		}
 	}else{
@@ -121,11 +121,12 @@ function updateitem(id = 0) {
 				label : label,
 				class : clases,
 				link : url,
-				language_id : $("#language_id").val()
+				language: $("#language").val()
 			});
 		});
-
 		var data = {arraydata: arr_data};
+
+		console.log(data);
 	}
 	$.ajax({
 		data : data,
@@ -153,7 +154,7 @@ function actualizarmenu() {
 			arraydata : arraydata,
 			menuname : $("#menu-name").val(),
 			idmenu : $("#idmenu").val(),
-			language_id : $("#language_id").val(),
+			language : $("#language").val(),
 		},
 
 		url : generatemenucontrolr,
@@ -234,7 +235,7 @@ function createnewmenu() {
 
 			data : {
 				menuname : $("#menu-name").val(),
-				language_id : $("#language_id").val(),
+				language : $("#language").val(),
 			},
 
 			url :createnewmenur,

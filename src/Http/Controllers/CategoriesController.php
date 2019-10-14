@@ -27,7 +27,7 @@ class CategoriesController extends Controller
     {
         $this->model = $category;
     	// $this->middleware('admin');
-        $this->languages = Language::orderBy('order')->pluck('name','id')->toArray();
+        $this->languages = Language::orderBy('order')->pluck('name','code')->toArray();
         $this->def_lang = Language::orderBy('order')->first();
     }
 
@@ -62,7 +62,7 @@ class CategoriesController extends Controller
             ])->render();
             return response()->json(array('success' => true, 'html' => $returnHTML));
         }else{
-            $categories = $model->where('type', $type)->where('parent_id', '<=', 0)->where('language_id', $this->def_lang->id)->orderBy('order', 'DESC')->get();
+            $categories = $model->where('type', $type)->where('parent_id', '<=', 0)->where('lang', $this->def_lang->code)->orderBy('order', 'DESC')->get();
             return view('admin-panel::category.create_edit', [
                 'categories' => $categories,
                 'type' => $type,
@@ -105,7 +105,7 @@ class CategoriesController extends Controller
             if(isset($request['selected'])){
              $keys = explode(',', $request['selected']);
                 array_push($keys, $category->id);
-                $categories  = Category::where('type', $category->type)->where('language_id', $category->language_id)->orderBy('order', 'DESC')->get()->groupBy('parent_id');
+                $categories  = Category::where('type', $category->type)->where('lang', $category->lang)->orderBy('order', 'DESC')->get()->groupBy('parent_id');
                 $returnHTML = view('admin-panel::components.categories', [
                     'render' => true,
                     'categories' => $categories,
@@ -151,7 +151,7 @@ class CategoriesController extends Controller
         $category = $category->find($id);
         $categories = $category->where('type', $type)
             ->where('parent_id', '<=', 0)
-            ->where('language_id', $category->language_id)
+            ->where('lang', $category->lang)
             ->where('id', '!=', $id)->orderBy('order', 'DESC')->get();
         if($request->ajax()) {
             $returnHTML = view('admin-panel::category.create_edit', [
@@ -246,7 +246,7 @@ class CategoriesController extends Controller
         if ($translate) {
             $parent = $translate->parent_id;
             if($parent){
-                $parentTrans = Category::where('language_id', $lang)->where('parent_lang_id', $parent)->get();
+                $parentTrans = Category::where('lang', $lang)->where('parent_lang_id', $parent)->get();
             } else {
                 $parentTrans = null;
             }
@@ -264,49 +264,50 @@ class CategoriesController extends Controller
 
     public function createOrEditCategoryTranslation($id, $lang )
     {
-        $category = $this->model->where(['id' => $id, 'language_id' => $lang])->orWhere(['id' => $id])->first();
+        $category = $this->model->where(['id' => $id, 'lang' => $lang])->orWhere(['id' => $id])->first();
         if(!$category){
             return ['status' => 'redirect', 'route' => route('categories.create') ];
         }
 
-        if($category->language_id != $lang && isset($category->parent_lang_id)){
+        if($category->lang != $lang && isset($category->parent_lang_id)){
 
-            $parent_cat = $this->model->where(['id' => $category->parent_lang_id, 'language_id' => $lang])->first();
+            $parent_cat = $this->model->where(['id' => $category->parent_lang_id, 'lang' => $lang])->first();
 
             if($parent_cat){
 //                dd('s');
                 return ['status' => 'redirect', 'route' => route('categories.edit', [$parent_cat->id, $category->type])];
-            }else if(null != $trans_cat = $this->model->where(['parent_lang_id' => $category->parent_lang_id, 'language_id' => $lang])->first()){
+            }else if(null != $trans_cat = $this->model->where(['parent_lang_id' => $category->parent_lang_id, 'lang' => $lang])->first()){
                 return ['status' => 'redirect', 'route' => route('categories.edit', [$trans_cat->id, $category->type])];
             }else{
                 $trans_cat = $this->model->where('id', $category->parent_lang_id)->first();
-                $trans_cat['language_id'] = $lang;
+                $trans_cat['lang'] = $lang;
                 return $trans_cat;
             }
 
 
-        } else if($category->language_id != $lang && !isset($category->parent_lang_id)) {
-            $parent_cat = $this->model->where(['parent_lang_id' => $category->id, 'language_id' => $lang])->first();
+        } else if($category->lang != $lang && !isset($category->parent_lang_id)) {
+            $parent_cat = $this->model->where(['parent_lang_id' => $category->id, 'lang' => $lang])->first();
             if($parent_cat ){
                 return ['status' => 'redirect', 'route' => route('categories.edit', [$parent_cat->id, $parent_cat->type])];
             }
-            $category['language_id'] = $lang;
+            $category['lang'] = $lang;
             return $category;
         }else{
-            $category['language_id'] = $lang;
+            $category['lang'] = $lang;
             return $category;
         }
 
         $category = $this->model->find($id);
-        $category['language_id'] = $lang;
+        $category['lang'] = $lang;
 
         return $category;
 
 
     }
 
+
     public function categories_by_lang($type, $lang, $parent = null){
-        $categories = Category::where(['type' =>$type, 'language_id' => $lang ])->get();
+        $categories = Category::where(['type' =>$type, 'lang' => $lang ])->get();
         $data = [
             'render' => true,
             'categories' => $categories,

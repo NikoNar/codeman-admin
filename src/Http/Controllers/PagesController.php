@@ -34,7 +34,7 @@ class PagesController extends Controller
 //    	 $this->middleware('auth:admin');
         $this->CRUD = new CRUDService($model);
         $this->model = $model;
-        $this->languages = Language::orderBy('order')->pluck('name','id')->toArray();
+        $this->languages = Language::orderBy('order')->pluck('name','code')->toArray();
     }
 
     /**
@@ -44,7 +44,6 @@ class PagesController extends Controller
      */
     public function index()
     {
-
         return view('admin-panel::page.index', ['pages' => $this->CRUD->getAll() , 'dates' => $this->getDatesOfResources($this->model), 'languages' => $this->languages]);
     }
 
@@ -55,12 +54,13 @@ class PagesController extends Controller
      */
     public function create($lang = null, PageInterface $pageInterface)
     {
+
         if(!auth()->user()->can('create-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
 
         $template = null;
-        $languages = Language::orderBy('order')->pluck('name','id')->toArray();
+        $languages = Language::orderBy('order')->pluck('name','code')->toArray();
         $templates = Module::where('module_type', 'template')->pluck('title', 'id')->toArray();
 
         if(request()->has('template')){
@@ -92,7 +92,7 @@ class PagesController extends Controller
                 'parents' 	=> $pageInterface->getAllPagesTitlesArray(),
                 'order' 	=> $pageInterface->getMaxOrderNumber(),
                 'languages' => $languages,
-                'language_id' => $lang
+                'lang' => $lang
             ]);
 
         }else{
@@ -100,7 +100,7 @@ class PagesController extends Controller
                 'parents' => $pageInterface->getAllPagesTitlesArray(),
                 'order' => $pageInterface->getMaxOrderNumber(),
                 'languages' => $languages,
-                'language_id' => $lang,
+                'lang' => $lang,
                 'templates' 	=> $templates,
             ]);
         }
@@ -146,14 +146,13 @@ class PagesController extends Controller
      */
     public function translate($id, $lang, PageInterface $pageInterface)
     {
-
         if(!auth()->user()->can('edit-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
 
         $template = null;
         $templates = Module::where('module_type', 'template')->pluck('title', 'id')->toArray();
-        $languages = Language::orderBy('order')->pluck('name','id')->toArray();
+        $languages = Language::orderBy('order')->pluck('name','code')->toArray();
         if(request()->has('template')){
             $template = request()->get('template');
         }
@@ -162,16 +161,15 @@ class PagesController extends Controller
         if(isset($translate['status']) && $translate['status'] == 'redirect'){
             return redirect($translate['route']);
         }
-
+//dd($translate);
         if(isset($translate) && $translate->parent_lang_id != null) {
             $parent_lang_id = null;
         }else {
             $parent_lang_id = $translate->id;
         }
-        // dd($parent_lang_id);
+//         dd($parent_lang_id);
         if($translate)
         {
-
             if(!$template){
                 $template = $translate->template;
             }
@@ -219,13 +217,13 @@ class PagesController extends Controller
                     }
                 }
                 $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
-                $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->where('language_id', $translate->language_id)->get();
+                $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->where('lang', $translate->lang)->get();
                 $attachments = $relations->groupBy('type')->toArray();
             }
 
             return view('admin-panel::page.create_edit', [
                 'page' => $translate,
-                'parents' => $pageInterface->getAllPagesTitlesArray($translate->language_id),
+                'parents' => $pageInterface->getAllPagesTitlesArray($translate->lang),
                 'template' 	=> $additional_options,
                 'templates' 	=> $templates,
                 'attachments' => $attachments,
@@ -252,7 +250,7 @@ class PagesController extends Controller
         $templates = Module::where('module_type', 'template')->pluck('title', 'id')->toArray();
 
         $page = $pageInterface->getById($id);
-        $languages = Language::orderBy('order')->pluck('name','id')->toArray();
+        $languages = Language::orderBy('order')->pluck('name','code')->toArray();
 
         if(request()->has('template')) {
             $template = request()->get('template');
@@ -302,7 +300,7 @@ class PagesController extends Controller
                     }
                 }
                 $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
-                $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->where('language_id', $page->language_id)->get();
+                $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->where('lang', $page->lang)->get();
                 $attachments = $relations->groupBy('type')->toArray();
             } else {
                 $attachments = null;
@@ -319,11 +317,11 @@ class PagesController extends Controller
                 'attachments' => $attachments,
                 'selected_attachments' => $selected_attachments,
                 'page' => $page,
-                'parents' => $pageInterface->getAllPagesTitlesArray($page->language_id,$id),
+                'parents' => $pageInterface->getAllPagesTitlesArray($page->lang,$id),
                 'languages' => $languages
             ]);
         }else{
-            return view('admin-panel::page.create_edit', ['page' => $page, 'parents' => $pageInterface->getAllPagesTitlesArray($page->language_id,$id),'languages' => $languages,'templates' => $templates]);
+            return view('admin-panel::page.create_edit', ['page' => $page, 'parents' => $pageInterface->getAllPagesTitlesArray($page->lang,$id),'languages' => $languages,'templates' => $templates]);
         }
     }
 

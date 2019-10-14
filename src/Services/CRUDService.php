@@ -43,10 +43,11 @@ class CRUDService implements CRUDInterface
 	*/
 	public function getAll($module = null)
 	{
-	    if($module){
-            return $this->model->orderBy('order', 'DESC')->where(['language_id'=>$this->default_language->id, 'type' =>$module])->paginate(10);
+
+        if($module){
+            return $this->model->orderBy('order', 'DESC')->where(['lang'=>$this->default_language->code, 'type' =>$module])->paginate(10);
         } else{
-            return $this->model->orderBy('order', 'DESC')->where('language_id',$this->default_language->id)->paginate(10);
+            return $this->model->orderBy('order', 'DESC')->where('lang',$this->default_language->code)->paginate(10);
         }
         // dd($this->model->orderBy('order', 'DESC')->where('lang','en')->paginate(10));
 	}
@@ -83,7 +84,7 @@ class CRUDService implements CRUDInterface
 	public function createOrEditTranslation( $id, $lang )
 	{
 
-        $model= str_singular($this->model->getTable());
+        $model= \Illuminate\Support\Str::singular($this->model->getTable());
         $page = $this->model->where(['id' => $id, 'language_id' => $lang])->orWhere(['id' => $id])->first();
 
         if(!$page){
@@ -147,36 +148,36 @@ class CRUDService implements CRUDInterface
     public function createOrEditResourceTranslation($type, $id, $lang)
     {
 
-        $model= str_singular($this->model->getTable());
-        $page = $this->model->where(['id' => $id, 'language_id' => $lang])->orWhere(['id' => $id])->first();
+        $model= \Illuminate\Support\Str::singular($this->model->getTable());
+        $page = $this->model->where(['id' => $id, 'lang' => $lang])->orWhere(['id' => $id])->first();
 
         if(!$page){
             return ['status' => 'redirect', 'route' => route('resources.create', [$type, $lang]) ];
         }
 
         if($page->language_id != $lang && isset($page->parent_lang_id)){
-            $parent_page = $this->model->where(['id' => $page->parent_lang_id, 'language_id' => $lang])->first();
+            $parent_page = $this->model->where(['id' => $page->parent_lang_id, 'lang' => $lang])->first();
 
             if($parent_page){
                 return ['status' => 'redirect', 'route' => route('resources.edit', [$type,$parent_page->id])];
-            }else if(null != $trans_page = $this->model->where(['parent_lang_id' => $page->parent_lang_id, 'language_id' => $lang])->first()){
+            }else if(null != $trans_page = $this->model->where(['parent_lang_id' => $page->parent_lang_id, 'lang' => $lang])->first()){
                 return ['status' => 'redirect', 'route' => route('resources.edit', [$type,$trans_page->id])];
             }else{
                 $trans_page = $this->model->where('id', $page->parent_lang_id)->first();
-                $trans_page['language_id'] = $lang;
+                $trans_page['lang'] = $lang;
                 return $trans_page;
             }
 
 
         } else if($page->language_id != $lang && !isset($page->parent_lang_id)) {
-            $parent_page = $this->model->where(['parent_lang_id' => $page->id, 'language_id' => $lang])->first();
+            $parent_page = $this->model->where(['parent_lang_id' => $page->id, 'lang' => $lang])->first();
             if($parent_page ){
                 return ['status' => 'redirect', 'route' => route('resources.edit', [$type,$parent_page->id])];
             }
-            $page['language_id'] = $lang;
+            $page['lang'] = $lang;
             return $page;
         }else{
-            $page['language_id'] = $lang;
+            $page['lang'] = $lang;
             return $page;
         }
 
@@ -198,7 +199,7 @@ class CRUDService implements CRUDInterface
 //			return $parent_lang;
 //		}
         $resourse = $this->model->find($id);
-        $resourse['language_id'] = $lang;
+        $resourse['lang'] = $lang;
 
         return $resourse;
 

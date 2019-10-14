@@ -16,7 +16,7 @@ class CreatePagesTable extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parent_id')->nullable();
-            $table->integer('language_id');
+            $table->string('lang');
             $table->integer('parent_lang_id')->nullable();
             $table->string('title');
             $table->string('slug');
@@ -29,7 +29,7 @@ class CreatePagesTable extends Migration
             $table->string('meta-title')->nullable();
             $table->longText('meta-description')->nullable();
             $table->text('meta-keywords')->nullable();
-            $table->unique(['slug', 'language_id']);
+            $table->unique(['slug', 'lang']);
             $table->timestamps();
         });
     }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $fillable = ['id','parent_id', 'title', 'content', 'type', 'language_id', 'slug', 'parent_lang_id',  'order', 'thumbnail', 'level', 'node', 'status'];
+    protected $fillable = ['id','parent_id', 'title', 'content', 'type', 'lang', 'slug', 'parent_lang_id',  'order', 'thumbnail', 'level', 'node', 'status'];
     protected $table = "cm_categories";
 
     /**

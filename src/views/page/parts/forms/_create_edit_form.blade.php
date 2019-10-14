@@ -24,7 +24,7 @@
 			<div class='input-group'>
 			    <span class="input-group-addon">
 			    	@if(isset($page))
-			    		<a href="{!! url($page->language->code.'/'.$page->slug) !!}" target="_blank">
+			    		<a href="{!! url($page->lang.'/'.$page->slug) !!}" target="_blank">
 			    			<i class="fa fa-link"></i>
 			    		</a>
 			    	@else
@@ -34,7 +34,7 @@
 			     <span class="input-group-addon no-border-right">
 			        <i>
 			        	@if(isset($page))
-							{!! url($page->language->code.'/'.$page->slug) !!}
+							{!! url($page->lang.'/'.$page->slug) !!}
 			        	@else
 			        		{{ URL::to('/') }}
 			        	@endif
@@ -97,7 +97,7 @@
 			@if(isset($page) && !empty($page))
 			<input type="hidden" name="resource_id" value="{{$page->id}}">
 			@endif
-		{!! Form::label('language_id', 'Language'); !!}
+		{!! Form::label('lang', 'Language'); !!}
 {{--		@if(isset($parent_lang_id) || (isset($page) && $page->lang == 'arm'))--}}
 {{--			{!! Form::select('lang', ['arm' => 'Հայերեն'], null, ['class' => 'form-control select2', 'readonly']); !!}--}}
 {{--		@else--}}
@@ -105,7 +105,7 @@
 {{--			--}}
 {{--		@endif--}}
 
-		{!! Form::select('language_id', $languages, isset($language_id) ? $language_id : null, ['class' => 'form-control select2 languages']); !!}
+		{!! Form::select('lang', $languages, isset($lang) ? $lang : null, ['class' => 'form-control select2 languages']); !!}
 		@endif
 	</div>
 	<div class="form-group">

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Codeman\Admin\Models\BaseModel;
 use Codeman\Admin\Models\Category;
+use Illuminate\Support\Str;
 
 class Controller extends BaseController
 {
@@ -79,7 +80,7 @@ class Controller extends BaseController
             }
             if(request()->has('language') && request()->get('language') != null)
             {
-                $result->where('language_id',request()->get('language'));
+                $result->where('lang',request()->get('language'));
             }
             if(request()->has('brand_name') && request()->get('brand_name') != null)
             {
@@ -122,12 +123,12 @@ class Controller extends BaseController
             }
             if(request()->ajax()){
                 $viewDirection = 'admin-panel::'.strtolower($modelName).'.parts.listing';
-                $returnHTML =  view($viewDirection, [str_plural(strtolower($modelName)) => $result, 'module' =>$type]);
+                $returnHTML =  view($viewDirection, [Str::plural(strtolower($modelName)) => $result, 'module' =>$type]);
                 $returnHTML = $returnHTML->render();
                 return response()->json(array('success' => true, 'html' => $returnHTML));
             }
             $viewDirection = 'admin-panel::'.strtolower($modelName).'.index';
-            $returnHTML =  view($viewDirection, [str_plural(strtolower($modelName)) => $result]);
+            $returnHTML =  view($viewDirection, [Str::plural(strtolower($modelName)) => $result]);
 
             return $returnHTML;
         }
