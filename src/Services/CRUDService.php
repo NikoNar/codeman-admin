@@ -63,7 +63,6 @@ class CRUDService implements CRUDInterface
             ->where('lang', $this->default_language->code)
             ->paginate(10);
         }
-        // dd($this->model->orderBy('order', 'DESC')->where('lang','en')->paginate(10));
 	}
 
 	/**
@@ -85,10 +84,7 @@ class CRUDService implements CRUDInterface
 	*/
 	public function store($inputs)
 	{
-//	    dd($inputs);
         $model = $this->model->create($this->createInputs($inputs));
-//        dd($model);
-//        dd($this->createInputs( $inputs ));
         if(isset($inputs['category_id'])){
             $model->categories()->sync($inputs['category_id']);
         }

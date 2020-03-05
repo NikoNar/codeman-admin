@@ -124,7 +124,9 @@
 <div class="col-md-3">
 	<div class="form-group">
 		{!! Form::label('created_at', 'Created'); !!}
-		@include('admin-panel::components.timestamps',['value'=>isset($resource)?$resource->created_at : null, 'updated'=>isset($resource)?$resource->updated_at->diffForHumans() : null ])
+		@include('admin-panel::components.timestamps',[
+			'value' => isset($resource)?$resource->created_at : date('Y-m-d H:i:a'), 
+			'updated' => isset($resource)?$resource->updated_at->diffForHumans() : null ])
 
 		{{--		{!! Form::label('updated_at', 'Updated',['class'=>'pull-right']); !!}--}}
 {{--		<div class="clearfix"></div>--}}

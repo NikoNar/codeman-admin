@@ -2,7 +2,6 @@
 	<thead>
 		<tr>
 			<th width="3%" class="no-sort"><input type="checkbox" name="checked" onClick="checkAll(this)"></th>
-			<th>Image</th>
 			<th>Title</th>
 			<th>Url</th>
 			<th width="10%">Status</th>

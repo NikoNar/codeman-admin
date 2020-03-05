@@ -33,8 +33,8 @@ class Controller extends BaseController
 
     public function getDatesOfResources($model)
     {
-        return $model->select(\DB::raw('YEAR(created_at) year'))
-                   ->pluck('year','year');
+        // return $model->select(\DB::raw('YEAR(created_at) year'))
+        //            ->pluck('year','year');
     }
 
     public function searchResource(Request $request)
