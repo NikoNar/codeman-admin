@@ -91,16 +91,23 @@ class AdminServiceProvider extends ServiceProvider
   //           return  new Admin($app);
   //       });
         View::composer('admin-panel::layouts.left-menu', function($view){
-            $modules = Module::where('module_type', 'module')->get();
-//            dd(json_decode($modules[1]->options));
+            $modules = Module::where('module_type', 'module')->orderBy('order','DESC')->get();
 
             $view->with('modules', $modules);
         });
-
-
-        View::composer('*', function ($view) {
+        
+        View::composer('layouts.app', function ($view) {
             $settings = Setting::pluck('value', 'key');
-            $view->with(['cm_settings'=> $settings]);
+            
+            $admin_modules = null;
+            if(auth()->check() && (auth()->user()->hasRole('SuperAdmin') || auth()->user()->hasRole('Admin')))
+            {
+                $admin_modules = Module::where('module_type', 'module')->orderBy('order','DESC')->get();
+            }
+            $view->with([
+                'settings' => $settings,
+                'admin_modules' => $admin_modules
+            ]);
         });
 
 	}

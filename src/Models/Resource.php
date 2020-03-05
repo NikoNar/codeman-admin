@@ -32,7 +32,4 @@ class Resource extends Model
     {
         return $this->belongsToMany('Codeman\Admin\Models\Resource', 'resourceables', 'resourceable_id', 'resource_id');
     }
-
-
-
 }

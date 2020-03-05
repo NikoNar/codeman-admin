@@ -77,6 +77,7 @@ class PagesController extends Controller
 
         if($template){
             if(null == $relation_ids = json_decode($model->relations)){
+
                 $slugs = [];
                 $attachments = null;
             }else{
@@ -101,7 +102,7 @@ class PagesController extends Controller
                 'order' => $pageInterface->getMaxOrderNumber(),
                 'languages' => $languages,
                 'lang' => $lang,
-                'templates' 	=> $templates,
+                'templates' => $templates,
             ]);
         }
     }
@@ -114,13 +115,12 @@ class PagesController extends Controller
     public function store(PageRequest $request, PageInterface $pageInterface )
     {
         // $this->authorize('create', $this->model);
-//        dd($request->all());
+
         if(!auth()->user()->can('create-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
 
         $inputs = $pageInterface->getMaxOrderNumber($request->all());
-//        dd('store');
 
         if(null != $page = $pageInterface->store($inputs)){
             if($request->has('meta'))
@@ -161,13 +161,13 @@ class PagesController extends Controller
         if(isset($translate['status']) && $translate['status'] == 'redirect'){
             return redirect($translate['route']);
         }
-//dd($translate);
+
         if(isset($translate) && $translate->parent_lang_id != null) {
             $parent_lang_id = null;
         }else {
             $parent_lang_id = $translate->id;
         }
-//         dd($parent_lang_id);
+
         if($translate)
         {
             if(!$template){
@@ -261,6 +261,7 @@ class PagesController extends Controller
         } else {
             $model = null;
         }
+
         if($model){
             $add_opts = json_decode($model->additional_options)? : array();
             $additional_options = [];
@@ -284,14 +285,16 @@ class PagesController extends Controller
             }
         }
         $page->setAttribute('meta', $decoded_pagemetas);
-
         if(!$model || null == $relation_ids = json_decode($model->relations)){
+
             $slugs = [];
             $attachments = null;
             $selected_attachments = [];
 
         }else{
+            
             if(key_exists('attachments', $decoded_pagemetas)){
+
                 $meta_attachments = $decoded_pagemetas['attachments'];
                 $selected_attachments = [];
                 foreach($meta_attachments as $key => $val){
@@ -299,11 +302,20 @@ class PagesController extends Controller
                         $selected_attachments = array_merge($selected_attachments, explode(',', $val));
                     }
                 }
+
                 $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
                 $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->where('lang', $page->lang)->get();
                 $attachments = $relations->groupBy('type')->toArray();
+
             } else {
-                $attachments = null;
+
+                if($relation_ids){
+                    $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
+                    $relations = Resource::select('type', 'id', 'title')->whereIn('type', $slugs)->where('lang', $page->lang)->get();
+                    $attachments = $relations->groupBy('type')->toArray();
+                }else{
+                    $attachments = null;
+                }
                 $selected_attachments = null;
             }
 

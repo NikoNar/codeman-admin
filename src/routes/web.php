@@ -210,12 +210,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 	});
 });
-//    Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['web', 'language' ]], function() {
-//        Route::namespace('Codeman\Admin\Http\Controllers')->group(function () {
-//            Route::get('/language/{lang}', 'Front\LanguagesController@changeLanguage');
-//            Route::get('/{slug?}', 'Front\PagesController@index')->where('slug', '(?s).*');
-//        });
-//
-//    });
+   
 
 });

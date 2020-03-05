@@ -21,7 +21,7 @@
 @section('content')
     <section class="content">
 @php
-    $color = $rand = array('#1a2226', '#008fca', '#ff9800', '#5cd5d5');
+    $color = $rand = array('#008fca');
 @endphp
         <!-- Info boxes -->
         <div class="row">
@@ -33,9 +33,10 @@
                             <span class="info-box-icon" style="background-color: {{$color[array_rand($color)]}}; color:#fff"><i class="fa fa-window-restore"></i></span>
                         </a>
                         <div class="info-box-content">
-                      <span class="info-box-text" style="">Pages
-                      <span class="info-box-number">{!! $pages_count !!}</span>
-                      </span>
+                          <span class="info-box-text" style="">
+                            <span class="info-box-number">{!! $pages_count !!}</span>
+                            <span>Pages</span>
+                          </span>
                             <a href="{!! route('page-index') !!}" class="small-box-footer info-box-text"
                                style="position: absolute;right: 30px; bottom: 30px;">View all <i
                                         class="fa fa-arrow-circle-right"></i></a>
@@ -50,7 +51,7 @@
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="info-box ">
                                 <a href="{!! route('resources.index', [$res->type]) !!}">
-                                    <span class="info-box-icon" style="background-color: {{array_rand($color)}}"><i class="fa {{$res->icon}}"></i></span>
+                                    <span class="info-box-icon" style="background-color: {!!$color[array_rand($color)]!!}; color:#fff"><i class="fa {{$res->icon}}"></i></span>
                                 </a>
                                 <div class="info-box-content">
                                   <span class="info-box-text" style="">{{$res->type}}

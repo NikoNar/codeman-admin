@@ -32,17 +32,6 @@
 				<input type="hidden"  id="page_id" value="{{$page->id}}">
 				<h3 class="box-title">Edit Page</h3>
 				<a href="{{ route('page-create') }}" class="btn btn-primary btn-flat pull-right ">Add New</a>
-{{--				@if(isset($parent_lang_id) || isset($page) && $page->lang == 'arm')--}}
-{{--					@if(isset($parent_lang_id))--}}
-{{--						<a href="{{ route('page-edit', [$parent_lang_id]) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to English</a>--}}
-{{--					@else--}}
-{{--						<a href="{{ route('page-edit', $page->parent_lang_id) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to English</a>--}}
-{{--					@endif--}}
-{{--				@else--}}
-{{--					<a href="{{ route('page-translate',$page->id) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to Armenian</a>--}}
-{{--				@endif--}}
-
-{{--				<a href="{{ route('page-translate', [$page->id, $page->language_id]) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate</a>--}}
 			@endif
 	    </div>
 	    <div class="box-body">
@@ -104,7 +93,7 @@
 
 	  	$('body').off('change', '#template').on('change', '#template', function(e){
 	  		e.preventDefault();
-	  		var conf = confirm('By chnaging the page template your data will be lost. Are you sure you want to chnage it?');
+	  		var conf = confirm('By chnaging the page template your unsaved data will be lost. Are you sure you want to change it?');
 	  		if(conf == true){
 	  			window.location.href = app.ajax_url+window.location.pathname+'?template='+this.value
 	  		}

@@ -27,4 +27,9 @@ class Page extends Model
     {
         return $this->belongsTo('Codeman\Admin\Models\Language', 'lang', 'code');
     }
+
+    public function pagetemplate()
+    {
+        return $this->belongsTo('Codeman\Admin\Models\Module', 'template', 'id');
+    }
 }

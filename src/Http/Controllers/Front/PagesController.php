@@ -53,47 +53,85 @@ class PagesController extends Controller
      */
     public function index($slug = null)
     {
-        if($slug == 'products'){
-            return redirect()->route('products');
-        }
-//        dd(session()->get('prev_lang'), 'ctrl');
         $pageObject = null;
         $index_page_id = Setting::select('value')->where('key', 'index')->first()['value'];
         $url = explode('/', $slug);
         $default_lang = Language::orderBy('order')->first();
-        $def_land_id  = $default_lang->id;
+        // $def_land_id  = $default_lang->id;
         $def_land_code  = $default_lang->code;
-        $this_lang_id = Language::where('code', $this->lang)->first()->id;
+        // $this_lang_id = Language::where('code', $this->lang)->first()->id;
 
         if(count($url) > 1){
             $slug = $url[count($url) - 1];
         }
-
         if(!$slug){
-            $pageObject = $this->page->where('language_id', $this_lang_id)->whereStatus('published')->where(function($query) use($index_page_id){
+
+            $pageObject = $this->page->where('lang', $this->lang)
+            ->whereStatus('published')
+            ->where(function($query) use($index_page_id){
                 $query->where('id', $index_page_id)->orWhere('parent_lang_id', $index_page_id);
-            })->first();
+            })
+            ->with('metas')
+            ->with(['pagetemplate' => function($q){
+                $q->select('id','slug');
+            }])
+            ->first();
+            
             if(!$pageObject){
-                $pageObject = $this->page->where('language_id', $this_lang_id)->whereStatus('published')->where(function($query) use($this_lang_id){
-                    $query->join('pages as p','pages.parent_lang_id', '=', 'p.parent_lang_id')->where('language_id', $this_lang_id);
-                })->first();
+
+                $pageObject = $this->page->where('lang', $this->lang)
+                ->whereStatus('published')
+                ->where(function($query){
+                    $query->join('pages as p','pages.parent_lang_id', '=', 'p.parent_lang_id')->where('lang', $this->lang);
+                })
+                ->with('metas')
+                ->with(['pagetemplate' => function($q){
+                    $q->select('id','slug');
+                }])
+                ->first();
             }
 
         }
 
         if(!$pageObject){
-            $pageObject = $this->page->whereSlug($slug)->whereLanguageId($this_lang_id)->whereStatus('published')->first();
+
+            $pageObject = $this->page->whereSlug($slug)->whereLang($this->lang)
+            ->whereStatus('published')
+            ->with('metas')
+            ->with(['pagetemplate' => function($q){
+                $q->select('id','slug');
+            }])
+            ->first();
+            
         }
 
         if(!$pageObject && session()->has('page_id')){
+
             if( null != $prevPage = $this->page->where('id', session()->get('page_id') )->first()){
                 if($prevPage->parent_lang_id){
-                    $pageObject = $this->page->where('language_id', $this_lang_id)->where(function ($query) use($prevPage){
+
+                    $pageObject = $this->page->where('lang', $this->lang)
+                    ->whereStatus('published')
+                    ->where(function ($query) use($prevPage){
                         $query->where('parent_lang_id', $prevPage->parent_lang_id)
                             ->orWhere('id', $prevPage->parent_lang_id);
-                    })->first();
+                    })
+                    ->with('metas')
+                    ->with(['pagetemplate' => function($q){
+                        $q->select('id','slug');
+                    }])
+                    ->first();
+
                 } else {
-                    $pageObject = $this->page->where('parent_lang_id', $prevPage->id)->where('language_id', $this_lang_id)->first();
+
+                    $pageObject = $this->page->where('parent_lang_id', $prevPage->id)
+                    ->whereStatus('published')
+                    ->where('lang', $this->lang)
+                    ->with('metas')
+                    ->with(['pagetemplate' => function($q){
+                        $q->select('id','slug');
+                    }]) 
+                    ->first();
 
                 }
 
@@ -105,56 +143,14 @@ class PagesController extends Controller
                 }
             }
         }
-//        dd('1', $pageObject);
-//        if($this->lang != $def_land_code){
-//            if(!$slug){
-//                $pageObject = $this->page->where('parent_lang_id', $index_page_id)->where('language_id', '=', $this_lang_id)->whereStatus('published')->first();
-//            }else{
-//                $pageObject = $this->page->where('slug', $slug)->where('language_id', '=', $this_lang_id)->whereStatus('published')->first();
-//            }
-//            if(!$pageObject){
-//                if(!$slug){
-//                    $parent_page_id = $this->page->where('id', $index_page_id)->whereStatus('published')->pluck('id')->first();
-//                }else{
-//                    $parent_page_id = $this->page->where('slug', $slug)->whereStatus('published')->pluck('id')->first();
-//                }
-//                $pageObject = $this->page->where('parent_lang_id', $parent_page_id)->whereStatus('published')->select('id', 'parent_id', 'slug')->first();
-//                if($pageObject){
-//                    $url = buildUrl($pageObject);
-//                    return redirect()->to($url);
-//                }
-//            }
-//        }else{
-//            if(!$slug){
-//                $pageObject = $this->page->where('id', $index_page_id)->where('language_id', $def_land_id)->whereStatus('published')->first();
-//            }else{
-//                $pageObject = $this->page->where('slug', $slug)->where('language_id', $def_land_id)->whereStatus('published')->first();
-//            }
-//            if(!$pageObject){
-//                if(!$slug){
-//                    $child_page_parent_id = $this->page->where('id', $index_page_id)->whereStatus('published')->pluck('parent_lang_id')->first();
-//                }else{
-//                    $child_page_parent_id = $this->page->where('slug', $slug)->whereStatus('published')->pluck('parent_lang_id')->first();
-//                }
-//                if($child_page_parent_id > 0){
-//                    $pageObject = $this->page->where('id', $child_page_parent_id)->whereStatus('published')->select('id', 'parent_id', 'slug')->first();
-//                }
-//
-//                if($pageObject){
-//                    $url = buildUrl($pageObject);
-//                    return redirect()->to($url);
-//                }
-//
-//            }
-//        }
 
 
 
         if($pageObject){
-//            dd($pageObject);
-            $idex = Page::where('id', $index_page_id)->first();
+            // $idex = Page::where('id', $index_page_id)->first();
             if(($pageObject->id == $index_page_id && $slug)  ||  ($pageObject->parent_lang_id == $index_page_id && $slug) /*|| ($pageObject->parent_lang_id === $idex->parent_lang_id && $slug)*/){
-                $lang_code = Language::where('id', $pageObject->language_id)->first()->code;
+                // $lang_code = Language::where('id', $pageObject->language_id)->first()->code;
+                $lang_code = $pageObject->lang;
                 if($lang_code == $def_land_code){
                     return redirect()->to('/');
                 } else {
@@ -197,8 +193,11 @@ class PagesController extends Controller
             // 	$pageObject = $this->page->where('slug', $submenu[0]->slug)->whereStatus('published')->first();
             // }
             $pagemetas = null;
-            $pagemetas = $this->getPageMetas($pageObject->id);
-//            dd($pageObject->id);
+            if(isset($pageObject->metas)){
+                // $pagemetas = $this->getPageMetas($pageObject->id);
+                $pagemetas = $pageObject->metas->pluck('value', 'key')->toArray();
+            }
+
             if($pagemetas){
                 $pageObject->setAttribute('meta', $pagemetas);
             }
@@ -207,22 +206,40 @@ class PagesController extends Controller
                 $content = json_decode($pageObject->description);
             }
 
-            // dd(json_decode($pageObject->description));
-//             dd($pageObject);
 
             if(array_key_exists('attachments', $pagemetas) && !empty($pagemetas['attachments'])){
                 $attachments = json_decode($pagemetas['attachments'], true);
+                
                 foreach($attachments as $type => $val){
                     if($val == 'all'){
-                        $resource = Resource::where('type', $type)->where('status', 'published')->orderBy('order')->get();
+                        $resource = Resource::where('type', $type)
+                        ->with('metas')
+                        ->with('categories')
+                        ->where('status', 'published')
+                        ->where('lang', $this->lang)
+                        ->orderBy('order', 'DESC')
+                        ->get();
                     } else {
-                        $resource = Resource::whereIn('id', explode(',', $val))->where('status', 'published')->orderBy('order')->get();
+                        $resource = Resource::whereIn('id', explode(',', $val))
+                        ->with('metas')
+                        ->with('categories')
+                        ->where('status', 'published')
+                        ->where('lang', $this->lang)
+                        ->orderBy('order', 'DESC')
+                        ->get();
+                        
                     }
 
                     $resourseWithMetas = [];
+                    $resource_ids = $resource->pluck('id')->toArray();
+                    // $CRUD = new CRUDService($resource, $default_lang);
+                    // $resourcemetas = $CRUD->getPageMetasByResourceIds($resource_ids);
+                    // dump($resourcemetas);
+                    // dd($resourcemetas);
                     foreach($resource as $item){
-                        $CRUD = new CRUDService($resource);
-                        $resourcemetas = $CRUD->getPageMetas($item->id);
+                        // $resourcemetas = $CRUD->getPageMetas($item->id);
+                        $resourcemetas = $item->metas->pluck('value', 'key')->toArray();
+                        // dd($resourcemetas);
                         $decoded_resourcemetas = [];
                         foreach($resourcemetas as $key => $value) {
                             if(isJson($value)){
@@ -234,27 +251,29 @@ class PagesController extends Controller
 
                         $item->setAttribute('meta', $decoded_resourcemetas);
                         $resourseWithMetas[] = $item;
-
                     }
 
-
                     $pageObject[$type] = $resourseWithMetas;
+                    
+                    $resource_categories = Category::where('type', $type)->where('lang', $this->lang)->where('status', 'published')->orderBy('order', 'ASC')->get();
+                    $pageObject->setAttribute($type.'_categories', $resource_categories);
                 }
-
             }
+
             if($pageObject->template){
-                $template = Module::where('id', $pageObject->template)->first()->slug;
+                // $template = Module::where('id', $pageObject->template)->first()->slug;
+                $template = $pageObject->pagetemplate->slug;
+                // dd($template);
             } else {
                 $template = null;
             }
 
-//            dd($pageObject->id);
+
             session()->put('page_id', $pageObject->id);
             session()->put('model_type', 'page');
-//            session()->flush();
+            //session()->flush();
             session()->save();
-//            dd(session()->all());
-//            dd($template);
+           
 
             if ($template && View::exists($template)) {
                 return view($template, [
@@ -262,26 +281,16 @@ class PagesController extends Controller
                     // 'submenu' => $submenu,
                     // 'siblingmenu' => $siblingmenu,
                     // 'parentmenu' => $parentmenu,
-
-
                 ] );
             } else {
 
-                return View::exists('default')? view('default', ['page' => $pageObject,]) : abort(404);
+                return View::exists('default')? view('default', ['page' => $pageObject]) : abort(404);
 
             }
         }
         // return redirect('/');
         abort(404);
     }
-
-    public function home(){
-        // return $this->index('home');
-        $reviews = Review::where('lang', $this->lang)->get();
-        return view('home', compact('reviews'));
-    }
-
-
 
     private function getPageMetas($page_id)
     {

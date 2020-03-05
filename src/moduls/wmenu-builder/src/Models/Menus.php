@@ -24,4 +24,15 @@ class Menus extends Model
         return self::where('name', '=', $name)->where('lang', $lang)->first();
     }
 
+    public function menuItems()
+    {
+        return $this->hasMany('Codeman\Admin\Menu\Models\MenuItems', 'menu');
+    }
+    public static function getMenuWithItems($name, $lang)
+    {
+        return self::where('name', '=', $name)->where('lang', $lang)->has('menuItems')
+        ->with(['menuItems' => function($q){
+            $q->orderBy('sort', 'ASC');
+        }])->first();
+    }
 }

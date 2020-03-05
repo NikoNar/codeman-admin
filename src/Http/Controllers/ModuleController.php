@@ -25,7 +25,7 @@ class ModuleController extends Controller
         if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
-        $modules = Module::where('module_type', 'module')->paginate(15);
+        $modules = Module::where('module_type', 'module')->orderBy('order','DESC')->paginate(15);
         return view('admin-panel::modules.index', compact('modules'));
     }
 
@@ -66,16 +66,17 @@ class ModuleController extends Controller
 //        $request['options'] = json_encode($request->options);
         $request['slug'] = Str::slug($request['title']);
         if(Permission::where(['name' => 'create-'.$request['slug']])->first() === null){
-            Permission::create(['name' => 'create-'.$request['slug']]);
+            Permission::firstOrCreate(['name' => 'create-'.$request['slug']]);
         };
+
         if(Permission::where(['name' => 'edit-'.$request['slug']])->first() === null){
-        Permission::create(['name' => 'edit-'.$request['slug']]);
+            Permission::firstOrCreate(['name' => 'edit-'.$request['slug']]);
         };
+
         if(Permission::where(['name' => 'delete-'.$request['slug']])->first() === null){
-            Permission::create(['name' => 'delete-'.$request['slug']]);
+            Permission::firstOrCreate(['name' => 'delete-'.$request['slug']]);
         };
-
-
+        
         $module = Module::create($request->all());
         return redirect()->route('modules.edit', $module->id)->with('success', 'Module Created Successfully.');
 

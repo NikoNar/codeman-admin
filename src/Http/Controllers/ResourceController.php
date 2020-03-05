@@ -217,7 +217,7 @@ class ResourceController extends Controller
         }
 
         $resource->setAttribute('meta', $resourcemetas);
-        $categories = Category::where(['lang'=>$resource->langu, 'type'=>$module])->get()->groupBy('parent_id');
+        $categories = Category::where(['lang' => $resource->lang, 'type'=>$module])->get()->groupBy('parent_id');
         return view('admin-panel::resource.create_edit', [ 'resource' => $resource, 'module' => $module, 'options' => $options, 'additional_options' => $additional_options, 'relations' => $relations,'languages' => $this->languages, 'order' => $this->CRUD->getMaxOrderNumber(),'categories' => $categories, 'attached_relations' => $attached_relations ]);
     }
 
@@ -351,7 +351,7 @@ class ResourceController extends Controller
                 $translated_categories[] = $trans_cat_id;
             }
         }
-//dd($translate->categories);
+        
         if ($translate) {
             return view('admin-panel::resource.create_edit', [
                 'resource' => $translate,

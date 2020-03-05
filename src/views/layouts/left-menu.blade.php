@@ -16,14 +16,9 @@
             <li class="header">MAIN NAVIGATION</li>
             <li >
                 <a href="{!! url('admin/dashboard') !!}">
-                    <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                    <i class="fa fa-tachometer-alt"></i> <span>Dashboard</span>
                 </a>
             </li>
-            {{-- <li class="">
-                <a href="{!! route('admin-home') !!}">
-                    <i class="fa fa-dashboard"></i> <span>Home Page</span>
-                </a>
-            </li> --}}
             <li class="treeview @if(Request::is('admin/pages*')) active @endif">
                 <a href="#">
                     <i class="fa fa-window-restore"></i>

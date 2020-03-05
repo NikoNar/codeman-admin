@@ -29,10 +29,14 @@ class CRUDService implements CRUDInterface
 	 *
 	 * @param  model 
 	 */
-	public function __construct($model)
+	public function __construct($model, $default_language = null)
 	{
 		$this->model = $model;
-		$this->default_language = Language::orderBy('order')->first();
+        if(!$default_language){
+		  $this->default_language = Language::orderBy('order')->first();
+        }else{
+            $this->default_language = $default_language;
+        }
 		$this->resourcemeta = new Resourcemeta;
 	}
 
@@ -332,6 +336,12 @@ class CRUDService implements CRUDInterface
     {
         return $this->resourcemeta->where('resource_id', $resource_id)->select('key', 'value')->pluck('value', 'key')->toArray();
     }
+
+    public function getPageMetasByResourceIds($resource_ids)
+    {
+        return $this->resourcemeta->whereIn('resource_id', $resource_ids)->select('key', 'value')->get()->toArray();
+    }
+
 
 	private function uploadImage( $image ){
 		if($image) {

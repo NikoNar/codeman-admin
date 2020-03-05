@@ -390,7 +390,7 @@
     @else
         <div class="form-group">
             {!! Form::label('order', 'Order'); !!}
-            {!! Form::number('order', null, ['class' => 'form-control']) !!}
+            {!! Form::number('order', 0, ['class' => 'form-control']) !!}
         </div>
     @endif
 </div>

@@ -24,6 +24,12 @@ class Category extends Model
         return $this->hasMany('Codeman\Admin\Models\Category','parent_id','id')->where('status','published')->orderBy('order', 'DESC');
     }
 
+    public function relatedResources()
+    {
+
+        return $this->morphedByMany('Codeman\Admin\Models\Resource', 'categorisable')->with('metas');
+    }
+
     // public function products()
     // {
     //   return $this->belongsToMany('Codeman\Admin\Models\Product','product_categories');

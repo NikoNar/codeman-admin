@@ -265,7 +265,8 @@
 	}
 
 
-	function urlLang($url, $def_lang){
+	function urlLang($url, $def_lang = null){
+
 		$lang = \LaravelLocalization::getCurrentLocale();
 
 		if($lang != $def_lang){
@@ -277,6 +278,7 @@
                 $url = $lang.'/'.$url;
             }
 		}
+		// dd($url);
 		return $url;
 	}
 
@@ -288,7 +290,7 @@
 		$daynum = date("j", strtotime($date));
 		$month  = date("F", strtotime($date));
 		$year   = date("Y", strtotime($date));
-		if($lang == 'arm'){
+		if($lang == 'hy'){
 			
 			switch($day)
 			{
@@ -332,8 +334,8 @@
 	}
 
 
-use Codeman\Admin\Models\Language;
-use Intervention\Image\ImageManager;
+	use Codeman\Admin\Models\Language;
+	use Intervention\Image\ImageManager;
 
 	function image_thumbnail($image_url, $w = null, $h = null, $safecrop = false)
 	{
