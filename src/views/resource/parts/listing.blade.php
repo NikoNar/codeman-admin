@@ -4,12 +4,11 @@
 			<th width="3%" class="no-sort"><input type="checkbox" name="checked" onClick="checkAll(this)"></th>
 					
 			<th >Title</th>
-{{--			<th width="25%">Content</th>--}}
-			{{-- <th width="15%">Language</th> --}}
+			<th >Categories</th>
 			<th width="10%">Status</th>
 			<th width="10%">Created Date</th>
 			<th width="12%">Last Time Update</th>
-			<th width="13%">Actions</th>
+			<th width="10%" class="text-center">Actions</th>
 		</tr>
 	</thead>
 	<tbody>

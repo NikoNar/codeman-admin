@@ -7,12 +7,12 @@ if($page->thumbnail != ''){
 <tr data-id="{{ $page->id }}">
 	<td><input type="checkbox" name="checked" value="{{ $page->id }}"></td>
 	<td>
-		{{-- <a href="javascript:void(0)" class="featured-img-change media-open">
+		<a href="javascript:void(0)" class="featured-img-change media-open">
 			<img src="{!! $thumbnail !!}" class="thumbnail img-xs">
 
 			<i class="fa fa-camera"></i>
 			<input name="thumbnail" type="hidden" value="">
-		</a> --}}
+		</a>
 		{{ $page->title }}
 	</td>
 	<td>

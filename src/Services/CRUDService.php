@@ -49,9 +49,19 @@ class CRUDService implements CRUDInterface
 	{
 
         if($module){
-            return $this->model->orderBy('order', 'DESC')->where(['lang'=>$this->default_language->code, 'type' =>$module])->paginate(10);
+            return $this->model
+            ->with(['categories' => function($q){
+                return $q->select('cm_categories.id', 'cm_categories.title')->where('cm_categories.lang', $this->default_language->code);
+            }])
+            ->orderBy('order', 'DESC')->where([
+                'lang' => $this->default_language->code,
+                'type' => $module
+            ])->paginate(10);
         } else{
-            return $this->model->orderBy('order', 'DESC')->where('lang',$this->default_language->code)->paginate(10);
+            return $this->model
+            ->orderBy('order', 'DESC')
+            ->where('lang', $this->default_language->code)
+            ->paginate(10);
         }
         // dd($this->model->orderBy('order', 'DESC')->where('lang','en')->paginate(10));
 	}
