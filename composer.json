@@ -28,16 +28,15 @@
     "require": {
         "oriceon/laravel-settings": ">=1.6",
         "barryvdh/laravel-translation-manager": ">=0.5.2",
-        "intervention/image": ">=2.4",
-        "laravolt/avatar": ">=3.0",
-        "laravelcollective/html": ">=5.4.*",
-        "mcamara/laravel-localization": ">=1.*",
-        "proengsoft/laravel-jsvalidation": ">=2.2.*",
+         "intervention/image": "^2.4",
+        "laravolt/avatar": "^3.0",
+        "laravelcollective/html": "^5.4.*",
+        "mcamara/laravel-localization": "^1.*",
+        "proengsoft/laravel-jsvalidation": ">2.*",
         "spatie/laravel-permission":"*",
         "laravel/tinker": "^2.0",
         "laravelcollective/html": ">=6.0",
         "spatie/laravel-sitemap": ">=5.5"
-
     },
     "require-dev": {}
 }
