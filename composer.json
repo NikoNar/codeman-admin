@@ -34,7 +34,7 @@
         "mcamara/laravel-localization": ">=1.*",
         "proengsoft/laravel-jsvalidation": ">=2.2.*",
         "spatie/laravel-permission":"*",
-        "laravel/tinker": ">=2.2.0",
+        "laravel/tinker": "^2.0",
         "laravelcollective/html": ">=6.0",
         "spatie/laravel-sitemap": ">=5.5"
 
