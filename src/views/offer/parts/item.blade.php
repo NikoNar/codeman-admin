@@ -14,9 +14,9 @@ if($item->thumbnail != ''){
 		</a>
 		{{ $item->title }}</td>
 	<td>
-		<a href="{!! url('/product', $item->slug ) !!}" target="_blank">
+		<a href="{!! url('/offer', $item->slug ) !!}" target="_blank">
 			<i class="fa fa-link"></i>
-			{{ URL::to('/product') }}/{{ $item->slug }}
+			{{ URL::to('/offer') }}/{{ $item->slug }}
 		</a>
 	</td>
 	<td class="text_capitalize">{{ $item->status }}</td>
@@ -24,8 +24,8 @@ if($item->thumbnail != ''){
 	<td>{{ date('m/d/Y g:i A', strtotime($item->updated_at)) }}</td>
 
 	<td class="action">
-		<a href="{{ route("product.edit", $item->id ) }}" title="Edit" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>
-		{{-- <a href="{{ action("Admin\ProductsController@translate", $item->id ) }}" title="Translate To Armenian" class="btn btn-xs btn-primary"><i class="fa fa-language"></i></a> --}}
-		<a href="{{ route("product.delete", $item->id ) }}" title="Delete" class="btn btn-xs btn-danger confirm-del"><i class="fa fa-trash"></i></a>
+		<a href="{{ route("offer.edit", $item->id ) }}" title="Edit" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>
+		{{-- <a href="{{ action("Admin\offersController@translate", $item->id ) }}" title="Translate To Armenian" class="btn btn-xs btn-primary"><i class="fa fa-language"></i></a> --}}
+		<a href="{{ route("offer.delete", $item->id ) }}" title="Delete" class="btn btn-xs btn-danger confirm-del"><i class="fa fa-trash"></i></a>
 	</td>
 </tr>

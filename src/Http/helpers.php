@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 	/**
 	 * Generate a unique slug.
@@ -36,7 +36,7 @@
 	function getMaxOrderNumber($modelName, $inputs = null)
 	{
 		$model = "Codeman\\Admin\\Models\\".$modelName;
-		$model = new $model; 
+		$model = new $model;
 
 		if($inputs){
 			$inputs['order'] = $model->max('order') + 1;
@@ -100,12 +100,12 @@
 	        return false;
 	    }
 	}
-	
+
 	function video_id($url)
 	{
 		if (strpos($url, 'youtube') > 0) {
 	       	preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match);
-			return  $match[1]; 
+			return  $match[1];
 	    } elseif (strpos($url, 'vimeo') > 0) {
 	        return (int) substr(parse_url($url, PHP_URL_PATH), 1);
 	    }
@@ -123,6 +123,7 @@
 	}
 
 	function isJson($string) {
+		// dd(json_decode($string));
 		json_decode($string);
 	 	return (json_last_error() == JSON_ERROR_NONE);
 	}
@@ -130,7 +131,7 @@
 	function url_slug($str, $options = array()) {
 		// Make sure string is in UTF-8 and strip invalid UTF-8 characters
 		$str = mb_convert_encoding((string)$str, 'UTF-8', mb_list_encodings());
-		
+
 		$defaults = array(
 			'delimiter' => '-',
 			'limit' => null,
@@ -138,21 +139,21 @@
 			'replacements' => array(),
 			'transliterate' => false,
 		);
-		
+
 		// Merge options
 		$options = array_merge($defaults, $options);
-		
+
 		$char_map = array(
 			// Latin
-			'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'AE', 'Ç' => 'C', 
-			'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 
-			'Ð' => 'D', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ő' => 'O', 
-			'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ű' => 'U', 'Ý' => 'Y', 'Þ' => 'TH', 
-			'ß' => 'ss', 
-			'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'ae', 'ç' => 'c', 
-			'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 
-			'ð' => 'd', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ő' => 'o', 
-			'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ű' => 'u', 'ý' => 'y', 'þ' => 'th', 
+			'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'AE', 'Ç' => 'C',
+			'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I',
+			'Ð' => 'D', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ő' => 'O',
+			'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ű' => 'U', 'Ý' => 'Y', 'Þ' => 'TH',
+			'ß' => 'ss',
+			'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'ae', 'ç' => 'c',
+			'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i',
+			'ð' => 'd', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ő' => 'o',
+			'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ű' => 'u', 'ý' => 'y', 'þ' => 'th',
 			'ÿ' => 'y',
 			// Latin symbols
 			'©' => '(c)',
@@ -169,7 +170,7 @@
 			'ϊ' => 'i', 'ΰ' => 'y', 'ϋ' => 'y', 'ΐ' => 'i',
 			// Turkish
 			'Ş' => 'S', 'İ' => 'I', 'Ç' => 'C', 'Ü' => 'U', 'Ö' => 'O', 'Ğ' => 'G',
-			'ş' => 's', 'ı' => 'i', 'ç' => 'c', 'ü' => 'u', 'ö' => 'o', 'ğ' => 'g', 
+			'ş' => 's', 'ı' => 'i', 'ç' => 'c', 'ü' => 'u', 'ö' => 'o', 'ğ' => 'g',
 			// Russian
 			'А' => 'A', 'Б' => 'B', 'В' => 'V', 'Г' => 'G', 'Д' => 'D', 'Е' => 'E', 'Ё' => 'Yo', 'Ж' => 'Zh',
 			'З' => 'Z', 'И' => 'I', 'Й' => 'J', 'К' => 'K', 'Л' => 'L', 'М' => 'M', 'Н' => 'N', 'О' => 'O',
@@ -185,42 +186,42 @@
 			'Є' => 'Ye', 'І' => 'I', 'Ї' => 'Yi', 'Ґ' => 'G',
 			'є' => 'ye', 'і' => 'i', 'ї' => 'yi', 'ґ' => 'g',
 			// Czech
-			'Č' => 'C', 'Ď' => 'D', 'Ě' => 'E', 'Ň' => 'N', 'Ř' => 'R', 'Š' => 'S', 'Ť' => 'T', 'Ů' => 'U', 
-			'Ž' => 'Z', 
+			'Č' => 'C', 'Ď' => 'D', 'Ě' => 'E', 'Ň' => 'N', 'Ř' => 'R', 'Š' => 'S', 'Ť' => 'T', 'Ů' => 'U',
+			'Ž' => 'Z',
 			'č' => 'c', 'ď' => 'd', 'ě' => 'e', 'ň' => 'n', 'ř' => 'r', 'š' => 's', 'ť' => 't', 'ů' => 'u',
-			'ž' => 'z', 
+			'ž' => 'z',
 			// Polish
-			'Ą' => 'A', 'Ć' => 'C', 'Ę' => 'e', 'Ł' => 'L', 'Ń' => 'N', 'Ó' => 'o', 'Ś' => 'S', 'Ź' => 'Z', 
-			'Ż' => 'Z', 
+			'Ą' => 'A', 'Ć' => 'C', 'Ę' => 'e', 'Ł' => 'L', 'Ń' => 'N', 'Ó' => 'o', 'Ś' => 'S', 'Ź' => 'Z',
+			'Ż' => 'Z',
 			'ą' => 'a', 'ć' => 'c', 'ę' => 'e', 'ł' => 'l', 'ń' => 'n', 'ó' => 'o', 'ś' => 's', 'ź' => 'z',
 			'ż' => 'z',
 			// Latvian
-			'Ā' => 'A', 'Č' => 'C', 'Ē' => 'E', 'Ģ' => 'G', 'Ī' => 'i', 'Ķ' => 'k', 'Ļ' => 'L', 'Ņ' => 'N', 
+			'Ā' => 'A', 'Č' => 'C', 'Ē' => 'E', 'Ģ' => 'G', 'Ī' => 'i', 'Ķ' => 'k', 'Ļ' => 'L', 'Ņ' => 'N',
 			'Š' => 'S', 'Ū' => 'u', 'Ž' => 'Z',
 			'ā' => 'a', 'č' => 'c', 'ē' => 'e', 'ģ' => 'g', 'ī' => 'i', 'ķ' => 'k', 'ļ' => 'l', 'ņ' => 'n',
 			'š' => 's', 'ū' => 'u', 'ž' => 'z'
 		);
-		
+
 		// Make custom replacements
 		$str = preg_replace(array_keys($options['replacements']), $options['replacements'], $str);
-		
+
 		// Transliterate characters to ASCII
 		if ($options['transliterate']) {
 			$str = str_replace(array_keys($char_map), $char_map, $str);
 		}
-		
+
 		// Replace non-alphanumeric characters with our delimiter
 		$str = preg_replace('/[^\p{L}\p{Nd}]+/u', $options['delimiter'], $str);
-		
+
 		// Remove duplicate delimiters
 		$str = preg_replace('/(' . preg_quote($options['delimiter'], '/') . '){2,}/', '$1', $str);
-		
+
 		// Truncate slug to max. characters
 		$str = mb_substr($str, 0, ($options['limit'] ? $options['limit'] : mb_strlen($str, 'UTF-8')), 'UTF-8');
-		
+
 		// Remove delimiter from ends
 		$str = trim($str, $options['delimiter']);
-		
+
 		return $options['lowercase'] ? mb_strtolower($str, 'UTF-8') : $str;
 	}
 
@@ -272,7 +273,7 @@
 		if($lang != $def_lang){
             if(preg_match("/^http/i", $url)){
                 $url = explode('/', rtrim($url, '/'));
-                $url[3] = $lang.'/'.$url[3];
+//                $url[3] = $lang.'/'.$url[3];
                 $url = implode('/', $url) .'/';
             } else{
                 $url = $lang.'/'.$url;
@@ -291,7 +292,7 @@
 		$month  = date("F", strtotime($date));
 		$year   = date("Y", strtotime($date));
 		if($lang == 'hy'){
-			
+
 			switch($day)
 			{
 				case "Monday":    $day = "Երկուշաբթի";  break;
@@ -326,7 +327,7 @@
 			}else if($format == 'l, d F Y'){
 				return  $day . ", ". $daynum . " " . $month . " " . $year;
 			}
-		} 
+		}
 		if($format == 'M/Y'){
 			return $month . "/" . $year;
 		}
@@ -342,14 +343,14 @@
 		if(!$image_url) return $image_url;
 
 		$image_url_array = explode('/', $image_url);
-		
+
 		$index = array_search('full_size', $image_url_array);
 		$image_folder_path = public_path('media');
 		$image_folder_url = asset('media');
 		$image_name = $image_url_array[count($image_url_array) - 1 ];
 		if($index){
 
-			for ($i = $index; $i < count($image_url_array)-1; $i++) { 
+			for ($i = $index; $i < count($image_url_array)-1; $i++) {
 				$image_folder_path .= '/'.$image_url_array[$i];
 				$image_folder_url .= '/'.$image_url_array[$i];
 			}
@@ -442,7 +443,7 @@
     function getModel($modelName)
     {
        $model = "App\\Models\\".$modelName;
-       $model = new $model; 
+       $model = new $model;
        return $model;
     }
 

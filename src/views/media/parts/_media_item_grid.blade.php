@@ -12,11 +12,46 @@
 			<i class="fa fa-trash"></i> Delete
 		</button>
 	</div>
-	@if(!is_url($image->filename))
+	@switch($image->file_type)
+		@case('application/pdf')
+		<img src="{!! url('admin-panel/images/icons/extentions/pdf.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
+		<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
+		@break
+
+		@case('application/msword')
+		<img src="{!! url('admin-panel/images/icons/extentions/doc.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
+		<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
+		@break
+
+		@case('application/vnd.ms-powerpoint')
+		<img src="{!! url('admin-panel/images/icons/extentions/ppt.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
+		<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
+		@break
+
+		@case('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+		<img src="{!! url('admin-panel/images/icons/extentions/doc.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
+		<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
+		@break
+
+        @case('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+		<img src="{!! url('admin-panel/images/icons/extentions/xls.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
+		<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
+		@break
+
+		@default
+		@if(!is_url($image->filename))
+			<img src="{!! url('/media/icon_size').'/'.$image->filename !!}" alt="" class="thumbnail img-responsive">
+		@else
+			<img src="{!! $image->filename !!}" alt="" class="thumbnail img-responsive">
+		@endif
+	@endswitch
+
+
+	{{-- @if(!is_url($image->filename))
 		<img src="{!! url('/media/icon_size').'/'.$image->filename !!}" alt="" class="thumbnail img-responsive">
 	@else
 		<img src="{!! $image->filename !!}" alt="" class="thumbnail img-responsive">
-	@endif
+	@endif --}}
 	{{-- <span class="filename">
 		{!! $image->original_name !!}
 	</span> --}}

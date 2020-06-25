@@ -4,7 +4,7 @@
     </div>
     @if(date('Y') > 2017)
     	<span>Copyright &copy; 2017 - {{ date('Y') }} <a href="//codeman.am" style="letter-spacing: 1px;">CODEMAN</a></span>
-    
+
     @else
     	<span>Copyright &copy; {{ date('Y') }} <a href="//codeman.am" style="letter-spacing: 1px;">Codeman</a></span>
     @endif
@@ -62,6 +62,7 @@
               format: 'YYYY-MM-DD hh:mm:ss'
           });
       });
+
   </script>
 
 @yield('script')

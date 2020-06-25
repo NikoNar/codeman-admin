@@ -1,6 +1,6 @@
 <div class="form-group">
     <div class="box-header with-border">
-{{--        {{dd(get_defined_vars())}}--}}
+
         {!! Form::label('meta[gallery]', 'Gallery'); !!}
         <span class="btn btn-file btn-primary btn-flat media-open multichoose pull-right"  >
     	        <span class="fileupload-new">Select Images</span>
@@ -11,6 +11,10 @@
         @if(isset($resource->meta['gallery']) && !empty($resource->meta['gallery']) && isJson($resource->meta['gallery']))
             @php
                 $gallery = json_decode($resource->meta['gallery']);
+            @endphp
+        @elseif(isset($resource->gallery))
+            @php
+                $gallery = json_decode($resource->gallery);
             @endphp
         @endif
         <div class="clearfix"></div>

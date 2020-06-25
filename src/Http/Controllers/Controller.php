@@ -45,7 +45,7 @@ class Controller extends BaseController
         if($modelName)
         {
             $model = $this->getModel($modelName);
-            
+
             if(!request()->has('query') || request()->get('query') == null)
             {
                 $result = $model->where('parent_lang_id', null)->orderBy('created_at', 'DESC')->paginate(10);
@@ -62,6 +62,7 @@ class Controller extends BaseController
 
     public function filterResource(Request $request)
     {
+        dd($request->all);
         $modelName = $request->has('model') ? $request->get('model') : null;
         $searchBy = $request->has('search_by') ? $request->get('search_by') : 'title';
         $type = ($request->has('type') && $request->get('type') != 'undefined')? $request->get('type') : null;
@@ -92,11 +93,11 @@ class Controller extends BaseController
                 $result->whereBetween('created_at', array(request()->get('created_at').'-01-01 00:00:00', request()->get('created_at').'-12-31 23:59:59'))->first();
             }
             if(request()->has('status'))
-            {   
+            {
                 $result->where('status', 'LIKE', '%'.request()->get('status').'%');
             }
             if(request()->has('category_id'))
-            {   
+            {
                 $category_id = request()->get('category_id');
                 if($category_id != '' && $category_id != 0){
                     $result->with('categories')->whereHas('categories', function($query) use ($category_id)
@@ -113,7 +114,7 @@ class Controller extends BaseController
             }
 
             if(request()->has('per-page'))
-            {  
+            {
                 $result = $result->paginate((int) request()->get('per-page'));
             }else{
                 $result = $result->paginate(10);
@@ -137,12 +138,12 @@ class Controller extends BaseController
 
     public function bulkDeleteResource(Request $request)
     {
-        
+
         $modelName = $request->has('model') ? $request->get('model') : null;
         if($modelName)
         {
             $model = $this->getModel($modelName);
-          
+
             if($request->has('ids'))
             {
                 $resources = $model->find($request->get('ids'));
@@ -208,12 +209,12 @@ class Controller extends BaseController
     private function getModel($modelName)
     {
        $model = "Codeman\\Admin\\Models\\".$modelName;
-       $model = new $model; 
+       $model = new $model;
        return $model;
     }
 
     public function getResourceCategories($type)
-    {       
+    {
         $categories_model = new Category();
         $result = $categories_model->where('type', $type)->where('parent_id', '=', 0)->orderBy('order', 'DESC')->get();
         if(request()->ajax()){
@@ -226,13 +227,13 @@ class Controller extends BaseController
     }
 
     public function getResourceCategoriesAndNames($type)
-    {   
+    {
         $categories_model = new Category();
         $model = $this->getModel(ucfirst($type));
         $categories = $categories_model->where('type', $type)->where('parent_id', '=', 0)->orderBy('order', 'DESC')->get();
         $resource_names = $model->select('id', 'title')->orderBy('title', 'DESC')->get()->toArray();
         if(request()->ajax()){
-            
+
             $categories_view_direction = 'admin-panel::layouts.parts.categories_dropdown';
             $returnHTML =  view($categories_view_direction, ['categories' => $categories, 'selected'=>[request()->get('category')]])->render();
             return response()->json(array('success' => true, 'categories' => $returnHTML, 'names' => $resource_names));
@@ -240,4 +241,46 @@ class Controller extends BaseController
         }
         return false;
     }
+
+    public function createOrEditTranslation($model, $id, $lang)
+    {
+
+        $resource_name = \Illuminate\Support\Str::singular($model->getTable());
+        $page = $model->where(['id' => $id, 'lang' => $lang])->orWhere(['id' => $id])->first();
+        if(!$page){
+
+            return ['redirect' => 'redirect', 'route' => route($resource_name.'.create', [$lang]) ];
+        }
+
+        if($page->lang != $lang && isset($page->parent_lang_id)){
+            $parent_page = $model->where(['id' => $page->parent_lang_id, 'lang' => $lang])->first();
+
+            if($parent_page){
+                return ['redirect' => 'redirect', 'route' => route($resource_name.'.edit', [$parent_page->id])];
+            }else if(null != $trans_page = $model->where(['parent_lang_id' => $page->parent_lang_id, 'lang' => $lang])->first()){
+                return ['redirect' => 'redirect', 'route' => route($resource_name.'.edit', [$trans_page->id])];
+            }else{
+                $trans_page = $model->where('id', $page->parent_lang_id)->first();
+                $trans_page['lang'] = $lang;
+                return $trans_page;
+            }
+        } else if($page->lang != $lang && !isset($page->parent_lang_id)) {
+//            dd($page, 'gage');
+            $parent_page = $model->where(['parent_lang_id' => $page->id, 'lang' => $lang])->first();
+            if($parent_page ){
+                return ['redirect' => 'redirect', 'route' => route($resource_name.'.edit', [$parent_page->id])];
+            }
+            $page['lang'] = $lang;
+            return $page;
+        }else{
+            $page['lang'] = $lang;
+            return $page;
+        }
+
+        $resourse = $model->find($id);
+        $resourse['lang'] = $lang;
+
+        return $resourse;
+    }
+
 }

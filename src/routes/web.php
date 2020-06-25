@@ -3,12 +3,12 @@
 use Spatie\Sitemap\SitemapGenerator;
 
 Route::middleware('web')->group(function () {
- 	
+
 	Route::namespace('Codeman\Admin\Http\Controllers')->group(function () {
 		// Authentication Routes...
 		Route::get('admin/login', 'Auth\LoginController@showLoginForm')->name('login');
 		Route::post('admin/login', 'Auth\LoginController@login')->name('postLogin');
-		
+
 
 		// Registration Routes...
 		// Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
@@ -26,11 +26,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
 	Route::get('/clear-cache', function() {
 	    $exitCode = Artisan::call('cache:clear');
 	});
-	
+
 	Route::get('/queue-work', function() {
 	    Artisan::call('queue:work');
 	});
-	
+
 
 	// Route::get('admin/logout', 'Auth\LoginController@postLogout');
 
@@ -153,7 +153,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 		Route::get('admin/custom-pages/contact-us', 'CustomPagesController@contactUs');
 		Route::get('admin/custom-pages/categories', 'CustomPagesController@categories');
-		
+
 
 		// MenusController
 		Route::get('admin/menus', 'MenusController@index')->name('menu-index');
@@ -173,7 +173,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 
 
-		
+
 
 		// Application Controller
 		Route::get('admin/applications', 'ApplicationController@index')->name('applications-index');
@@ -188,7 +188,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 		// Route::get('admin/galleries/year/{year}', 'GalleriesController@selectGalleriesByYear');
 		// Route::get('admin/galleries/id/{id}', 'GalleriesController@selectGalleryById');
 		// // Route::get('admin/galleries/filter', 'GalleriesController@filter');
-		
+
 
 		// Route::post('admin/galleries/storeimages', 'GalleriesController@storeImages');
 
@@ -196,8 +196,21 @@ Route::middleware(['auth', 'admin'])->group(function () {
 		// Route::put('admin/galleries/update/{id}', 'GalleriesController@update');
 		// // Route::get('admin/daily/add-language/{id}', 'NewsController@addLanguage');
 		// Route::get('admin/galleries/destroy/{id}', 'GalleriesController@destroy');
+        Route::resource('admin/product', '\App\Http\Controllers\ProductController');
+        Route::resource('admin/vendor', '\App\Http\Controllers\VendorController');
+        Route::resource('admin/offer', '\App\Http\Controllers\OfferController');
+        Route::get('admin/product/delete/{id}', '\App\Http\Controllers\ProductController@destroy')->name('product.delete');
+        Route::get('admin/vendor/delete/{id}', '\App\Http\Controllers\VendorController@destroy')->name('vendor.delete');
+        Route::get('admin/offer/delete/{id}', '\App\Http\Controllers\OfferController@destroy')->name('offer.delete');
+        Route::get('admin/vendor/translate/{id}/{lang}', '\App\Http\Controllers\VendorController@translate')->name('vendor.translate');
+        Route::get('admin/product/translate/{id}/{lang}', '\App\Http\Controllers\ProductController@translate')->name('product.translate');
+        Route::get('admin/offer/translate/{id}/{lang}', '\App\Http\Controllers\OfferController@translate')->name('offer.translate');
+        Route::get('admin/offer/products/{vendor}', '\App\Http\Controllers\OfferController@products');
+        Route::get('admin/products-categories', '\App\Http\Controllers\ProductController@categories')->name('product.categories');
 
-		//ImagesController
+
+
+        //ImagesController
 		Route::get('admin/media','ImagesController@index')->name('image-index');
 		Route::get('admin/media/json','ImagesController@getAllImagesJson');
 		Route::get('admin/media/popup','ImagesController@popup');
@@ -210,6 +223,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 	});
 });
-   
+
 
 });

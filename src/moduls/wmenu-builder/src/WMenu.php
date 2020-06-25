@@ -3,6 +3,7 @@
 namespace Codeman\Admin\Menu;
 
 use App\Http\Requests;
+use Codeman\Admin\Models\Category;
 use Codeman\Admin\Models\Language;
 use Codeman\Admin\Models\Page;
 use Codeman\Admin\Menu\Models\Menus;
@@ -59,11 +60,17 @@ class WMenu
                 $menus = $menuitems->getall(request()->input("menu"));
             }
             if($menu){
-                $pages = Page::where('lang', $menu->lang)->get();
+                $pages = Page::select('slug', 'lang', 'title', 'id')->where('lang', $menu->lang)->get();
             } else {
                 $pages = null;
             }
-            $data = ['menus' => $menus, 'indmenu' => $menu, 'menulist' => $menulist, "pages" => $pages];
+            if($menu){
+                $categories = Category::select('slug', 'lang', 'title', 'id', 'type')->where('lang', $menu->lang)->get();
+                $categories = $categories->groupBy('type');
+            } else {
+                $categories = null;
+            }
+            $data = ['menus' => $menus, 'indmenu' => $menu, 'menulist' => $menulist, "pages" => $pages, "categories" => $categories];
             return view('vendor.harimayco-menu.menu-html', $data, compact('languages'));
         }
 

@@ -62,9 +62,9 @@ class ResourceController extends Controller
     public function index($module)
     {
         return view('admin-panel::resource.index', [
-            'resources' => $this->CRUD->getAll($module), 
-            'module' => $module, 
-            'dates' => $this->getDatesOfResources($this->model), 
+            'resources' => $this->CRUD->getAll($module),
+            'module' => $module,
+            'dates' => $this->getDatesOfResources($this->model),
             'languages' => $this->languages
         ]);
     }
@@ -270,7 +270,10 @@ class ResourceController extends Controller
         if(!auth()->user()->can('update-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
+
         $translate = $this->CRUD->createOrEditResourceTranslation($module, $id, $lang );
+
+//        dd($translate);
         $model = Module::where('title', $module)->first();
 
         if (isset($translate['status']) && $translate['status'] == 'redirect') {
@@ -348,7 +351,7 @@ class ResourceController extends Controller
                 $translated_categories[] = $trans_cat_id;
             }
         }
-        
+
         if ($translate) {
             return view('admin-panel::resource.create_edit', [
                 'resource' => $translate,
@@ -363,8 +366,6 @@ class ResourceController extends Controller
                 'attached_relations' => $attached_relations,
                 'translated_categories' => $translated_categories
             ]);
-
-
         }
     }
 

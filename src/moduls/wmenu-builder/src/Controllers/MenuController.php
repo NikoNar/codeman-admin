@@ -3,6 +3,7 @@
 namespace Codeman\Admin\Menu\Controllers;
 
 use Codeman\Admin\Menu\Facades\Menu;
+use Codeman\Admin\Models\Category;
 use Codeman\Admin\Models\Language;
 use Codeman\Admin\Models\Page;
 use Illuminate\Http\Request;
@@ -78,6 +79,15 @@ class MenuController extends Controller
                 $menuitem->sort = MenuItems::getNextSortRoot($page["idmenu"]);
                 $menuitem->save();
             }
+        } else if (request()->has('categories')) {
+            foreach (request()->categories as $category) {
+                $menuitem = new MenuItems();
+                $menuitem->label = $category["labelmenu"];
+                $menuitem->link = $category["linkmenu"];
+                $menuitem->menu = $category["idmenu"];
+                $menuitem->sort = MenuItems::getNextSortRoot($category["idmenu"]);
+                $menuitem->save();
+            }
         } else {
             $menuitem = new MenuItems();
             $menuitem->label = request()->input("labelmenu");
@@ -115,6 +125,7 @@ class MenuController extends Controller
         $menulist = $menu->select(['id', 'name'])->get();
         $menulist = $menulist->pluck('name', 'id')->prepend('Select menu', 0)->all();
         $pages = Page::all();
+        $categories = Category::all();
         $languages = Language::orderBy('order')->pluck('name','code')->toArray();
 
 
@@ -122,7 +133,7 @@ class MenuController extends Controller
             $menu = Menus::find($id);
             $menus = $menuitems->getall(request()->input("menu"));
 
-            $data = ['menus' => $menus, 'indmenu' => $menu, 'menulist' => $menulist, "pages" => $pages];
+            $data = ['menus' => $menus, 'indmenu' => $menu, 'menulist' => $menulist, "pages" => $pages, '$categories' => $categories];
             return view('admin-panel::menus.index', $data, compact('languages'));
 
 

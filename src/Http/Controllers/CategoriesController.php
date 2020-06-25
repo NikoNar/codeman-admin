@@ -51,7 +51,9 @@ class CategoriesController extends Controller
 	public function create(Request $request,  Category $model, $type)
 	{
         if($request->ajax()) {
-            $categories = $model->where('type', $type)->where('parent_id', '<=', 0)->orderBy('order', 'DESC')->get();
+            $categories = $model->where('type', $type)->where('parent_id', '<=', 0)
+            // ->where('lang', )
+            ->orderBy('order', 'DESC')->get();
             $returnHTML = view('admin-panel::category.parts._category_modal', [
                 'categories' => $categories,
                 'module' => $type,

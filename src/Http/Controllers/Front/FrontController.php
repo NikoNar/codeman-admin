@@ -28,6 +28,7 @@ class FrontController extends Controller
 
     public function contact_us(ContactUsRequest $request)
     {
+        dd($request->all());
         Mail::to($this->email)->send(new ContactUs($request->except('_token')));
         return redirect()->back()->with('Success', 'Email Was Successfully Sent');
     }

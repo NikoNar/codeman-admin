@@ -437,7 +437,7 @@ table td.action a{
 	height: 100%;
 	margin: 0;
 	padding: 0;
-	object-fit: cover;
+	object-fit: contain;
 	background: #ccc;
 }
 #file-info-modal .full-image{
@@ -746,4 +746,9 @@ span.twitter-typeahead{
 	max-height: 300px;
 	overflow-y: scroll;
 	overflow-x: hidden;
+}
+
+.right-sidebar .gallery-show-container.col-md-3-gallery .media-item{
+	width: 115px;
+	height: 115px;
 }

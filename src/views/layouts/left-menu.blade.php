@@ -66,6 +66,65 @@
             @endrole
             @if(isset($modules) && count($modules) > 0)
                 <hr>
+                <li class="treeview @if(Request::is('admin/product*')) active @endif">
+                    <a href="#">
+                        <i class="fa fa-car"></i>
+                        <span>Product</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="@if(Request::is('admin/product')) active @endif">
+                            <a href="{!! route('product.index') !!}">
+                                <i class="fa fa-list fz-12"></i> View All
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('admin/product/create')) active @endif">
+                            <a href="{!! route('product.create') !!}">
+                                <i class="fa fa-plus"></i> Add New
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('admin/products/categories')) active @endif">
+                            <a href="{!! route('product.categories') !!}">
+                                <i class="fa fa-circle-notch "></i> Categories
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview @if(Request::is('admin/vendor*')) active @endif">
+                    <a href="#">
+                        <i class="fab fa-app-store"></i>
+                        <span>Vendor</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="@if(Request::is('admin/vendor')) active @endif">
+                            <a href="{!! route('vendor.index') !!}">
+                                <i class="fa fa-list fz-12"></i> View All
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('admin/vendor/create')) active @endif">
+                            <a href="{!! route('vendor.create') !!}">
+                                <i class="fa fa-plus"></i> Add New
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview @if(Request::is('admin/offer*')) active @endif">
+                    <a href="#">
+                        <i class="fas fa-bookmark"></i>
+                        <span>Offer</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="@if(Request::is('admin/offer')) active @endif">
+                            <a href="{!! route('offer.index') !!}">
+                                <i class="fas fa-list fz-12"></i> View All
+                            </a>
+                        </li>
+                        <li class="@if(Request::is('admin/offer/create')) active @endif">
+                            <a href="{!! route('offer.create') !!}">
+                                <i class="fa fa-plus"></i> Add New
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 @foreach($modules as $key => $module)
                     <li class="treeview @if(Request::is('admin/'.$module->title.'*')) active @endif">
                         <a href="#">

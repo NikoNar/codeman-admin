@@ -27,7 +27,7 @@ class CRUDService implements CRUDInterface
 	/**
 	 * model constructor.
 	 *
-	 * @param  model 
+	 * @param  model
 	 */
 	public function __construct($model, $default_language = null)
 	{
@@ -76,7 +76,7 @@ class CRUDService implements CRUDInterface
 		return $this->model->find($id);
 	}
 
-	
+
 	/**
 	* Store a newly created resource in storage.
 	*
@@ -137,7 +137,7 @@ class CRUDService implements CRUDInterface
 
 		// }
 		// return null;
-		
+
 //		if(null != $parent_lang = $this->model->where('parent_lang_id', $id)->first()){
 //			// $news_date = date('m/d/Y' ,strtotime($parent_lang->created_at));
 //			// $news_time = date('g:i A' ,strtotime($parent_lang->created_at));
@@ -181,6 +181,7 @@ class CRUDService implements CRUDInterface
 
         } else if($page->language_id != $lang && !isset($page->parent_lang_id)) {
             $parent_page = $this->model->where(['parent_lang_id' => $page->id, 'lang' => $lang])->first();
+
             if($parent_page ){
                 return ['status' => 'redirect', 'route' => route('resources.edit', [$type,$parent_page->id])];
             }
@@ -256,9 +257,9 @@ class CRUDService implements CRUDInterface
 	* @return Response
 	*/
 	public function destroy( $id )
-	{	
+	{
 		$model = $this->getById($id);
-		 $model->categories()->detach();
+		$model->categories()->detach();
 		return $model->delete();
 	}
 

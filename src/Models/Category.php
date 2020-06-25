@@ -30,6 +30,11 @@ class Category extends Model
         return $this->morphedByMany('Codeman\Admin\Models\Resource', 'categorisable')->with('metas');
     }
 
+
+    public function offers()
+    {
+        return $this->morphedByMany('App\Offer', 'categorisable');
+    }
     // public function products()
     // {
     //   return $this->belongsToMany('Codeman\Admin\Models\Product','product_categories');

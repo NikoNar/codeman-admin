@@ -31,7 +31,7 @@ class PagesController extends Controller
     public function __construct(Page $model)
     {
         // $this->settings = $settings;
-//    	 $this->middleware('auth:admin');
+//       $this->middleware('auth:admin');
         $this->CRUD = new CRUDService($model);
         $this->model = $model;
         $this->languages = Language::orderBy('order')->pluck('name','code')->toArray();
@@ -87,11 +87,11 @@ class PagesController extends Controller
             }
 
             return view('admin-panel::page.create_edit', [
-                'template' 	=> $additional_options,
-                'templates' 	=> $templates,
+                'template'  => $additional_options,
+                'templates'     => $templates,
                 'attachments' => $attachments,
-                'parents' 	=> $pageInterface->getAllPagesTitlesArray(),
-                'order' 	=> $pageInterface->getMaxOrderNumber(),
+                'parents'   => $pageInterface->getAllPagesTitlesArray(),
+                'order'     => $pageInterface->getMaxOrderNumber(),
                 'languages' => $languages,
                 'lang' => $lang
             ]);
@@ -194,10 +194,12 @@ class PagesController extends Controller
             if($model){
                 $add_opts = json_decode($model->additional_options);
                 $additional_options = [];
-                foreach($add_opts as $key =>$val){
-                    $arr =[];
-                    parse_str($val, $arr);
-                    $additional_options[$key] = $arr;
+                if($add_opts) {
+                    foreach ($add_opts as $key => $val) {
+                        $arr = [];
+                        parse_str($val, $arr);
+                        $additional_options[$key] = $arr;
+                    }
                 }
             } else {
                 $additional_options = [];
@@ -224,8 +226,8 @@ class PagesController extends Controller
             return view('admin-panel::page.create_edit', [
                 'page' => $translate,
                 'parents' => $pageInterface->getAllPagesTitlesArray($translate->lang),
-                'template' 	=> $additional_options,
-                'templates' 	=> $templates,
+                'template'  => $additional_options,
+                'templates'     => $templates,
                 'attachments' => $attachments,
                 'selected_attachments' => $selected_attachments,
                 'parent_lang_id' => $parent_lang_id,
@@ -292,7 +294,7 @@ class PagesController extends Controller
             $selected_attachments = [];
 
         }else{
-            
+
             if(key_exists('attachments', $decoded_pagemetas)){
 
                 $meta_attachments = $decoded_pagemetas['attachments'];
@@ -320,12 +322,12 @@ class PagesController extends Controller
             }
 
         }
-//		$pagemetas = $decoded_pagemetas;
-//		$page->setAttribute('meta', $decoded_pagemetas);
+//      $pagemetas = $decoded_pagemetas;
+//      $page->setAttribute('meta', $decoded_pagemetas);
         if($template){
             return view('admin-panel::page.create_edit', [
-                'template' 	=> $additional_options,
-                'templates' 	=> $templates,
+                'template'  => $additional_options,
+                'templates'     => $templates,
                 'attachments' => $attachments,
                 'selected_attachments' => $selected_attachments,
                 'page' => $page,
@@ -347,7 +349,7 @@ class PagesController extends Controller
     {
         // $this_page = $pageInterface->getById($id);
         // $this->authorize('update', $this->model);
-//		 dd(request()->all());
+//       dd(request()->all());
 
 //        dd('update');
         if(!auth()->user()->can('edit-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){

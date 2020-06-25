@@ -42,7 +42,10 @@ class PagesController extends Controller
         // $this->lang = 'en';
         $this->page = $page;
         $this->pagemeta = $pagemeta;
-//    	dd($this->lang);
+        $this->is_admin = false;
+        if(auth()->check() && (auth()->user()->hasRole('SuperAdmin') || auth()->user()->hasRole('Admin'))){
+            $this->is_admin = true;
+        }
     }
 
 
@@ -66,9 +69,12 @@ class PagesController extends Controller
         }
         if(!$slug){
 
-            $pageObject = $this->page->where('lang', $this->lang)
-            ->whereStatus('published')
-            ->where(function($query) use($index_page_id){
+            $pageObject = $this->page->where('lang', $this->lang);
+            if(!$this->is_admin){
+            $pageObject = $pageObject->whereStatus('published');
+
+            }
+            $pageObject = $pageObject->where(function($query) use($index_page_id){
                 $query->where('id', $index_page_id)->orWhere('parent_lang_id', $index_page_id);
             })
             ->with('metas')
@@ -76,12 +82,14 @@ class PagesController extends Controller
                 $q->select('id','slug');
             }])
             ->first();
-            
+
             if(!$pageObject){
 
-                $pageObject = $this->page->where('lang', $this->lang)
-                ->whereStatus('published')
-                ->where(function($query){
+                $pageObject = $this->page->where('lang', $this->lang);
+                if(!$this->is_admin){
+                    $pageObject = $pageObject->whereStatus('published');
+                }
+                $pageObject = $pageObject->where(function($query){
                     $query->join('pages as p','pages.parent_lang_id', '=', 'p.parent_lang_id')->where('lang', $this->lang);
                 })
                 ->with('metas')
@@ -95,14 +103,16 @@ class PagesController extends Controller
 
         if(!$pageObject){
 
-            $pageObject = $this->page->whereSlug($slug)->whereLang($this->lang)
-            ->whereStatus('published')
-            ->with('metas')
+            $pageObject = $this->page->whereSlug($slug)->whereLang($this->lang);
+            if(!$this->is_admin){
+                $pageObject = $pageObject->whereStatus('published');
+            }
+            $pageObject = $pageObject->with('metas')
             ->with(['pagetemplate' => function($q){
                 $q->select('id','slug');
             }])
             ->first();
-            
+
         }
 
         if(!$pageObject && session()->has('page_id')){
@@ -110,9 +120,11 @@ class PagesController extends Controller
             if( null != $prevPage = $this->page->where('id', session()->get('page_id') )->first()){
                 if($prevPage->parent_lang_id){
 
-                    $pageObject = $this->page->where('lang', $this->lang)
-                    ->whereStatus('published')
-                    ->where(function ($query) use($prevPage){
+                    $pageObject = $this->page->where('lang', $this->lang);
+                    if(!$this->is_admin){
+                        $pageObject = $pageObject->whereStatus('published');
+                    }
+                    $pageObject = $pageObject->where(function ($query) use($prevPage){
                         $query->where('parent_lang_id', $prevPage->parent_lang_id)
                             ->orWhere('id', $prevPage->parent_lang_id);
                     })
@@ -124,13 +136,15 @@ class PagesController extends Controller
 
                 } else {
 
-                    $pageObject = $this->page->where('parent_lang_id', $prevPage->id)
-                    ->whereStatus('published')
-                    ->where('lang', $this->lang)
+                    $pageObject = $this->page->where('parent_lang_id', $prevPage->id);
+                    if(!$this->is_admin){
+                        $pageObject = $pageObject->whereStatus('published');
+                    }
+                    $pageObject = $pageObject->where('lang', $this->lang)
                     ->with('metas')
                     ->with(['pagetemplate' => function($q){
                         $q->select('id','slug');
-                    }]) 
+                    }])
                     ->first();
 
                 }
@@ -166,31 +180,31 @@ class PagesController extends Controller
             // $siblingmenu = null;
             // $parentmenu = null;
             // if($pageObject->parent_id){
-            // 	$siblingmenu = $this->page->where('parent_id', $pageObject->parent_id)
-            // 	->where('lang', $this->lang)
-            // 	->select('id', 'order', 'title', 'slug', 'parent_id')
-            // 	->orderBy('order', 'DESC')->get();
+            //  $siblingmenu = $this->page->where('parent_id', $pageObject->parent_id)
+            //  ->where('lang', $this->lang)
+            //  ->select('id', 'order', 'title', 'slug', 'parent_id')
+            //  ->orderBy('order', 'DESC')->get();
 
-            // 	$parent_page = $this->page->where('id', $pageObject->parent_id)
-            // 	->where('lang', $this->lang)
-            // 	->select('id', 'order', 'title', 'slug', 'parent_id')
-            // 	->orderBy('order', 'DESC')->first();
-            // 	if(!empty($parent_page) && $parent_page->parent_id != null){
-            // 		$parentmenu = $this->page->where('parent_id', $parent_page->parent_id)
-            //  	->where('lang', $this->lang)
-            //  	->select('id', 'order', 'title', 'slug', 'parent_id')
-            //  	->orderBy('order', 'DESC')->get();
-            // 	}
+            //  $parent_page = $this->page->where('id', $pageObject->parent_id)
+            //  ->where('lang', $this->lang)
+            //  ->select('id', 'order', 'title', 'slug', 'parent_id')
+            //  ->orderBy('order', 'DESC')->first();
+            //  if(!empty($parent_page) && $parent_page->parent_id != null){
+            //      $parentmenu = $this->page->where('parent_id', $parent_page->parent_id)
+            //      ->where('lang', $this->lang)
+            //      ->select('id', 'order', 'title', 'slug', 'parent_id')
+            //      ->orderBy('order', 'DESC')->get();
+            //  }
             // }
             // if($siblingmenu != null && !$siblingmenu->isEmpty()){
-            // 	if($siblingmenu->count() <= 1){
-            // 		$siblingmenu = null;
-            // 	}
+            //  if($siblingmenu->count() <= 1){
+            //      $siblingmenu = null;
+            //  }
             // }
             //END For making a menu using parent and chiled pages
 
             // if(!$submenu->isEmpty()){
-            // 	$pageObject = $this->page->where('slug', $submenu[0]->slug)->whereStatus('published')->first();
+            //  $pageObject = $this->page->where('slug', $submenu[0]->slug)->whereStatus('published')->first();
             // }
             $pagemetas = null;
             if(isset($pageObject->metas)){
@@ -209,7 +223,7 @@ class PagesController extends Controller
 
             if(array_key_exists('attachments', $pagemetas) && !empty($pagemetas['attachments'])){
                 $attachments = json_decode($pagemetas['attachments'], true);
-                
+
                 foreach($attachments as $type => $val){
                     if($val == 'all'){
                         $resource = Resource::where('type', $type)
@@ -227,7 +241,7 @@ class PagesController extends Controller
                         ->where('lang', $this->lang)
                         ->orderBy('order', 'DESC')
                         ->get();
-                        
+
                     }
 
                     $resourseWithMetas = [];
@@ -254,7 +268,7 @@ class PagesController extends Controller
                     }
 
                     $pageObject[$type] = $resourseWithMetas;
-                    
+
                     $resource_categories = Category::where('type', $type)->where('lang', $this->lang)->where('status', 'published')->orderBy('order', 'ASC')->get();
                     $pageObject->setAttribute($type.'_categories', $resource_categories);
                 }
@@ -273,7 +287,7 @@ class PagesController extends Controller
             session()->put('model_type', 'page');
             //session()->flush();
             session()->save();
-           
+
 
             if ($template && View::exists($template)) {
                 return view($template, [

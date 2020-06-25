@@ -13,17 +13,17 @@
 		</tr>
 	</thead>
 	<tbody>
-    @isset($products)
-		@foreach($products as $key => $item)
-			@include('admin-panel::product.parts.item')
+    @isset($offers)
+		@foreach($offers as $key => $item)
+			@include('admin-panel::offer.parts.item')
 		@endforeach
     @endif
 	</tbody>
 </table>
 <div class="clearfix"></div>
-@isset($products)
-<div class="col-md-6 pull-left"><div class="dataTables_info" id="data-table_info" role="status" aria-live="polite">Showing  to {!! $products->perPage() * $products->currentPage() !!} of {!! $products->total() !!} entries</div></div>
-<div class="pull-right ">{!! $products->links() !!}</div>
+@isset($offers)
+<div class="col-md-6 pull-left"><div class="dataTables_info" id="data-table_info" role="status" aria-live="polite">Showing  to {!! $offers->perPage() * $offers->currentPage() !!} of {!! $offers->total() !!} entries</div></div>
+<div class="pull-right ">{!! $offers->links() !!}</div>
 @endif
 {{-- {!! dd($news_list) !!} --}}
 {{-- {!! dd($news_list->currentPage()) !!} --}}

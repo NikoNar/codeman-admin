@@ -1,5 +1,4 @@
 @extends('admin-panel::layouts.app')
-
 @section('style')
 @endsection
 
