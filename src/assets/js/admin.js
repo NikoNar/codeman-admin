@@ -1,6 +1,7 @@
+const thumbnailNoImageUrl = "/admin-panel/images/no-image.jpg";
 imgError = function (image) {
     image.onerror = "";
-    image.src = "/admin-panel/images/no-image.jpg";
+    image.src = thumbnailNoImageUrl;
     return true;
 }
 function isJson(str) {
@@ -57,7 +58,7 @@ function drop(ev) {
 function checkImageAvailability()
 {
     $('body').find("img").on('error', function () {
-        $(this).unbind("error").attr("src", "/admin-panel/images/no-image.jpg");
+        $(this).unbind("error").attr("src", thumbnailNoImageUrl);
     });
 }
 function generateDataTable()
@@ -154,11 +155,11 @@ $(document).ready(function(){
     generateSortableDataTable();
 
     $("img").on('error', function () {
-        $(this).unbind("error").attr("src", "/admin-panel/images/no-image.jpg");
+        $(this).unbind("error").attr("src", thumbnailNoImageUrl);
     });
     $.each($("img"), function(){
         if ($(this).attr('src') === "unknown" || $(this).attr('src') === "undefined" ||  $(this).attr('src') === "") {
-            $(this).attr("src", "/admin-panel/images/no-image.jpg");
+            $(this).attr("src", thumbnailNoImageUrl);
         }
     })
 
@@ -167,7 +168,7 @@ $(document).ready(function(){
     });
     $('#remove-thumbnail').on('click', function(e){
         e.preventDefault();
-        $('#thumbnail-image').attr('src', null);
+        $('#thumbnail-image').attr('src', thumbnailNoImageUrl);
         $('input#thumbnail').val('');
         imgError(document.getElementById('thumbnail-image'));
     });
@@ -176,9 +177,9 @@ $(document).ready(function(){
         e.preventDefault();
         var container = $(this).closest('.fileupload');
 
-        container.find('.thumbnail-image').attr('src', null);
+        container.find('.thumbnail-image').attr('src', thumbnailNoImageUrl);
         container.find('input.thumbnail').val('');
-        imgError(document.getElementById('thumbnail-image'));
+        imgError(container.find('.thumbnail-image'));
     });
 
     $('body').off('click', '.media-open').on('click', '.media-open', function(e){
@@ -368,9 +369,12 @@ $(document).ready(function(){
             }
         });
     });
-
+    
     $('body').off('keyup', '#resource-search').on('keyup', '#resource-search', function(e){
-        filterAjax($(this));
+        setTimeout(function(){
+            filterAjax($(this));
+        }, 1000);
+
     });
     $('body').off('keyup', '#email-search').on('keyup', '#email-search', function(e){
         filterAjax($(this));

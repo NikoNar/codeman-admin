@@ -19,8 +19,8 @@ class AdminSeeder extends Seeder
     {
         
         // $this->call(UsersTableSeeder::class);
-//        $profile_pic_filename = Str::random(32).'.png';
-//        $profile_pic = Avatar::create('Super Admin')->save(public_path().'/images/users/'.$profile_pic_filename);
+        // $profile_pic_filename = Str::random(32).'.png';
+        // $profile_pic = Avatar::create('Super Admin')->save(public_path().'/images/users/'.$profile_pic_filename);
 
         DB::table('languages')->insert([
             [
@@ -28,7 +28,7 @@ class AdminSeeder extends Seeder
                 'code' => 'en',
                 'script' => 'Latn',
                 'native' => 'English',
-                'regional' => 'en_GB',
+                'regional' => 'en_EN',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -66,9 +66,9 @@ class AdminSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-            Permission::create(['name' => 'create-page']);
-            Permission::create(['name' => 'edit-page']);
-            Permission::create(['name' => 'delete-page']);
+        Permission::create(['name' => 'create-page']);
+        Permission::create(['name' => 'edit-page']);
+        Permission::create(['name' => 'delete-page']);
 
 
         if(null == \Spatie\Permission\Models\Role::where('name', 'SuperAdmin')->first()){
@@ -83,8 +83,9 @@ class AdminSeeder extends Seeder
             $role = \Spatie\Permission\Models\Role::create(['name' => 'Regular']);
         }
 
-
-
+        if(null == \Spatie\Permission\Models\Role::where('name', 'Customer')->first()){
+            $role = \Spatie\Permission\Models\Role::create(['name' => 'Customer']);
+        }
 
         $superadmin = User::whereEmail('superadmin@codeman.am')->first();
         $admin = User::whereEmail('admin@codeman.am')->first();

@@ -114,29 +114,22 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 @endforeach
                             @endif
                         </div>
                         <a class="btn btn-success btn-flat pull-right add-social-row"> Add New Social Icon</a>
-
                         <div class="clearfix"></div>
-
                     </div>
 
-
-
-{{--                </div>--}}
-{{--                <div class="resource-container">--}}
                     <div id="additional_settings">
                         <h4>Additional Settings</h4>
                         <hr>
                         @if(isset($additional_settings))
                             @foreach($additional_settings as $key => $value)
-                                <div class="card setting mb-3" data-i="{{$key}}">
-                                    <div class="card-body row col-md-12">
+                                <div class="card setting mb-3 col-md-12" data-i="{{$key}}">
+                                    <div class="card-body">
                                         <div class="col-md-2 form-group">
-                                            <select   name="data[{{$key}}][type]"  id="" class="form-control setting-type" data-id="{{$key}}">
+                                            <select name="data[{{$key}}][type]" id="" class="form-control setting-type" data-id="{{$key}}">
                                                 <option value="text" @if($value['type'] == 'text') {{'selected'}} @endif>Text</option>
                                                 <option value="ckeditor" @if($value['type'] == 'ckeditor') {{'selected'}} @endif>Editor</option>
                                                 <option value="thumbnail" @if($value['type'] == 'thumbnail') {{'selected'}} @endif>Image</option>
@@ -145,29 +138,56 @@
                                             </select>
                                         </div>
                                         <div class="col-md-3 form-group">
-                                            <input type="text"   name="data[{{$key}}][key]"  placeholder="Key"  value="{{$value['key']}}" id="" class="form-control">
+                                            <input type="text" name="data[{{$key}}][key]"  placeholder="Key"  value="{{$value['key']}}" id="" class="form-control">
                                         </div>
                                         <div class="col-md-6 form-group setting-value">
                                             @switch($value['type'])
                                                 @case('text')
-                                                @include('admin-panel::components.text', ['name' => "data[$key][val]", 'value'=>$value['value']])
+                                                @include('admin-panel::components.text', [
+                                                    'name'  => "data[$key][val]", 
+                                                    'value' =>$value['value'],
+                                                    'id'    => $key,
+                                                    'label' => null
+                                                ])
                                                 @break
                                                 @case('ckeditor')
-                                                @include('admin-panel::components.ckeditor', ['name' => "data[$key][val]", 'value'=>$value['value']])
+                                                @include('admin-panel::components.ckeditor', [
+                                                    'name'  => "data[$key][val]", 
+                                                    'value' =>$value['value'],
+                                                    'id'    => $key,
+                                                    'label' => null
+                                                ])
                                                 @break
                                                 @case('thumbnail')
-                                                @include('admin-panel::components.thumbnail', ['name' => "data[$key][val]", 'value'=>$value['value']])
+                                                @include('admin-panel::components.thumbnail', [
+                                                    'name'  => "data[$key][val]", 
+                                                    'value' =>$value['value'],
+                                                    'id'    => $key,
+                                                    'label' => null
+                                                ])
                                                 @break
                                                 @case('iconpicker')
-                                                @include('admin-panel::components.iconpicker', ['name' => "data[$key][val]", 'value'=>$value['value']])
+                                                @include('admin-panel::components.iconpicker', [
+                                                    'name'  => "data[$key][val]", 
+                                                    'value' =>$value['value'],
+                                                    'id'    => $key,
+                                                    'label' => null
+                                                ])
                                                 @break
                                                 @case('datetimepicker')
-                                                @include('admin-panel::components.datetimepicker', ['name' => "data[$key][val]", 'value'=>$value['value']])
+                                                @include('admin-panel::components.datetimepicker', [
+                                                    'name'  => "data[$key][val]", 
+                                                    'value' => $value['value'],
+                                                    'id'    => $key,
+                                                    'label' => null
+                                                ])
                                                 @break
                                             @endswitch
                                         </div>
                                         <div class="col-md-1">
-                                            <a href="javascript:void(0);" class="btn btn-sm btn-danger remove-row"><i class="fa fa-trash"></i></a>
+                                            <a href="javascript:void(0);" class="btn btn-sm btn-danger btn-flat remove-row">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -175,7 +195,7 @@
                         @endif
                     </div>
                     <div class="mb-5 pull-right">
-                        <a href="javascript:void(0)" class="btn btn-success pull-righ" id="add-setting" style="margin-bottom: 15px;"><i class="fa fa-plus" aria-hidden="true" ></i> Add </a>
+                        <a href="javascript:void(0)" class="btn btn-success btn-flat pull-righ" id="add-setting" style="margin-bottom: 15px;"><i class="fa fa-plus" aria-hidden="true" ></i> Add </a>
                     </div>
 
                     {!! Form::submit('Save Changes', ['class'=> 'btn btn-success btn-flat col-md-12']) !!}
@@ -223,8 +243,8 @@
                     i = parseInt(i) + 1;
                 });
                 let html = '\
-                <div class="card  setting mb-3" data-i="'+i+'">\
-                    <div class="card-body row col-md-12">\
+                <div class="card setting mb-3 col-md-12" data-i="'+i+'">\
+                    <div class="card-body">\
                         <div class="col-md-2 form-group">\
                             <select   name="data['+i+'][type]"  id="" class="form-control setting-type" data-id="'+i+'">\
                                 <option value="text">Text</option>\
@@ -241,7 +261,7 @@
                             <input type="text"   name="data['+i+'][val]"     id="" class="form-control">\
                         </div>\
                         <div class="col-md-1">\
-                            <a href="javascript:void(0);" class="btn btn-sm btn-danger remove-row"><i class="fa fa-trash"></i></a>\
+                            <a href="javascript:void(0);" class="btn btn-sm btn-danger btn-flat remove-row"><i class="fa fa-trash"></i></a>\
                         </div>\
                     </div>\
                 </div>';
@@ -275,8 +295,7 @@
 
                     }
                 });
-            })
-
+            });
 
             // $("body").off('change', '.social_icon_name').on('change', '.social_icon_name', function(){
             //     var icon = $(this).val();
@@ -298,8 +317,6 @@
                 $('.iconpicker').iconpicker();
                 $('select').select2();
             });
-
-
         })
     </script>
 

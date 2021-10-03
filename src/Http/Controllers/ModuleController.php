@@ -54,7 +54,6 @@ class ModuleController extends Controller
         if(!auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
-//        dd($request->all());
         if(isset($request->options)){
             $request['options'] = json_encode($request->options);
         }
@@ -62,8 +61,6 @@ class ModuleController extends Controller
         if(isset($request->relations)){
             $request['relations'] = json_encode($request->relations);
         }
-//        dd($request->all(0));
-//        $request['options'] = json_encode($request->options);
         $request['slug'] = Str::slug($request['title']);
         if(Permission::where(['name' => 'create-'.$request['slug']])->first() === null){
             Permission::firstOrCreate(['name' => 'create-'.$request['slug']]);
@@ -79,7 +76,6 @@ class ModuleController extends Controller
         
         $module = Module::create($request->all());
         return redirect()->route('modules.edit', $module->id)->with('success', 'Module Created Successfully.');
-
     }
 
     /**

@@ -40,6 +40,9 @@
                     </div>
                 </div>
             </div>
+            @isset($info)
+                <small id="{{ $id }}" class="form-text text-muted">{!! $info !!}</small>
+            @endif
         </div>
 
 {{--@else--}}

@@ -19,12 +19,10 @@ class SettingsController extends Controller
      */
     public function __construct(Setting $setting)
     {
-
         $this->middleware('admin');
         $this->settings =  $setting;
         $this->def_lang = Language::orderBy('order')->first();
-
-}
+    }
 
     /**
      * Display a listing of the resource.
@@ -35,6 +33,7 @@ class SettingsController extends Controller
     {
         $settings = $this->settings->where('type', null)->pluck('value', 'key');
         $additional_settings = $this->settings->where('type', '!=', null)->get();
+
         $pages = Page::where('lang', $this->def_lang->code)->pluck('title','id');
         $languages = Language::pluck('name', 'code');
         $selected_langs = Language::pluck('code')->toArray();

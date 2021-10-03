@@ -101,7 +101,6 @@ class ProductsController extends Controller
         $categories = $category->where('parent_id', '=', 0)->where('type', 'product')->orderBy('order', 'DESC')->get();
         $product = $productInterface->getSingleproduct($id);
         $colors =json_decode($product->variations);
-//        dd(count($colors[0]));
         return view('admin-panel::product.edit', [
     		'product' => $product,
     		'categories' => $categories,

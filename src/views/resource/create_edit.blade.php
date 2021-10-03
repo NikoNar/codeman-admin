@@ -32,17 +32,6 @@
 				<input type="hidden"  id="resource_id" value="{{$resource->id}}">
 				<h3 class="box-title">Edit {{Str::singular(ucwords($module))}}</h3>
 				<a href='{{ url("admin/resource/$module/create") }}' class="btn btn-primary btn-flat pull-right ">Add New</a>
-{{--				@if(isset($parent_lang_id) || isset($resource) && $resource->lang == 'arm')--}}
-{{--					@if(isset($parent_lang_id))--}}
-{{--						<a href="{{ route('resource-edit', [$parent_lang_id]) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to English</a>--}}
-{{--					@else--}}
-{{--						<a href="{{ route('resource-edit', $resource->parent_lang_id) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to English</a>--}}
-{{--					@endif--}}
-{{--				@else--}}
-{{--					<a href="{{ route('resource-translate',$resource->id) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to Armenian</a>--}}
-{{--				@endif--}}
-
-{{--				<a href="{{ route('resource-translate', [$resource->id, $resource->language_id]) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate</a>--}}
 			@endif
 	    </div>
 	    <div class="box-body">
@@ -53,6 +42,19 @@
 
 @endsection
 @section('script')
+	<script type="text/javascript">
+		//Content Builder
+	    @if(isset($resource))
+			builderOptions = {!! $resource->content_builder !!};
+			console.log('builderOptions', builderOptions);
+			if(Object.keys(builderOptions).length === 0 && builderOptions.constructor === Object){
+	    		builderOptions = [];
+			}
+	    @else
+	    	builderOptions = [];
+	    @endif
+    </script>
+	
 	<!-- Select2 -->
 	<script src="{{ asset('admin-panel/bower_components/select2/dist/js/select2.full.min.js') }}"></script>
 	<script src="{{ asset('admin-panel/plugins/bootstrap-tagsinput-master/src/bootstrap-tagsinput.js') }}"></script>
@@ -69,9 +71,7 @@
 				CKEDITOR.replaceClass('.editor');
 			}
 	  	})
-  	
-	  	
-	  </script>
+	</script>
 	<script src="{{ asset('admin-panel/plugins/sortable/Sortable.min.js') }} "></script>
 
 	<script>
@@ -81,26 +81,35 @@
 			}).disableSelection();
 		} );
 
-
-		$('body').off('submit','form').on('submit', 'form', function (e) {
+		$('body').off('submit', 'form').on('submit', 'form', function (e) {
 			if($(this).attr('id') != 'store_category') {
 				e.preventDefault();
 				var relations = {};
-				// $('.dragged').each(function () {
-				//     var name = $(this).data('name');
-				//     var ids = $(this).find('li').map(function() {
-				//         return $(this).data("id");
-				//     }).get().join();
-				//     relations[name] = ids;
-				// });
 				var ids = $('.dragged').find('li').map(function () {
 					relations[$(this).data('id')] = {'resourceable_type': $(this).closest('ul').data('name')};
 				});
-
-
 				$('#relations').val(JSON.stringify(relations));
-				$(this)[0].submit();
 			}
+
+			var form = $(this);
+			var form_data = form.serializeArray();
+			form_data.push({ name: 'content_builder', 'value': JSON.stringify(builderOptions) }); 
+			
+			$.ajax({
+				type: 'POST',
+				url: form.attr('action'),
+				dataType: 'JSON',
+				// data: {'content' '_token' : $('meta[name="csrf-token"]').attr('content')},
+				data: form_data,
+				success: function(data){
+					initToastr(data.message, data.status);
+					if(data.redirect_url){
+						setTimeout(function(){
+							window.location = data.redirect_url;
+						},500);
+					}
+				}
+			});
 		});
 
 		$('.gallery-show-container').each(function(){
@@ -166,5 +175,5 @@
 			}
 		}
 	</script>
-	  <!-- <script src="{{ asset('admin-panel/content-builder/content-builder.js') }}"></script> -->
+	<script src="{{ asset('admin-panel/content-builder/content-builder.js') }}"></script>
 @endsection()

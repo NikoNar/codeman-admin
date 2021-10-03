@@ -1,6 +1,6 @@
 multiple
 <div id="media-popup" class="modal fade" role="dialog">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-lg" style="width: 1100px;">
 		<!-- Modal content-->
 		<div class="modal-content">
 			<div class="modal-header">
@@ -40,78 +40,84 @@ multiple
 							@include('admin-panel::media.parts.forms._upload_images_form')
 				    	</div>
 				    	<hr class="no-margin-top">
-				    	<div class="infinite-scroll media-container" style="overflow-y: scroll;height: 500px;">
-					    		<div class="media-container-items">
-						    		@if(isset($images) && !$images->isEmpty())
-						    			@foreach($images as $key => $image)
-						    				{{-- {!! dd($image) !!} --}}
-											<div class="item {!! isset($multichoose) && $multichoose == 1 ? 'multiple' : null !!}" data-id={!! $image->filename !!} data-index="{!! $key !!}">
-												{{-- <button type="button" class="close delete-file" aria-label="Close">
-													<i class="fa fa-trash delete-file-icon"></i>
-												</button> --}}
-												@switch($image->file_type)
-													@case('application/pdf')
-													<img src="{!! url('admin-panel/images/icons/extentions/pdf.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
-													<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
-													@break
+				    	<div class="infinite-scroll media-container" style="overflow-y: scroll; height: 500px;">
+				    		<div class="media-container-items">
+					    		@if(isset($images) && !$images->isEmpty())
+					    			@foreach($images as $key => $image)
+					    				{{-- {!! dd($image) !!} --}}
+										<div class="item {!! isset($multichoose) && $multichoose == 1 ? 'multiple' : null !!}" data-id="{!! $image->filename !!}" data-index="{!! $key !!}">
+											{{-- <button type="button" class="close delete-file" aria-label="Close">
+												<i class="fa fa-trash delete-file-icon"></i>
+											</button> --}}
+											@switch($image->file_type)
+												@case('application/pdf')
+												<img src="{!! url('admin-panel/images/icons/extentions/pdf.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
+												<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
+												@break
 
-													@case('application/msword')
-													<img src="{!! url('admin-panel/images/icons/extentions/doc.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
-													<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
-													@break
+												@case('application/msword')
+												<img src="{!! url('admin-panel/images/icons/extentions/doc.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
+												<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
+												@break
 
-													@case('application/vnd.ms-powerpoint')
-													<img src="{!! url('admin-panel/images/icons/extentions/ppt.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
-													<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
-													@break
+												@case('application/vnd.ms-powerpoint')
+												<img src="{!! url('admin-panel/images/icons/extentions/ppt.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
+												<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
+												@break
 
-													@case('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-													<img src="{!! url('admin-panel/images/icons/extentions/doc.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
-													<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
-													@break
+												@case('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+												<img src="{!! url('admin-panel/images/icons/extentions/doc.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
+												<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
+												@break
 
-                                                    @case('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-													<img src="{!! url('admin-panel/images/icons/extentions/xls.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
-													<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
-													@break
+                                                @case('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+												<img src="{!! url('admin-panel/images/icons/extentions/xls.png')!!}"  alt="" class="img-responsive icon" style="background-color: #fff">
+												<input type="hidden" name="source" value="{!! url('/media/otherfiles/'.$image->filename) !!}">
+												@break
 
-													@default
-													@if(!is_url($image->filename))
-														<img src="{!! url('/media/full_size').'/'.$image->filename !!}" alt="" class="thumbnail img-responsive">
-													@else
-														<img src="{!! $image->filename !!}" alt="" class="thumbnail img-responsive">
-													@endif
-												@endswitch
-												<span class="filename">
-													{!! $image->original_name !!}
-												</span>
-												<input type="hidden" name="filename" value="{!! $image->original_name !!}">
-												<input type="hidden" name="alt" value="{!! $image->alt !!}">
-												<input type="hidden" name="width" value="{!! $image->width !!}">
-												<input type="hidden" name="height" value="{!! $image->height !!}">
-												<input type="hidden" name="file_size" value="{!! $image->file_size !!}">
-												<input type="hidden" name="file_type" value="{!! $image->file_type !!}">
+												@default
 												@if(!is_url($image->filename))
-													@if(isset($pdf) && $pdf == 'pdf' )
-														<input type="hidden" name="full-size-url" value="{!! url('/media/otherfiles').'/'.$image->filename !!}">
-													@else
-														<input type="hidden" name="full-size-url" value="{!! url('/media/full_size').'/'.$image->filename !!}">
-													@endif
-
+													<img src="{!! url('/media/full_size').'/'.$image->filename !!}" alt="" class="thumbnail img-responsive">
 												@else
-													<input type="hidden" name="full-size-url" value="{!! $image->filename !!}">
+													<img src="{!! $image->filename !!}" alt="" class="thumbnail img-responsive">
+												@endif
+											@endswitch
+											<p class="filename">
+                                                @php
+                                                    $extension = explode('.', $image->filename);
+                                                    $extension = is_array($extension) && count($extension) > 1 ? end($extension) : '';
+                                                @endphp
+												{!! $image->original_name.'.'.$extension !!}
+											</p>
+
+											<input type="hidden" name="id" value="{!! $image->id !!}">
+											<input type="hidden" name="filename" value="{!! $image->original_name !!}">
+											<input type="hidden" name="alt" value="{!! $image->alt !!}">
+											<input type="hidden" name="width" value="{!! $image->width !!}">
+											<input type="hidden" name="height" value="{!! $image->height !!}">
+											<input type="hidden" name="file_size" value="{!! $image->file_size !!}">
+											<input type="hidden" name="file_type" value="{!! $image->file_type !!}">
+											@if(!is_url($image->filename))
+												@if(isset($pdf) && $pdf == 'pdf' )
+													<input type="hidden" name="full-size-url" value="{!! url('/media/otherfiles').'/'.$image->filename !!}">
+												@else
+													<input type="hidden" name="full-size-url" value="{!! url('/media/full_size').'/'.$image->filename !!}">
 												@endif
 
-												<input type="hidden" name="created_at" value="{!! date('F d, Y @ H:i', strtotime($image->created_at)) !!}">
-											</div>
-										@endforeach
-										@if(isset($multichoose) && $multichoose == 1)
-											{!! $images->appends('json', false)->appends('multichoose', 'true')->links() !!}
-										@else
-											{!! $images->appends('json', false)->links() !!}
-										@endif
+											@else
+												<input type="hidden" name="full-size-url" value="{!! $image->filename !!}">
+											@endif
+
+											<input type="hidden" name="created_at" value="{!! date('F d, Y @ H:i', strtotime($image->created_at)) !!}">
+										</div>
+									@endforeach
+									@if(isset($multichoose) && $multichoose == 1)
+										{!! $images->appends('json', false)->appends('multichoose', 'true')->links() !!}
+									@else
+										{!! $images->appends('json', false)->links() !!}
 									@endif
-					    		</div>
+								@endif
+				    		</div>
 				    	</div>
 				    </div>
 				</div>
@@ -133,7 +139,7 @@ multiple
 	    $(function() {
 	        $('.infinite-scroll').jscroll({
 	            // autoTrigger: true,
-	            loadingHtml: '<i class="fa fa-spinner faa-spin animated"></i>',
+	            loadingHtml: '<i class="fa fa-spinner fa-spin animated"></i>',
 	            padding: 100,
 	            nextSelector: '.pagination li.active + li a',
 	            contentSelector: 'div.media-container-items',
@@ -149,7 +155,7 @@ multiple
 
 			if((typeof resource_id != 'undefined' || typeof resource_id != undefined ) && resource_id != 0){
 				var img_url = $(this).find('img').attr('src');
-				
+
 				$.ajax({
 				    type: 'POST',
 				    url: app.ajax_url + '/admin/change-resource-featured-image',
@@ -166,15 +172,15 @@ multiple
 				        }
 				    }
 				});
-				
+
 			}else if((typeof chnage_just_image != 'undefined' || typeof chnage_just_image != undefined ) && chnage_just_image != 0){
 				// console.log(chnage_just_image);
 				chnage_just_image.css('background-image', "url('"+$(this).find('input[name="full-size-url"]').val()+"')");
 				chnage_just_image.find('input[name="thumbnail"]').val($(this).find('input[name="full-size-url"]').val());
 				chnage_just_image.find('input.thumbnail').val($(this).find('input[name="full-size-url"]').val());
-				
+
 			}else if((typeof film_director_img_tr != 'undefined' || typeof film_director_img_tr != undefined ) && film_director_img_tr != 0){
-				
+
 				film_director_img_tr.find('.fileupload-preview').find('img').attr('src', $(this).find('img').attr('src'));
 				// film_director_img_tr.find('input[name="directors[thumbnail][]"]').val($(this).find('input[name="full-size-url"]').val());
 				film_director_img_tr.find('input[name="colors[pic][]"]').val($(this).find('input[name="full-size-url"]').val());
@@ -212,11 +218,13 @@ multiple
 				if (imagesArr[index] == undefined) {
 				    imagesArr[index] = {
 				    	'url': $(this).find('input[name="full-size-url"]').val(),
-				    	'alt': $(this).find('input[name="alt"]').val()
+				    	'alt': $(this).find('input[name="alt"]').val(),
+				    	'id': $(this).find('input[name="id"]').val(),
 				    };
 				    imagesUrlsArr.push({
 				    	'url': $(this).find('img').attr('src'),
-				    	'alt': $(this).find('input[name="alt"]').val()
+				    	'alt': $(this).find('input[name="alt"]').val(),
+				    	'id': $(this).find('input[name="id"]').val(),
 				    });
 				}
 			}else{
@@ -240,17 +248,18 @@ multiple
 			e.stopPropagation();
 			// console.log(imagesArr);
 			// var imageAlt
-			 var feed = ($(this).hasClass('feed'))? true : false;
-			
-
-
-
+			var feed = ($(this).hasClass('feed'))? true : false;
+			// console.log('imagesUrlsArr');
+			// console.log(imagesUrlsArr);
 			if(imagesUrlsArr.length > 0)
 			{
+				// console.log('data meta');
+				// console.log($(this).data('meta'));
+				// console.log($(this).data('meta') > 0);
 				if($(this).data('meta') > 0 ){
 					var container =	$(".gallery-show-container[data-meta='" + $(this).data('meta') + "']");
 				} else {
-					console.log(container);
+					// console.log(container);
 					var container = $(".gallery-show-container");
 				}
 				if(feed){
@@ -259,6 +268,7 @@ multiple
 						// console.log(imagesUrlsArr[i]);
 						if(imagesUrlsArr[i] != undefined){
 							container.append('<div class="media-item"><i class="fa fa-times-circle remove"></i><i class="fa fa-arrows-alt gallery-image-sort"></i><img src="'+imagesUrlsArr[i].url+'" class="thumbnail"></div>');
+							// console.log(imagesUrlsArr[i]);
 							galleryImagesArr.push(imagesUrlsArr[i]);
 						}
 					}
@@ -272,31 +282,34 @@ multiple
 
 				} else {
 
-				container.find('.empty-gallery').fadeOut();
-				// var container = $('.gallery-show-container');
-				for (var i = imagesUrlsArr.length - 1; i >= 0; i--) {
-					// console.log(imagesUrlsArr[i]);
-					if(imagesUrlsArr[i] != undefined){
-						container.append('<div class="media-item"><i class="fa fa-times-circle remove"></i><i class="fa fa-arrows-alt gallery-image-sort"></i><img src="'+imagesUrlsArr[i].url+'" class="thumbnail"><input name="thumbnail-alt" class="form-control" value="'+imagesUrlsArr[i].alt+'" placeholder="Alt Name"></div>');
-						galleryImagesArr.push(imagesUrlsArr[i]);
+					container.find('.empty-gallery').fadeOut();
+					// var container = $('.gallery-show-container');
+					for (var i = imagesUrlsArr.length - 1; i >= 0; i--) {
+						// console.log(imagesUrlsArr[i]);
+						if(imagesUrlsArr[i] != undefined){
+							container.append('<div class="media-item"><i class="fa fa-times-circle remove"></i><i class="fa fa-arrows-alt gallery-image-sort"></i><img src="'+imagesUrlsArr[i].url+'" class="thumbnail"><input name="thumbnail-alt" class="form-control" value="'+imagesUrlsArr[i].alt+'" placeholder="Alt Name"><input type="hidden" name="id" value="'+imagesUrlsArr[i].id+'"></div>');
+							galleryImagesArr.push(imagesUrlsArr[i]);
+						}
 					}
-				}
+
 					if($(this).data('meta') > 0 ){
-						$(".multichoose[data-meta='" + $(this).data('meta') + "']").find('.meta_images').val('');
-						$(".multichoose[data-meta='" + $(this).data('meta') + "']").find('.meta_images').val(JSON.stringify(galleryImagesArr));
+						// console.log('galleryImagesArr');
+						// console.log(galleryImagesArr);
+						// $(".multichoose[data-meta='" + $(this).data('meta') + "']").find('.meta_images').val('');
+						$(".multichoose[data-meta='" + $(this).data('meta') + "']").find('.meta_images')
+						.val(JSON.stringify(galleryImagesArr));
 					}else{
 						$('#images').val(JSON.stringify(galleryImagesArr));
 					}
-					galleryImagesArr = [];
-				// console.log(galleryImagesArr);
-				// console.log(galleryImagesArr.length);
-				$('#media-popup').modal('hide');
-				setTimeout(function(){
-					$('#media-popup').remove();
-				},1000);
+					// galleryImagesArr = [];
+					// console.log(galleryImagesArr);
+					// console.log(galleryImagesArr.length);
+					$('#media-popup').modal('hide');
+					setTimeout(function(){
+						$('#media-popup').remove();
+					},1000);
 
 				}
-				
 			}
 
 		});

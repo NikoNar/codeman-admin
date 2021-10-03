@@ -2,15 +2,12 @@
 	<thead>
 		<tr>
 			<th width="3%" class="no-sort"><input type="checkbox" name="checked" onClick="checkAll(this)"></th>
-					
-			<th width="20%">Name</th>
-			<th width="15%">Email</th>
-			<th width="15%">Role</th>
-
-			
-			<th width="12%">Verified at</th>
+			<th width="25%">Name</th>
+			<th width="20%">Email</th>
+			<th width="10%">Role</th>
+			<th width="13%">Verified at</th>
 			<th width="10%">Registered Date</th>
-			<th width="12%">Actions</th>
+			<th width="220px">Actions</th>
 		</tr>
 	</thead>
 	<tbody>

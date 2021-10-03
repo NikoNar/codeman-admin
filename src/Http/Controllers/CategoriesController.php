@@ -15,7 +15,6 @@ use Illuminate\Support\Str;
 
 class CategoriesController extends Controller
 {
-
     protected $languages;
     protected $model;
 	/**
@@ -51,9 +50,7 @@ class CategoriesController extends Controller
 	public function create(Request $request,  Category $model, $type)
 	{
         if($request->ajax()) {
-            $categories = $model->where('type', $type)->where('parent_id', '<=', 0)
-            // ->where('lang', )
-            ->orderBy('order', 'DESC')->get();
+            $categories = $model->where('type', $type)->where('parent_id', '<=', 0)->orderBy('order', 'DESC')->get();
             $returnHTML = view('admin-panel::category.parts._category_modal', [
                 'categories' => $categories,
                 'module' => $type,
@@ -82,7 +79,6 @@ class CategoriesController extends Controller
 	*/
 	public function store(CategoryRequest $request, Category $category )
 	{
-//	    dd($request->all());
 //        if (strpos($request->created_at, '/') !== false) {
 //            $request['created_at'] = Carbon::createFromFormat('d/m/Y', $request->created_at);
 //        } else {
@@ -90,6 +86,8 @@ class CategoriesController extends Controller
 //
 //        }
         $request['slug'] = getUniqueSlug($category, $request['title']);
+        $request['parent_id'] = isset($request['parent_id']) ? $request['parent_id'] : 0;
+
         if($request['parent_id'] == 0){
             $request['level'] = 1;
         } else {
@@ -103,7 +101,7 @@ class CategoriesController extends Controller
             } else {
                 $category->node = Category::find($category['parent_id'])->node;
             }
-            $category ->update();
+            $category->update();
             if(isset($request['selected'])){
              $keys = explode(',', $request['selected']);
                 array_push($keys, $category->id);
@@ -160,7 +158,7 @@ class CategoriesController extends Controller
                 'category' => $category,
                 'categories' => $categories,
                 'type' => $type,
-                'order' => getMaxOrderNumber('Category'),
+                'order' => isset($category) ? $category->order : getMaxOrderNumber('Category'),
             ])->render();
             return response()->json(array('success' => true, 'html' => $returnHTML));
         } else {
@@ -192,14 +190,13 @@ class CategoriesController extends Controller
                 $request['level'] = Category::find($request['parent_id'])->level + 1;
             }
         }
-
         if($category['parent_id'] == 0){
             $request['node'] = $category->id;
         } else {
             if($category->parent_id == $request['parent_id']) {
-                $request['node'] = Category::find($category->parent_id)->node;
+                $request['node'] = null != Category::find($category->parent_id) ? Category::find($category->parent_id)->node : null;
             } else {
-                $request['node'] = Category::find($request['parent_id'])->node;
+                $request['node'] = null != Category::find($request['parent_id']) ? Category::find($request['parent_id'])->node : null;
             }
         }
 
@@ -256,7 +253,7 @@ class CategoriesController extends Controller
                 'category' => $translate,
                 'categories' => $parentTrans,  //parent category
                 'parent_lang_id' => $parent_lang_id,
-                'order' => $this->model->max('order')+1,
+                'order' => isset($translate) ? $translate->order : $this->model->max('order')+1,
                 'languages' => $this->languages,
                 'type'=> $translate->type,
             ]);

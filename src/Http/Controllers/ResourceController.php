@@ -5,7 +5,7 @@ namespace Codeman\Admin\Http\Controllers;
 use Codeman\Admin\Models\Category;
 use Codeman\Admin\Models\Language;
 use Codeman\Admin\Models\Module;
-use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
 use Codeman\Admin\Http\Requests\ResourceRequest;
 use Codeman\Admin\Services\CRUDService;
 use Codeman\Admin\Http\Controllers\Controller;
@@ -15,17 +15,17 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Route;
 
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use Codeman\Admin\Models\User;
+//use Spatie\Permission\Models\Role;
+//use Spatie\Permission\Models\Permission;
+//use Codeman\Admin\Models\User;
 
 class ResourceController extends Controller
 {
-
     protected $model;
     protected $languages;
     protected $def_lang;
     protected $module;
+
     /**
        * Run constructor
        *
@@ -41,16 +41,15 @@ class ResourceController extends Controller
         $this->def_lang = Language::orderBy('order')->first();
         $this->module = Route::current()->parameter('resource');
         $this->check_resource($this->module);
-
-
     }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    private  function check_resource($resource){
+    private function check_resource($resource){
 
         if (!Module::where('slug', $resource)->first()){
             abort(404);
@@ -62,9 +61,9 @@ class ResourceController extends Controller
     public function index($module)
     {
         return view('admin-panel::resource.index', [
-            'resources' => $this->CRUD->getAll($module),
-            'module' => $module,
-            'dates' => $this->getDatesOfResources($this->model),
+            'resources' => $this->CRUD->getAll($module), 
+            'module' => $module, 
+            'dates' => $this->getDatesOfResources($this->model), 
             'languages' => $this->languages
         ]);
     }
@@ -79,7 +78,9 @@ class ResourceController extends Controller
         if(!auth()->user()->can('create-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
+
         $model = Module::where('title', $module)->first();
+
         if(null == $options =json_decode($model->options)){
             $options = [];
         }
@@ -89,30 +90,31 @@ class ResourceController extends Controller
         }else{
             $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
         }
-//        $relations = Resource::select('id', 'title', 'type')->whereIn('type', $slugs)->get()->groupBy('type')->toArray();
+
+        //$relations = Resource::select('id', 'title', 'type')->whereIn('type', $slugs)->get()->groupBy('type')->toArray();
         if(null == $relations = Resource::select('id', 'title', 'type')->whereIn('type', $slugs)->get()->groupBy('type')->toArray()){
             $relations = [];
         }
 
-
-//        $types = Resource::groupBy('type')->pluck('type', 'id');
+        //$types = Resource::groupBy('type')->pluck('type', 'id');
         $categories = Category::where(['lang'=> $this->def_lang->code, 'type'=>$module])->get()->groupBy('parent_id');
         $add_opts = json_decode($model->additional_options)? :array();
         $additional_options = [];
         foreach($add_opts as $key =>$val){
-            $arr =[];
+            $arr = [];
             parse_str($val, $arr);
+            $arr['name'] = 'meta['.$arr['name'].']';
             $additional_options[$key] = $arr;
         }
         return view('admin-panel::resource.create_edit', [
-                'order' => $this->CRUD->getMaxOrderNumber(),
-                'module' =>$module,
-                'options' => $options,
-                'relations' => $relations,
-                'additional_options' => $additional_options,
-                'languages' => $this->languages,
-                'categories'=> $categories,
-            ]);
+            'order' => $this->CRUD->getMaxOrderNumber(),
+            'module' =>$module,
+            'options' => $options,
+            'relations' => $relations,
+            'additional_options' => $additional_options,
+            'languages' => $this->languages,
+            'categories'=> $categories,
+        ]);
     }
 
     /**
@@ -121,15 +123,11 @@ class ResourceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ResourceRequest $request,$module)
+    public function store(ResourceRequest $request, $module)
     {
         if(!auth()->user()->can('create-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
-
-
-//        dd($request->all(), $module);
-//        dd($this->def_lang);
         if(!$request->has('lang')){
             $request['lang'] = $this->def_lang->code;
         }
@@ -142,9 +140,19 @@ class ResourceController extends Controller
                 $relations = (array) json_decode($request->relations, true);
                 $resource->relations()->sync($relations);
             }
+            if($request->ajax()){
+                return response()->json([
+                    'status' => 'success',
+                    'message' => __(':model Successfully Created.', ['model' => Str::singular(ucwords($module))]),
+                    'redirect_url' => route('resources.edit', [$module, $resource->id])
+                ]);    
+            }
             return redirect()->route('resources.edit', [$module, $resource->id])->with('success', Str::singular(ucwords($module))." Created Successfully.");
         }
-
+        return response()->json([
+            'status' => 'error',
+            'message' => __('Something was wrong, please reload page and try again.'),
+        ]); 
 
     }
 
@@ -154,7 +162,7 @@ class ResourceController extends Controller
      * @param  \App\resource  $resource
      * @return \Illuminate\Http\Response
      */
-    public function show(resource $resource)
+    public function preview(resource $resource)
     {
         //
     }
@@ -169,8 +177,9 @@ class ResourceController extends Controller
         if(!auth()->user()->can('edit-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
+
         $model = Module::where('title', $module)->first();
-        if(null == $options =json_decode($model->options)){
+        if(null == $options = json_decode($model->options)){
             $options = [];
         }
 
@@ -179,7 +188,6 @@ class ResourceController extends Controller
         }else{
             $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
         }
-
 
         $resourcemetas = $this->CRUD->getPageMetas($id);
         $decoded_resourcemetas = [];
@@ -192,30 +200,44 @@ class ResourceController extends Controller
         }
 
         $add_opts = json_decode($model->additional_options)? : array();
+        
         $additional_options = [];
         foreach($add_opts as $key =>$val){
-            $arr =[];
+            $arr = [];
             parse_str($val, $arr);
+            $arr['name'] = 'meta['.$arr['name'].']';
             $additional_options[$key] = $arr;
         }
 
         $resourcemetas = $decoded_resourcemetas;
+        
         $resource = $this->CRUD->get_with_relations($id);
         $attached_relations = array_column($resource->relations->toArray(), 'id');
-//        dd($attached_relations);
-//        foreach($attached_relations as $key =>)
-        if(null == $relations = Resource::select('id', 'title', 'type')->where('lang', $resource->lang)->whereIn('type', $slugs)->get()->groupBy('type')->toArray()){
+        
+        if(null == $relations = Resource::select('id', 'title', 'type')
+            ->where('lang', $resource->lang)
+            ->whereIn('type', $slugs)
+            ->get()
+            ->groupBy('type')
+            ->toArray()
+        ){
             $relations = [];
-//            $slugs = is_array($slugs)? $slugs : $slugs->toArray();
-//            foreach($slugs as $key=>$val){
-//                $relations[$val] = [];
-//            }
-
         }
-
+        
         $resource->setAttribute('meta', $resourcemetas);
         $categories = Category::where(['lang' => $resource->lang, 'type'=>$module])->get()->groupBy('parent_id');
-        return view('admin-panel::resource.create_edit', [ 'resource' => $resource, 'module' => $module, 'options' => $options, 'additional_options' => $additional_options, 'relations' => $relations,'languages' => $this->languages, 'order' => $this->CRUD->getMaxOrderNumber(),'categories' => $categories, 'attached_relations' => $attached_relations ]);
+
+        return view('admin-panel::resource.create_edit', [
+            'resource' => $resource, 
+            'module' => $module, 
+            'options' => $options, 
+            'additional_options' => $additional_options, 
+            'relations' => $relations,
+            'languages' => $this->languages, 
+            'order' => isset($resource) ? $resource->order : $this->CRUD->getMaxOrderNumber(),
+            'categories' => $categories, 
+            'attached_relations' => $attached_relations 
+        ]);
     }
 
     /**
@@ -227,15 +249,15 @@ class ResourceController extends Controller
      */
     public function update(ResourceRequest $request, $module,  $id)
     {
-//        dd($request->all());
-        if (strpos($request->created_at, '/') !== false) {
-            $request['created_at'] = Carbon::createFromFormat('d/m/Y', $request->created_at);
-        }
         if(!auth()->user()->can('edit-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
 
-        if($resource =  $this->CRUD->update($id, $request->all())) {
+        if (strpos($request->created_at, '/') !== false) {
+            $request['created_at'] = Carbon::createFromFormat('d/m/Y', $request->created_at);
+        }
+
+        if($resource = $this->CRUD->update($id, $request->all())) {
             if ($request->has('meta')) {
                 $this->CRUD->createUpdateMeta($id, $request->get('meta'));
             }else{
@@ -245,8 +267,95 @@ class ResourceController extends Controller
                 $relations = (array) json_decode($request->relations, true);
                 $this->CRUD->getById($id)->relations()->sync($relations);
             }
-            return redirect()->route('resources.edit', [$module, $id])->with('success', Str::singular(ucwords($module)) . " Successfully Updated.");
+            if($request->ajax()){
+                return response()->json([
+                    'status' => 'success',
+                    'message' => __(':model Successfully Updated.', ['model' => Str::singular(ucwords($module))]),
+                ]);    
+            }
+            return redirect()->route('resources.edit', [$module, $id])
+            ->with('success', __(':model Successfully Updated.', ['model' => Str::singular(ucwords($module))]));
         }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => __('Something was wrong, please reload page and try again.'),
+        ]);    
+    }
+
+     /**
+     * Duplicate the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\resource  $resource
+     * @return \Illuminate\Http\Response
+     */
+    public function duplicate($module, $id)
+    {
+        if(!auth()->user()->can('edit-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
+            abort(403);
+        }
+        
+        $resource = $this->CRUD->get_with_relations($id);
+
+        $newResource = $resource->replicate();
+        
+        $newResource->title = $newResource->title.' (Clone)';
+        // $newResource->status = 'draft';
+        
+        $newResource->created_at = Carbon::now();
+        $newResource->save();
+
+
+        // TODO::Narek 
+        #Need to clone
+            # categories
+            # resourcemetas
+            # resourceables
+            # languages
+        
+        #  Get all categories of original $resource for assign to new resource
+        $categories_ids = $resource->categories->pluck('id')->toArray();
+        # Attache categories to new created resource
+        if($categories_ids && !empty($categories_ids)){
+            $newResource->categories()->attach($categories_ids);
+        }
+
+        #Get all metadata of original resoure for assign to new resource
+        $metadata = $resource->metas;
+
+        if($metadata->isNotEmpty()){
+            foreach($metadata as $meta){
+                $new_meta = $meta->replicate();
+                $new_meta->resource_id = $newResource->id;
+                $new_meta->created_at = Carbon::now();
+                $new_meta->save();
+            }
+        }
+
+        #Get all metadata of original resoure for assign to new resource
+        $relations = $resource->relations;
+
+        if($relations->isNotEmpty()){
+            foreach($relations as $relation){
+                $newResource->relations()->attach($relation->toArray());
+            }
+        }
+
+        
+        // $attached_relations = array_column($resource->relations->toArray(), 'id');
+        
+        // if(null == $relations = Resource::select('id', 'title', 'type')
+        //     ->where('lang', $resource->lang)
+        //     ->whereIn('type', $slugs)
+        //     ->get()
+        //     ->groupBy('type')
+        //     ->toArray()
+        // ){
+        //     $relations = [];
+        // }
+        return redirect()->back()->with('success', 'Resource was successfully duplicated.');
+
     }
 
     /**
@@ -270,10 +379,7 @@ class ResourceController extends Controller
         if(!auth()->user()->can('update-'.$module) && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
-
         $translate = $this->CRUD->createOrEditResourceTranslation($module, $id, $lang );
-
-//        dd($translate);
         $model = Module::where('title', $module)->first();
 
         if (isset($translate['status']) && $translate['status'] == 'redirect') {
@@ -294,8 +400,6 @@ class ResourceController extends Controller
         }else{
             $slugs = Module::whereIn('id', $relation_ids)->pluck('slug');
         }
-
-
 
         $resourcemetas = $this->CRUD->getPageMetas($id);
         $decoded_resourcemetas = [];
@@ -320,14 +424,13 @@ class ResourceController extends Controller
         $resource = $this->CRUD->get_with_relations($id);
 
         $attached_relations = array_column($resource->relations->toArray(), 'id');
-//        foreach($attached_relations as $key =>)
+        //foreach($attached_relations as $key =>)
         if(null == $relations = Resource::select('id', 'title', 'type')->where('lang', $resource->lang)->whereIn('type', $slugs)->get()->groupBy('type')->toArray()){
             $relations = [];
-//            $slugs = is_array($slugs)? $slugs : $slugs->toArray();
-//            foreach($slugs as $key=>$val){
-//                $relations[$val] = [];
-//            }
-
+            //$slugs = is_array($slugs)? $slugs : $slugs->toArray();
+            //foreach($slugs as $key=>$val){
+            //$relations[$val] = [];
+            //}
         }
 
         $translate->setAttribute('meta', $resourcemetas);
@@ -351,12 +454,12 @@ class ResourceController extends Controller
                 $translated_categories[] = $trans_cat_id;
             }
         }
-
+        
         if ($translate) {
             return view('admin-panel::resource.create_edit', [
                 'resource' => $translate,
                 'parent_lang_id' => $parent_lang_id,
-                'order' => $this->CRUD->getMaxOrderNumber(),
+                'order' => isset($translate) ? $translate->order : $this->CRUD->getMaxOrderNumber(),
                 'languages' => $this->languages,
                 'module' => $module,
                 'options' => $options,
@@ -371,10 +474,15 @@ class ResourceController extends Controller
 
     public function categories($module)
     {
-        $default_lang = Language::orderBy('order')->first();
-        $categories  = Category::where('type', $this->module)->where('lang', $default_lang->code)->orderBy('order', 'DESC')->get()->groupBy('parent_id');
-        $languages = Language::orderBy('order')->pluck('name','id')->toArray();
-        $type  = $module;
+        $categories  = Category::where('type', $this->module)
+        ->where('lang', $this->def_lang->code)
+        ->orderBy('order', 'DESC')
+        ->get()
+        ->groupBy('parent_id');
+        
+        $languages = $this->languages;
+        $type  = $this->module;
+        
         return view('admin-panel::category.index',  compact('categories', 'type', 'languages'));
     }
 

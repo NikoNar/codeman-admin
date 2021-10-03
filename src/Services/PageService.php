@@ -29,8 +29,6 @@ class PageService implements PageInterface
 		// $this->auth = auth()->user();
 	}
 
-
-
 	/**
 	* Select the specified resource from storage by id.
 	*
@@ -190,12 +188,12 @@ class PageService implements PageInterface
 	public function createUpdateMeta($page_id, $inputs)
 	{
         $pagemetas = $this->pagemeta->where('page_id', $page_id)->get();
-//        dd($page_id,$inputs);
         if( isset($pagemetas) && !$pagemetas->isEmpty() && isset($inputs) && !empty($inputs) ) {
 			$newInputs = array();
 			$updateInputs = array();
 			$updateInputsIds = array();
 			$i = 0;
+			
 			foreach ($pagemetas as $key => $value) {
 				if(	array_key_exists($value->key, $inputs)) {
 					$updateInputs['value'] = is_array($inputs[$value->key]) ? json_encode($inputs[$value->key]) : $inputs[$value->key];
@@ -204,10 +202,12 @@ class PageService implements PageInterface
 				}
 			}
 		}
+
 		if(isset($inputs) && !empty($inputs))
 		{
 			$newInputs = array();
 			$j = 0;
+
 			foreach ($inputs as $key => $value) {
 			
 				$newInputs[$j]['page_id'] = $page_id;
@@ -216,9 +216,11 @@ class PageService implements PageInterface
 				++$j;
 			}
 		}
+
 		if(isset($newInputs) && !empty($newInputs)){
 			$this->pagemeta->insert($newInputs);
 		}
+
 		return true;
 	}
 	public function deleteMetaIfExists($page_id)

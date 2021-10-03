@@ -21,10 +21,14 @@ if($page->thumbnail != ''){
 	<td>{{ date('m/d/Y g:i A', strtotime($page->created_at)) }}</td>
 	<td>{{ date('m/d/Y g:i A', strtotime($page->updated_at)) }}</td>
 	<td class="action">
-		<a href="{{ route('page-edit', $page->id ) }}" title="Edit" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>
+		<a href="{{ route('page-edit', $page->id ) }}" title="Edit" class="btn btn-xs btn-warning">
+			<i class="fa fa-edit"></i> Edit
+		</a>
 {{--		<a href="{{ route('page-translate', [$page->id, $page->language_id ]) }}" title="Add Language" class="btn btn-xs btn-primary"><i class="fa fa-language"></i></a>--}}
 {{--		@can('delete', $page)--}}
-		<a href="{{ route('page-destroy', $page->id ) }}" title="Delete" class="btn btn-xs btn-danger confirm-del"><i class="fa fa-trash"></i></a>
+		<a href="{{ route('page-destroy', $page->id ) }}" title="Delete" class="btn btn-xs btn-danger confirm-del">
+			<i class="fa fa-trash"></i> Remove
+		</a>
 {{--		@endcan--}}
 	</td>
 </tr>

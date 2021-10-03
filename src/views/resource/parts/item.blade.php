@@ -20,8 +20,15 @@
 	<td>{{ date('m/d/Y g:i A', strtotime($item->updated_at)) }}</td>
 
 	<td class="action">
-		<a href="{{ route('resources.edit', [$module, $item->id] ) }}" title="Edit" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>
-{{--		<a href="{{ route('resource-translate', $item->id ) }}" title="Translate To Armenian" class="btn btn-xs btn-primary"><i class="fa fa-language"></i></a>--}}
-		<a href="{{ route('resources.destroy',[$module, $item->id]) }}" title="Delete" class="btn btn-xs btn-danger confirm-del"><i class="fa fa-trash"></i></a>
+		<a href="{{ route('resources.edit', [$module, $item->id] ) }}" title="Edit" class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit">
+			<i class="fa fa-edit"></i>
+		</a>
+		<a href="{{ route('resources.duplicate', [$module, $item->id] ) }}" title="Duplicate" class="btn btn-xs btn-primary" data-toggle="tooltip" title="Duplicate">
+			<i class="fa fa-layer-group"></i>
+		</a>
+
+		<a href="{{ route('resources.destroy',[$module, $item->id]) }}" title="Delete" class="btn btn-xs btn-danger confirm-del" data-toggle="tooltip" title="Delete">
+			<i class="fa fa-trash"></i>
+		</a>
 	</td>
 </tr>

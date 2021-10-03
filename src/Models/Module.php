@@ -8,5 +8,13 @@ class Module extends Model
 {
     protected $fillable = [ 'title', 'slug', 'status',  'module_type', 'icon', 'options', 'additional_options', 'relations', 'created_at', 'order'];
 
+    public function getSearchableFields()
+    {
+        return [
+            'title',
+            'status',
+            'created_at'
+        ];
+    }
 
 }

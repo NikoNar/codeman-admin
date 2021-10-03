@@ -23,7 +23,11 @@
 	<td>{{ date('m/d/Y g:i A', strtotime($item->updated_at)) }}</td>
 
 	<td class="action">
-		<a href="{{ route('modules.edit', $item->id ) }}" title="Edit" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>
-		<a href="{{ route('modules.delete', $item->id ) }}" title="Delete" class="btn btn-xs btn-danger confirm-del"><i class="fa fa-trash"></i></a>
+		<a href="{{ route('modules.edit', $item->id ) }}" title="Edit" class="btn btn-xs btn-warning">
+			<i class="fa fa-edit"></i> Edit
+		</a>
+		<a href="{{ route('modules.delete', $item->id ) }}" title="Delete" class="btn btn-xs btn-danger confirm-del">
+			<i class="fa fa-trash"></i> Remove
+		</a>
 	</td>
 </tr>

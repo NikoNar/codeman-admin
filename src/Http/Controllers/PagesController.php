@@ -4,8 +4,8 @@ namespace Codeman\Admin\Http\Controllers;
 
 use Codeman\Admin\Models\Module;
 use Codeman\Admin\Models\Resource;
-use Codeman\Admin\Models\User;
-use Illuminate\Http\Request;
+//use Codeman\Admin\Models\User;
+//use Illuminate\Http\Request;
 use Codeman\Admin\Http\Requests\PageRequest;
 use Codeman\Admin\Http\Controllers\Controller;
 use Codeman\Admin\Services\CRUDService;
@@ -13,8 +13,8 @@ use Codeman\Admin\Interfaces\PageInterface;
 use Codeman\Admin\Models\Page;
 use Codeman\Admin\Models\Language;
 use Illuminate\Support\Facades\Response;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+//use Spatie\Permission\Models\Permission;
+//use Spatie\Permission\Models\Role;
 
 
 // use Settings;
@@ -31,7 +31,7 @@ class PagesController extends Controller
     public function __construct(Page $model)
     {
         // $this->settings = $settings;
-//       $this->middleware('auth:admin');
+        // $this->middleware('auth:admin');
         $this->CRUD = new CRUDService($model);
         $this->model = $model;
         $this->languages = Language::orderBy('order')->pluck('name','code')->toArray();
@@ -44,7 +44,11 @@ class PagesController extends Controller
      */
     public function index()
     {
-        return view('admin-panel::page.index', ['pages' => $this->CRUD->getAll() , 'dates' => $this->getDatesOfResources($this->model), 'languages' => $this->languages]);
+        return view('admin-panel::page.index', [
+            'pages' => $this->CRUD->getAll() , 
+            'dates' => $this->getDatesOfResources($this->model), 
+            'languages' => $this->languages
+        ]);
     }
 
     /**
@@ -54,7 +58,6 @@ class PagesController extends Controller
      */
     public function create($lang = null, PageInterface $pageInterface)
     {
-
         if(!auth()->user()->can('create-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
@@ -87,11 +90,11 @@ class PagesController extends Controller
             }
 
             return view('admin-panel::page.create_edit', [
-                'template'  => $additional_options,
-                'templates'     => $templates,
+                'template' 	=> $additional_options,
+                'templates' 	=> $templates,
                 'attachments' => $attachments,
-                'parents'   => $pageInterface->getAllPagesTitlesArray(),
-                'order'     => $pageInterface->getMaxOrderNumber(),
+                'parents' 	=> $pageInterface->getAllPagesTitlesArray(),
+                'order' 	=> $pageInterface->getMaxOrderNumber(),
                 'languages' => $languages,
                 'lang' => $lang
             ]);
@@ -114,8 +117,6 @@ class PagesController extends Controller
      */
     public function store(PageRequest $request, PageInterface $pageInterface )
     {
-        // $this->authorize('create', $this->model);
-
         if(!auth()->user()->can('create-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
@@ -128,14 +129,19 @@ class PagesController extends Controller
                 $pageInterface->createUpdateMeta($page->id, $request->get('meta'));
             }
 
-            // return Response::json([
-            //     'error' => false,
-            //     'success'=> 'Page Successfully Created.',
-            //     'code'  => 200,
-            //     'page_id' =>$page->id
-            // ], 200);
+            if($request->ajax()){
+                return response()->json([
+                    'status' => 'success',
+                    'message' => __('Page Successfully Created.'),
+                    'redirect_url' => route('page-edit', $page->id)
+                ]);    
+            }
             return redirect()->route('page-edit', $page->id)->with('success', 'Page Successfully Created.');
         }
+        return response()->json([
+            'status' => 'error',
+            'message' => __('Something was wrong, please reload page and try again.'),
+        ]);    
     }
 
     /**
@@ -176,7 +182,6 @@ class PagesController extends Controller
             $pagemetas = $pageInterface->getPageMetas($translate->id);
             $decoded_pagemetas = [];
 
-
             foreach($pagemetas as $key => $value) {
                 if(isJson($value)){
                     $decoded_pagemetas[$key] = json_decode($value, true);
@@ -185,21 +190,17 @@ class PagesController extends Controller
                 }
             }
             $pagemetas = $decoded_pagemetas;
-//            dd($pagemetas);
             $translate->setAttribute('meta', $pagemetas);
-
 
             $model = Module::where('id', $template)->first();
 
             if($model){
                 $add_opts = json_decode($model->additional_options);
                 $additional_options = [];
-                if($add_opts) {
-                    foreach ($add_opts as $key => $val) {
-                        $arr = [];
-                        parse_str($val, $arr);
-                        $additional_options[$key] = $arr;
-                    }
+                foreach($add_opts as $key =>$val){
+                    $arr =[];
+                    parse_str($val, $arr);
+                    $additional_options[$key] = $arr;
                 }
             } else {
                 $additional_options = [];
@@ -226,8 +227,8 @@ class PagesController extends Controller
             return view('admin-panel::page.create_edit', [
                 'page' => $translate,
                 'parents' => $pageInterface->getAllPagesTitlesArray($translate->lang),
-                'template'  => $additional_options,
-                'templates'     => $templates,
+                'template' 	=> $additional_options,
+                'templates' 	=> $templates,
                 'attachments' => $attachments,
                 'selected_attachments' => $selected_attachments,
                 'parent_lang_id' => $parent_lang_id,
@@ -244,10 +245,10 @@ class PagesController extends Controller
      */
     public function edit($id, PageInterface $pageInterface)
     {
-
         if(!auth()->user()->can('edit-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
+
         $template = null;
         $templates = Module::where('module_type', 'template')->pluck('title', 'id')->toArray();
 
@@ -294,14 +295,16 @@ class PagesController extends Controller
             $selected_attachments = [];
 
         }else{
-
+            
             if(key_exists('attachments', $decoded_pagemetas)){
 
                 $meta_attachments = $decoded_pagemetas['attachments'];
                 $selected_attachments = [];
-                foreach($meta_attachments as $key => $val){
-                    if($val != "all" || $val != ""){
-                        $selected_attachments = array_merge($selected_attachments, explode(',', $val));
+                if($meta_attachments){
+                    foreach($meta_attachments as $key => $val){
+                        if($val != "all" || $val != ""){
+                            $selected_attachments = array_merge($selected_attachments, explode(',', $val));
+                        }
                     }
                 }
 
@@ -322,12 +325,13 @@ class PagesController extends Controller
             }
 
         }
-//      $pagemetas = $decoded_pagemetas;
-//      $page->setAttribute('meta', $decoded_pagemetas);
+        
+        //$pagemetas = $decoded_pagemetas;
+        //$page->setAttribute('meta', $decoded_pagemetas);
         if($template){
             return view('admin-panel::page.create_edit', [
-                'template'  => $additional_options,
-                'templates'     => $templates,
+                'template' 	=> $additional_options,
+                'templates' 	=> $templates,
                 'attachments' => $attachments,
                 'selected_attachments' => $selected_attachments,
                 'page' => $page,
@@ -335,7 +339,12 @@ class PagesController extends Controller
                 'languages' => $languages
             ]);
         }else{
-            return view('admin-panel::page.create_edit', ['page' => $page, 'parents' => $pageInterface->getAllPagesTitlesArray($page->lang,$id),'languages' => $languages,'templates' => $templates]);
+            return view('admin-panel::page.create_edit', [
+                'page' => $page, 
+                'parents' => $pageInterface->getAllPagesTitlesArray($page->lang,$id),
+                'languages' => $languages,
+                'templates' => $templates
+            ]);
         }
     }
 
@@ -347,11 +356,6 @@ class PagesController extends Controller
      */
     public function update($id, PageRequest $request, PageInterface $pageInterface)
     {
-        // $this_page = $pageInterface->getById($id);
-        // $this->authorize('update', $this->model);
-//       dd(request()->all());
-
-//        dd('update');
         if(!auth()->user()->can('edit-page') && !auth()->user()->hasAnyRole('SuperAdmin|Admin')){
             abort(403);
         }
@@ -363,8 +367,19 @@ class PagesController extends Controller
             }else{
                 $pageInterface->deleteMetaIfExists($id);
             }
-            return redirect()->back()->with('success', 'Page Successfully Updated.');
+            if($request->ajax()){
+                return response()->json([
+                    'status' => 'success',
+                    'message' => __('Page Successfully Updated.'),
+                ]);    
+            }
+            return redirect()->back()->with('success', __('Page Successfully Updated.'));
         }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => __('Something was wrong, please reload page and try again.'),
+        ]);    
     }
 
     /**
@@ -382,8 +397,11 @@ class PagesController extends Controller
             return redirect()->back()->with('success', 'Page Successfully Deleted.');
         }
     }
-    public function templates(){
-        $modules = Module::where('module_type', 'template')->paginate(15);
+
+    public function templates()
+    {
+        $modules = Module::where('module_type', 'template')
+        ->paginate(15);
         return view('admin-panel::modules.index', compact('modules'));
     }
 }

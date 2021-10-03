@@ -9,7 +9,7 @@
 			<th width="10%">Status</th>
 			<th width="10%">Created Date</th>
 			<th width="12%">Last Time Update</th>
-			<th width="13%">Actions</th>
+			<th width="140px">Actions</th>
 		</tr>
 	</thead>
 	<tbody>

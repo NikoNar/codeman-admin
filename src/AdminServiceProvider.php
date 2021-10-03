@@ -9,6 +9,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Codeman\Admin\Http\Middleware\Admin;
 use Illuminate\Support\Facades\View;
+
+use Codeman\Admin\Models\Shop\Cart;
 /**
  * Codeman\Admin\
  */
@@ -61,6 +63,11 @@ class AdminServiceProvider extends ServiceProvider
 			__DIR__.'/config/service-account-credentials.json' => storage_path('app/analytics/service-account-credentials.json'),
 		], 'storage');
 
+        //Publish Data Filters Congings
+        $this->publishes([
+             __DIR__.'/config/data-filters.php' => config_path('admin-data-filters.php'),
+        ], 'config');
+
 		$translationManagerViewPath = __DIR__.'/views/translation-manager/';
         $this->loadViewsFrom($translationManagerViewPath, 'translation-manager');
         $this->publishes([
@@ -96,8 +103,8 @@ class AdminServiceProvider extends ServiceProvider
             $view->with('modules', $modules);
         });
         
-        View::composer('layouts.app', function ($view) {
-            $settings = Setting::pluck('value', 'key');
+        View::composer(['layouts.app-main', 'layouts.app-login'], function ($view) {
+            // $settings = Setting::pluck('value', 'key');
             
             $admin_modules = null;
             if(auth()->check() && (auth()->user()->hasRole('SuperAdmin') || auth()->user()->hasRole('Admin')))
@@ -105,9 +112,21 @@ class AdminServiceProvider extends ServiceProvider
                 $admin_modules = Module::where('module_type', 'module')->orderBy('order','DESC')->get();
             }
             $view->with([
-                'settings' => $settings,
+                // 'settings' => $settings,
                 'admin_modules' => $admin_modules
             ]);
+        });
+
+
+        View::composer('layouts.components._header', function ($view) {
+            $cart_model = new Cart;
+            //get user/guest cart items sum
+            $cart_items_sum = $cart_model->get_cart_items_qty('cart');
+            //get user/guest wishlist items sum
+            $wishlist_items_sum = $cart_model->get_cart_items_qty('wishlist');
+            
+            $view->with('cart_items_sum', $cart_items_sum);
+            $view->with('wishlist_items_sum', $wishlist_items_sum);
         });
 
 	}
@@ -116,7 +135,7 @@ class AdminServiceProvider extends ServiceProvider
 	{
         if (Schema::hasTable('languages')) {
             $langs = DB::table('languages')->select('code', 'name', 'script', 'native', 'regional')->orderBy('order')->get()->keyBy('code');
-//        config(['app.locale' => 'en']);
+
             if(count($langs) > 0){
                 $def_lang = $langs->first()->code;
                 config(['app.locale' => $def_lang]);
@@ -125,7 +144,7 @@ class AdminServiceProvider extends ServiceProvider
             foreach($langs as $key => $val){
                 $locales[$key] = (array) $val;
             }
-
+            // dd($locales);
             if(count($locales) > 0){
                 config([
                     'laravellocalization.supportedLocales' => $locales,

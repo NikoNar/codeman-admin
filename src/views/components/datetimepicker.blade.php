@@ -1,8 +1,12 @@
 <div class="form-group">
+	<label for="{{ $id }}">{{ $label }}</label>
     <div class='input-group date datetimepicker-simple'>
-        <input type='text' class="form-control" name="{{isset($name)? $name : null}}" value="{{isset($value)? $value : null}}"/>
+        {{ Form::text(isset($name)? $name : null, isset($value) ? $value : null, ['class' => 'form-control', 'id' => $id]) }}
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
     </div>
+    @isset($info)
+        <small id="{{ $id }}" class="form-text text-muted">{!! $info !!}</small>
+    @endif
 </div>

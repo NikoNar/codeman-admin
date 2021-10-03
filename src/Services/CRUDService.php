@@ -27,7 +27,7 @@ class CRUDService implements CRUDInterface
 	/**
 	 * model constructor.
 	 *
-	 * @param  model
+	 * @param  model 
 	 */
 	public function __construct($model, $default_language = null)
 	{
@@ -47,7 +47,6 @@ class CRUDService implements CRUDInterface
 	*/
 	public function getAll($module = null)
 	{
-
         if($module){
             return $this->model
             ->with(['categories' => function($q){
@@ -76,24 +75,19 @@ class CRUDService implements CRUDInterface
 		return $this->model->find($id);
 	}
 
-
 	/**
 	* Store a newly created resource in storage.
 	*
 	* @return Response
 	*/
 	public function store($inputs)
-	{
-        $model = $this->model->create($this->createInputs($inputs));
-        if(isset($inputs['category_id'])){
-            $model->categories()->sync($inputs['category_id']);
-        }
-        return $model;
+	{  
+        // On create methods working also boot self::createing and  self::created methods in Resource Model
+        return $this->model->create($inputs);
     }
 
 	public function createOrEditTranslation( $id, $lang )
 	{
-
         $model= \Illuminate\Support\Str::singular($this->model->getTable());
         $page = $this->model->where(['id' => $id, 'language_id' => $lang])->orWhere(['id' => $id])->first();
 
@@ -137,14 +131,14 @@ class CRUDService implements CRUDInterface
 
 		// }
 		// return null;
-
-//		if(null != $parent_lang = $this->model->where('parent_lang_id', $id)->first()){
-//			// $news_date = date('m/d/Y' ,strtotime($parent_lang->created_at));
-//			// $news_time = date('g:i A' ,strtotime($parent_lang->created_at));
-//			// $parent_lang->published_date = $news_date;
-//			// $parent_lang->published_time = $news_time;
-//			return $parent_lang;
-//		}
+		
+        //		if(null != $parent_lang = $this->model->where('parent_lang_id', $id)->first()){
+        //			// $news_date = date('m/d/Y' ,strtotime($parent_lang->created_at));
+        //			// $news_time = date('g:i A' ,strtotime($parent_lang->created_at));
+        //			// $parent_lang->published_date = $news_date;
+        //			// $parent_lang->published_time = $news_time;
+        //			return $parent_lang;
+        //		}
         $resourse = $this->model->find($id);
         $resourse['language_id'] = $lang;
 
@@ -152,8 +146,6 @@ class CRUDService implements CRUDInterface
 
 
     }
-
-
 
     public function createOrEditResourceTranslation($type, $id, $lang)
     {
@@ -181,7 +173,6 @@ class CRUDService implements CRUDInterface
 
         } else if($page->language_id != $lang && !isset($page->parent_lang_id)) {
             $parent_page = $this->model->where(['parent_lang_id' => $page->id, 'lang' => $lang])->first();
-
             if($parent_page ){
                 return ['status' => 'redirect', 'route' => route('resources.edit', [$type,$parent_page->id])];
             }
@@ -226,17 +217,15 @@ class CRUDService implements CRUDInterface
 	public function update( $id, $inputs )
 	{
         $model = $this->getById($id);
-//        dd( $model->categories()->exists());
+        //  dd( $model->categories()->exists());
         if(isset($inputs['category_id'])){
 	        $model->categories()->sync($inputs['category_id']);
         } else {
             $model->categories()->sync([]);
         }
-		return $model->update($inputs);
+		return $model->update($this->updateInputs($id, $inputs));
 
 	}
-
-
 
 	public function getMaxOrderNumber($inputs = null)
 	{
@@ -248,8 +237,18 @@ class CRUDService implements CRUDInterface
 		}
 
 	}
+    
+	public function getLastId($inputs = null)
+	{
+		if($inputs){
+			$inputs['id'] = $this->model->max('id') + 1;
+			return $inputs;
+		}else{
+			return $this->model->max('id') + 1;
+		}
 
-
+	}
+    
 	/**
 	* Remove the specified resource from storage.
 	*
@@ -257,7 +256,7 @@ class CRUDService implements CRUDInterface
 	* @return Response
 	*/
 	public function destroy( $id )
-	{
+	{	
 		$model = $this->getById($id);
 		$model->categories()->detach();
 		return $model->delete();
@@ -270,14 +269,19 @@ class CRUDService implements CRUDInterface
 	* @return Response
 	*/
 	private function createInputs($inputs)
-	{
-        if(in_array('slug', $inputs)){
-            $inputs['slug'] = getUniqueSlug($this->model, $inputs['slug']);
-        } else {
-            $inputs['slug'] = getUniqueSlug($this->model, $inputs['title']);
+	{   
+        if( '' != $slug = getUniqueSlug($this->model, $inputs['slug'])){
+            $inputs['slug'] = $slug;
+        } elseif('' != $slug = getUniqueSlug($this->model, $inputs['title'])) {
+            $inputs['slug'] = $slug;
+        }else{
+            $inputs['slug'] = getUniqueSlug($this->model, 'resource');
         }
-
-        $inputs['meta-title'] =  isset($inputs['meta-title']) ? $inputs['meta-title'] : $inputs['title'];
+        $inputs['meta-title'] =  isset($inputs['meta-title']) && !empty($inputs['meta-title']) ? $inputs['meta-title'] : $inputs['title'];
+        $inputs['meta-description'] =  
+            isset($inputs['meta-description'])  && !empty($inputs['meta-description']) 
+                ? $inputs['meta-description'] 
+                : (isset($inputs['content']) ? seo_description($inputs['content']) : null);
         return $inputs;
 	}
 
@@ -289,18 +293,14 @@ class CRUDService implements CRUDInterface
 	*/
 	private function updateInputs( $id, $inputs )
 	{
-		$date  = $inputs['published_date'].' '.$inputs['published_time'];
-		$published_full_date = date('Y-m-d H:i:s', strtotime($date));
-		if($published_full_date){
-			$inputs['created_at'] = $published_full_date;
-		}
-		if($this->getById($id)->slug !=  $inputs['slug']){
+		if(isset($inputs['slug']) && $this->getById($id)->slug !=  $inputs['slug']){
 			$inputs['slug'] = getUniqueSlug($this->model, $inputs['slug'], $id);
 		}
 		$inputs['meta-title'] =  isset($inputs['meta-title']) ? $inputs['meta-title'] : $inputs['title'];
-		// if(isset($inputs['thumbnail'])){
-		// 	$inputs['thumbnail'] = isset($inputs['thumbnail']) ? $this->uploadImage(request()->file('thumbnail')) : null;
-		// }
+        $inputs['meta-description'] =  $inputs['meta-description'] =  
+            isset($inputs['meta-description'])  && !empty($inputs['meta-description']) 
+                ? $inputs['meta-description'] 
+                : (isset($inputs['content']) ? seo_description($inputs['content']) : null);
 		return $inputs;
 	}
 
@@ -349,7 +349,6 @@ class CRUDService implements CRUDInterface
         return $this->resourcemeta->whereIn('resource_id', $resource_ids)->select('key', 'value')->get()->toArray();
     }
 
-
 	private function uploadImage( $image ){
 		if($image) {
 			$filename  = time() . '.' . $image->getClientOriginalExtension();
@@ -367,9 +366,6 @@ class CRUDService implements CRUDInterface
     {
         return $this->resourcemeta->where('id', $id)->delete();
     }
-
-
-
 
     public function get_with_relations($id, $type = null){
 	    if($type){

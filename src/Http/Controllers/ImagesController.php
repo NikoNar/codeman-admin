@@ -48,34 +48,42 @@ class ImagesController extends Controller
         $pdf = (request()->has('pdf') && request()->get('pdf') != 'false')? true : false;
         $multichoose = request()->has('multichoose') && request()->get('multichoose') === 'true' ? 1 : null;
         // $resource_id = request()->has('resource_id') && request()->get('resource_id') != 0 ? request()->get('resource_id') : 0;
-        $meta = request()->has('meta')? request()->get('meta') : null;
+        $meta = request()->has('meta') ? request()->get('meta') : null;
         if($pdf){
             $images = Image::where('filename', 'LIKE', '%.pdf')->orderBy('created_at', 'DESC')->paginate(20);
         } else {
             $images = Image::orderBy('created_at', 'DESC')->paginate(20);
         }
+        
         $returnHTML =  view('admin-panel::media.popup', [
-          'images' => $images,
-          'dates' => $dates,
-          'multichoose' => $multichoose,
-          'pdf' => $pdf,
-          'ckeditor'=>$ckeditor,
-          'meta' => $meta
-            ]);
+            'images' => $images,
+            'dates' => $dates,
+            'multichoose' => $multichoose,
+            'pdf' => $pdf,
+            'ckeditor' => $ckeditor,
+            'meta' => $meta
+        ]);
 
         if(request()->has('json') && (request()->get('json') == 0 || request()->get('json') == '0')){
             return $returnHTML;
         }
-        return response()->json(array('success' => true, 'html' => $returnHTML->render(), 'multichoose' => $multichoose, 'ckeditor'=>$ckeditor));
+
+        return response()->json([
+            'success' => true, 
+            'html' => $returnHTML->render(), 
+            'multichoose' => $multichoose, 
+            'ckeditor' => $ckeditor
+        ]);
+
         // $returnHTML =  view('admin.media.index', ['images' => Image::all(), 'dates' => $dates])->render();
         // dd($returnHTML);
-        // return response()->json(array('success' => true, 'html'=>$returnHTML));
+        // return response()->json(array('success' => true, 'html' => $returnHTML));
         // return view('admin.media.popup');
     }
 
     public function upload()
     {
-        return view('admin-panel::media.upload', ['images' => Image::all()] );
+        return view('admin-panel::media.upload', [ 'images' => Image::all() ] );
     }
 
 
@@ -127,17 +135,14 @@ class ImagesController extends Controller
 
     public function Imageupload( $form_data )
    	{
-
        $validator = Validator::make($form_data, Image::$rules, Image::$messages);
 
        if ($validator->fails()) {
-
            return Response::json([
                'error' => true,
                'message' => $validator->messages()->first(),
                'code' => 400
            ], 400);
-
        }
        
        $photo = $form_data['file'];
@@ -148,6 +153,7 @@ class ImagesController extends Controller
        $filename = $this->sanitize($originalNameWithoutExt);
        $allowed_filename = $this->createUniqueFilename( $filename, $extension);
    
+
        if(!in_array($extension, ['png','gif','jpeg','jpg','bmp'])){
            $current_year = date("Y");;
            $current_day = date('z') + 1;
@@ -179,7 +185,7 @@ class ImagesController extends Controller
        }
     
 
-       $uploadSuccess1 = $this->original( $photo, $allowed_filename );
+       $uploadSuccess1 = $this->original( $photo, $allowed_filename, $extension );
 
        $uploadSuccess2 = $this->icon( $photo, $allowed_filename );
 
@@ -242,12 +248,16 @@ class ImagesController extends Controller
    /**
     * Optimize Original Image
     */
-   public function original( $photo, $filename )
+   public function original( $photo, $filename, $extension = null )
    {
-       $manager = new ImageManager();
-       $image = $manager->make( $photo )->save(Config::get('images.full_size') . $filename );
-
-       return $image;
+        // dd($photo->getRealPath(), Config::get('images.full_size') . $filename);
+        if($extension == 'gif'){
+            $image = copy($photo->getRealPath(), Config::get('images.full_size') . $filename);
+        }else{
+            $manager = new ImageManager();
+            $image = $manager->make( $photo )->save(Config::get('images.full_size') . $filename );
+        }
+        return $image;
    }
 
    /**

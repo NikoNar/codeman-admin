@@ -10,6 +10,9 @@ label{
 .fz-12{
 	font-size: 12px;
 }
+.w-100{
+	width: 100%;
+}
 .cursor-pointer{
 	cursor: pointer;
 }
@@ -453,7 +456,7 @@ table td.action a{
 .gallery-show-container.col-md-3-gallery .media-item{
 	width: 120px;
 	height: 120px;
-	margin: 15px 4px;
+	margin: 15px 2px;
 }
 /*.gallery-show-container .media-item::before{
 	content: "\f047";
@@ -718,7 +721,10 @@ span.twitter-typeahead{
 	margin-left: auto;
 	margin-right: auto;
 	height: 112px!important;
-	margin-bottom: 62px;
+	/*margin-bottom: 62px;*/
+}
+.color-image-upload img{
+	height: 100%;
 }
 .feed_prod_thumb .portfolio-thumb{
 	width: 100px;
@@ -746,9 +752,4 @@ span.twitter-typeahead{
 	max-height: 300px;
 	overflow-y: scroll;
 	overflow-x: hidden;
-}
-
-.right-sidebar .gallery-show-container.col-md-3-gallery .media-item{
-	width: 115px;
-	height: 115px;
 }

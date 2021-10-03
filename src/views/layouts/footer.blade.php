@@ -1,10 +1,10 @@
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Version</b> 1.1.3
+      <b>Version</b> 1.2.0
     </div>
     @if(date('Y') > 2017)
     	<span>Copyright &copy; 2017 - {{ date('Y') }} <a href="//codeman.am" style="letter-spacing: 1px;">CODEMAN</a></span>
-
+    
     @else
     	<span>Copyright &copy; {{ date('Y') }} <a href="//codeman.am" style="letter-spacing: 1px;">Codeman</a></span>
     @endif
@@ -14,11 +14,12 @@
 
 <!-- jQuery 3 -->
 <script src="{{ asset('admin-panel/bower_components/jquery/dist/jquery.min.js') }}"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-
+<script src="{{ asset('admin-panel/js/jquery-ui.min.js') }}"></script>
 
 <!-- Bootstrap 3.3.7 -->
+<script src="{{ asset('admin-panel/js/popper.min.js') }}"></script>
 <script src="{{ asset('admin-panel/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+
 <!-- SlimScroll -->
 <script src="{{ asset('admin-panel/bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
 <!-- Jscroll -->
@@ -36,35 +37,59 @@
 <script src="{{ asset('admin-panel/bower_components/select2/dist/js/select2.full.min.js') }}"></script>
 <!-- Query string -->
 {{-- <script src="{{ asset('admin-panel/query-string/index.js') }}"></script> --}}
-  <script src="{{ asset('admin-panel/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
-  <script src="{{ asset('admin-panel/plugins/bootstrap-iconpicker-1.10.0/dist/js/bootstrap-iconpicker.bundle.min.js') }}"></script>
+<script src="{{ asset('admin-panel/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('admin-panel/plugins/bootstrap-iconpicker-1.10.0/dist/js/bootstrap-iconpicker.bundle.min.js') }}"></script>
+
+ 
+<script type="text/javascript" src="{{ asset('admin-panel/js/datatables/datatables.min.js') }}"></script>
+
+{{-- <script src="{{ asset('admin-panel/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script> --}}
+<script src="{{ asset('admin-panel/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
 
 
-  <script src="{{ asset('admin-panel/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ asset('admin-panel/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{asset('admin-panel/bower_components/moment/min/moment.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('admin-panel/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js')}}"></script>
 
-
-  <script type="text/javascript" src="{{asset('admin-panel/bower_components/moment/min/moment.min.js')}}"></script>
-  <script type="text/javascript" src="{{asset('admin-panel/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js')}}"></script>
-
+<script src="{{ asset('admin-panel/js/toastr/toastr.min.js') }}"></script>
 <script src="{{ asset('admin-panel/js/admin.js') }}"></script>
-  <script src="{{ asset('admin-panel/js/colors.js') }}"></script>
+<script src="{{ asset('admin-panel/js/colors.js') }}"></script>
 <script>
     $.ajaxSetup({
-        headers:
-            {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
     });
 
+    $(function () {
+        $('.datetimepicker-simple').datetimepicker({
+            format: 'YYYY-MM-DD hh:mm:ss'
+        });
+        $('.datepicker').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+    });
+    
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>
-  <script type="text/javascript">
-      $(function () {
-          $('.datetimepicker-simple').datetimepicker({
-              format: 'YYYY-MM-DD hh:mm:ss'
-          });
-      });
-
-  </script>
-
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+@include('admin-panel::messages.messages')
 @yield('script')
 @yield('after-script')
 </body>

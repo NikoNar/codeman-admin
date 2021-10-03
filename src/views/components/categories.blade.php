@@ -1,12 +1,12 @@
 <div class="col-md-12 no-padding">
-    {!! Form::label('categories_id', 'Categories') !!}
+    @if(!isset($noLabel))
+        {!! Form::label('categories_id', 'Categories') !!}
+    @endif
     <div class="form-group">
         <div class='input-group'>
-				<span class="input-group-addon">
-				    <span class="glyphicon glyphicon-tag"></span>
-				</span>
-            {{--				{{dd($file->categories()->get()->toArray())}}--}}
-
+			<span class="input-group-addon">
+			    <span class="glyphicon glyphicon-tag"></span>
+			</span>
             @if(isset($render))
                 @include('admin-panel::layouts.parts.categories_dropdown', ['multiple' => 'multiple', 'selected' => $selected])
             @else
@@ -26,8 +26,9 @@
                 @endif
             @endif
         </div>
-{{--        {{ dd(get_defined_vars()) }}--}}
         <div class="clearfix"></div>
-        <a href="#" class="pull-right" id="add-category" data-type="{{$module}}"><i class="fa fa-plus"></i> Add New Category</a>
+        @if(!isset($noAddLink))
+            <a href="#" class="pull-right" id="add-category" data-type="{{$module}}"><i class="fa fa-plus"></i> Add New Category</a>
+        @endif
     </div>
 </div>

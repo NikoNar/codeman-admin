@@ -17,7 +17,7 @@
 	    	</div>
 	    	<div class="col-md-8 no-padding pull-right">
 	    		<a href="{{ route('user.create') }}" class="btn btn-primary btn-flat  btn-medium pull-right">Create New User</a>
-	    		<!-- @include('admin-panel::layouts.resource_filter') -->
+	    		@include('admin-panel::layouts.resource_filter')
 				
     		</div>
     		<div class="clearfix"></div>

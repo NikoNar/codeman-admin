@@ -7,7 +7,7 @@
 	<div class="box">
 	    <div class="box-body">
 	    	<div class="col-md-4 no-padding-left">
-	    		<a href="javascript:void(0)" class="btn btn-primary btn-flat pull-left btn-medium" id="resource-bulk-action"><i class="fa fa-trash"></i> Bulk Delete </a>
+	    		{{-- <a href="javascript:void(0)" class="btn btn-primary btn-flat pull-left btn-medium" id="resource-bulk-action"><i class="fa fa-trash"></i> Bulk Delete </a> --}}
 	    		{{-- <div class="form-group col-md-7">
 					<select name="filter-by-year" id="filter-by-year" class="form-control pull-left">
 						<option value="">Do Nothing</option>
@@ -31,7 +31,7 @@
 
 @section('script')
 <!-- DataTables -->
-<script src="{{ asset('admin-panel/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+{{-- <script src="{{ asset('admin-panel/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('admin-panel/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-
+ --}}
 @endsection

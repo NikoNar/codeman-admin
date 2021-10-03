@@ -22,12 +22,11 @@
         @endswitch
     @endif
 @endforeach
-@isset($attachments)
+@php $full = []; @endphp
+@if(isset($attachments) && $attachments)
     @php
-        if(isset($page) && array_key_exists('attachments',$page->meta )){
+        if(isset($page) && array_key_exists('attachments',$page->meta ) && $page->meta['attachments']){
             $full = array_keys($page->meta['attachments'], 'all');
-        } else {
-            $full = [];
         }
     @endphp
 <hr>

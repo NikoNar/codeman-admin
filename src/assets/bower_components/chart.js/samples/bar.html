@@ -12,7 +12,6 @@
 
 	<script>
 	var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
-
 	var barChartData = {
 		labels : ["January","February","March","April","May","June","July"],
 		datasets : [
@@ -31,7 +30,6 @@
 				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
 			}
 		]
-
 	}
 	window.onload = function(){
 		var ctx = document.getElementById("canvas").getContext("2d");

@@ -1,5 +1,30 @@
 <?php
 
+	function set_cookie($name, $value, $minutes = null){
+	    $minutes = !$minutes ? time() + 60 * 60 * 24 * 365 : $minutes;
+	    return \Cookie::queue($name, $value, $minutes);
+	}
+
+	function get_cookie($name = null){
+	    $result = $name ? \Cookie::get($name) : \Cookie::get();
+	    return $result;
+	}
+
+	function get_user_session_id(){
+	    $cookie = \Cookie::get('user_session_id');
+	    // $cookie = request()->cookie('user_session_id');
+	    if($cookie){
+	        return  $cookie;
+	    }
+
+	    $uuid = \Str::orderedUuid()->toString();
+	    // $session_id = \Str::random(32);
+	    $one_year = time() + 60 * 60 * 24 * 365;// one year
+	    \Cookie::queue('user_session_id', $uuid, $one_year ); // change $session_id with uuid
+
+	    return $uuid;
+	}
+
 	/**
 	 * Generate a unique slug.
 	 * If it already exists, a number suffix will be appended.
@@ -11,26 +36,34 @@
 	 * @param string $value
 	 * @return string
 	 */
-    function getUniqueSlug(\Illuminate\Database\Eloquent\Model $model, $value, $existing_id = null)
+    function getUniqueSlug(\Illuminate\Database\Eloquent\Model $model, $value, $existing_id = null, $req_lang = null)
     {
 
-        // $slug = \Illuminate\Support\Str::slug($value);
-        $slug = url_slug($value);
-    //        dd($slug);
+    	$translitSlug = new Codeman\Admin\Http\TranslitSlug();
+        // $slug = url_slug($value);
+    	$slug = $translitSlug->build($value, '-', 2, false);
 
-        $req_lang = (request()->lang)? request()->lang : \Codeman\Admin\Models\Language::orderBy('order')->first()->code;
-    //dd($existing_id);
+        if(!$req_lang){
+        	$req_lang = (request()->lang)? request()->lang : \Codeman\Admin\Models\Language::orderBy('order')->first()->code;
+        }
         if(isset($existing_id)){
             $lang = $model->where('id', $existing_id)->first()['lang'];
-    //            dd($lang);
             $slugCount = count($model->whereRaw("slug REGEXP '^{$slug}(-[0-9]+)?$' and id != '{$existing_id}' and lang = '{$lang}'")->get());
-    //             dd('set', $lang, $slugCount);
         }else{
-            $slugCount = count($model->whereRaw("slug REGEXP '^{$slug}(-[0-9]+)?$' and id != '{$model->id}' and lang = '{$req_lang}' ")->get());
-    //             dd('notset', $slugCount, $req_lang);
+            // $slugCount = count($model->whereRaw("slug REGEXP '^{$slug}(-[0-9]+)?$' and id != '{$model->id}' and lang = '{$req_lang}' ")->get());
+            $slugCount = checkReapeatedSlugsCount($slug, $model, $req_lang);
         }
-    //        dd(($slugCount > 0) ? "{$slug}-{$slugCount}" : $slug);
         return ($slugCount > 0) ? "{$slug}-{$slugCount}" : $slug;
+    }
+
+    function checkReapeatedSlugsCount($slug, $model, $req_lang)
+    {
+    	if($model->id){
+    		return count($model->whereRaw("slug REGEXP '^{$slug}(-[0-9]+)?$' and id != '{$model->id}' and lang = '{$req_lang}' ")->get());
+    	}else{
+    		return count($model->whereRaw("slug REGEXP '^{$slug}(-[0-9]+)?$' and lang = '{$req_lang}' ")->get());
+
+    	}
     }
 
 	function getMaxOrderNumber($modelName, $inputs = null)
@@ -47,6 +80,7 @@
 
 	}
 
+	// make excerpt from string
 	function str_excerpt($text, $max_length = 125, $cut_off = '...', $keep_word = false)
 	{
 		mb_internal_encoding("UTF-8");
@@ -82,14 +116,15 @@
 		$description = preg_replace('/\s+/', ' ', trim($description));
 		// $description = preg_replace('&nbsp;', '', trim($description));
 		return $description;
-
 	}
 
+	// check is url valid or not
 	function is_url($url)
 	{
 		return filter_var($url, FILTER_VALIDATE_URL);
 	}
 
+	// check is video url from youtube or vimeo and return name of source
 	function is_video($url)
 	{
 		if (strpos($url, 'youtube') > 0) {
@@ -101,6 +136,12 @@
 	    }
 	}
 
+	function get_vimeo_video_id($url)
+	{
+		return substr(parse_url($url, PHP_URL_PATH), 1);
+	}
+
+	// pluck video id from Youtube and Video Url
 	function video_id($url)
 	{
 		if (strpos($url, 'youtube') > 0) {
@@ -123,7 +164,6 @@
 	}
 
 	function isJson($string) {
-		// dd(json_decode($string));
 		json_decode($string);
 	 	return (json_last_error() == JSON_ERROR_NONE);
 	}
@@ -245,7 +285,6 @@
 			if($lang != \Codeman\Admin\Models\Language::orderBy('order')->first()->code){
 				$url[] = $lang;
 			}
-//            dd($url);
 
 			$url = array_reverse($url);
 			$url = implode('/', $url);
@@ -273,7 +312,7 @@
 		if($lang != $def_lang){
             if(preg_match("/^http/i", $url)){
                 $url = explode('/', rtrim($url, '/'));
-//                $url[3] = $lang.'/'.$url[3];
+                $url[3] = $lang.'/'.$url[3];
                 $url = implode('/', $url) .'/';
             } else{
                 $url = $lang.'/'.$url;
@@ -302,7 +341,6 @@
 				case "Friday":    $day = "Ուրբաթ";  break;
 				case "Saturday":  $day = "Շաբաթ";  break;
 				case "Sunday":    $day = "Կիրակի";  break;
-				default:          $day = "Անհայտ"; break;
 			}
 
 			switch($month)
@@ -319,11 +357,44 @@
 				case "October":   $month = "Հոկտեմբեր";   break;
 				case "November":  $month = "Նոյեմբեր";  break;
 				case "December":  $month = "Դեկտեմբեր";  break;
-				default:          $month = "Անհայտ";   break;
 			}
 
 			if($format == 'd F Y'){
 				return  $daynum . " " . $month . " " . $year;
+			}else if($format == 'l, d F Y'){
+				return  $day . ", ". $daynum . " " . $month . " " . $year;
+			}
+		}else if($lang == 'ru'){
+
+			switch($day)
+			{
+				case "Monday":    $day = "Понедельник";  break;
+				case "Tuesday":   $day = "Вторник"; break;
+				case "Wednesday": $day = "Среда";  break;
+				case "Thursday":  $day = "Четверг"; break;
+				case "Friday":    $day = "Пятница";  break;
+				case "Saturday":  $day = "Суббота";  break;
+				case "Sunday":    $day = "Воскресенье";  break;
+			}
+
+			switch($month)
+			{
+				case "January":   $month = "Январь";    break;
+				case "February":  $month = "Февраль";   break;
+				case "March":     $month = "Март";     	break;
+				case "April":     $month = "Апрель";    break;
+				case "May":       $month = "Май";       break;
+				case "June":      $month = "Июнь";      break;
+				case "July":      $month = "Июль";      break;
+				case "August":    $month = "Август";    break;
+				case "September": $month = "Сентябрь"; 	break;
+				case "October":   $month = "Октябрь";   break;
+				case "November":  $month = "Ноябрь";  	break;
+				case "December":  $month = "Декабрь";  	break;
+			}
+
+			if($format == 'd F, Y'){
+				return  $daynum . " " . $month . ", " . $year;
 			}else if($format == 'l, d F Y'){
 				return  $day . ", ". $daynum . " " . $month . " " . $year;
 			}
@@ -335,6 +406,27 @@
 	}
 
 
+	function get_img_fulsize($image_url)
+	{
+		return str_replace('icon_size', 'full_size', $image_url);
+	}
+
+	function img_icon_size($image_url)
+	{
+		return str_replace('full_size', 'icon_size', $image_url);
+	}
+
+	function get_file_url($filename, $size = "full_size"){
+		$default_sizes = ['fill_size', 'icon_size', 'otherfiles'];
+		$file_path = public_path('/media/'.$size.'/'.$filename);
+		$file_url = asset('/media/'.$size.'/'.$filename);
+
+		if(file_exists($file_path)){
+			return $file_url;
+		}
+		return false;
+	}
+
 	use Codeman\Admin\Models\Language;
 	use Intervention\Image\ImageManager;
 
@@ -343,7 +435,7 @@
 		if(!$image_url) return $image_url;
 
 		$image_url_array = explode('/', $image_url);
-
+		$image_url_array = str_replace('icon_size', 'full_size', $image_url_array);
 		$index = array_search('full_size', $image_url_array);
 		$image_folder_path = public_path('media');
 		$image_folder_url = asset('media');
@@ -416,21 +508,6 @@
 
 	}
 
-	function filmUrl($slug, $year, $category = null, $subcategory = null )
-	{
-		$url = ['films'];
-		if($subcategory){
-			$url[] = $subcategory;
-		}else{
-			if($category){
-				$url[] = $category;
-			}
-		}
-		$url[] = $year;
-		$url[] = $slug;
-		$url = implode('/', $url);
-		return $url;
-	}
 
 	function date_compare($a, $b)
 	{
@@ -440,53 +517,147 @@
 	}
 
     // return Instance of Model
-    function getModel($modelName)
+	function getModel($modelName)
     {
-       $model = "App\\Models\\".$modelName;
-       $model = new $model;
-       return $model;
+    	if($modelName[0] != "\\"){
+       		$model = "App\\Models\\".$modelName;
+    	}else{
+    		$model = $modelName;
+    	}
+       	$model = new $model;
+       	return $model;
     }
-
-	function getFilmsByYear($year = null){
-		$model = getModel('Film');
-
-		if($year){
-		    $films = $model->where('year', $year)->orderBy('created_at', 'DESC')->get()->pluck('title', 'id')->toArray();
-		}else{
-		    $films = $model->where('year', date('Y'))->orderBy('created_at', 'DESC')->get()->pluck('title', 'id')->toArray();
-		}
-
-		if($films){
-		    return $films;
-		}
-		return array();
-	}
-
-	function get_img_fulsize($image_url)
-	{
-		return str_replace('icon_size', 'full_size', $image_url);
-	}
 
 	function deleteDir($dirPath) {
-    if(! is_dir($dirPath))
-    {
-        throw new InvalidArgumentException("$dirPath must be a directory");
-    }
-    if(substr($dirPath, strlen($dirPath) - 1, 1) != '/')
-    {
-        $dirPath .= '/';
+	    if(! is_dir($dirPath))
+	    {
+	        throw new InvalidArgumentException("$dirPath must be a directory");
+	    }
+	    if(substr($dirPath, strlen($dirPath) - 1, 1) != '/')
+	    {
+	        $dirPath .= '/';
+	    }
+
+	    $files = glob($dirPath . '*', GLOB_MARK);
+	    foreach($files as $file)
+	    {
+	        if(is_dir($file))
+	        {
+	            deleteDir($file);
+	        } else {
+	            unlink($file);
+	        }
+	    }
+	    rmdir($dirPath);
     }
 
-    $files = glob($dirPath . '*', GLOB_MARK);
-    foreach($files as $file)
-    {
-        if(is_dir($file))
-        {
-            deleteDir($file);
-        } else {
-            unlink($file);
-        }
+    /**
+     * Helper function
+     *
+     * @param array   $d   flat data, implementing a id/parent id (adjacency list) structure
+     * @param mixed   $r   root id, node to return
+     * @param string  $pk  parent id index
+     * @param string  $k   id index
+     * @param string  $c   children index
+     * @return array
+     */
+    function makeRecursive($d, $r = 0, $pk = 'parent_id', $k = 'id', $c = 'children') {
+      $m = array();
+      foreach ($d as $e) {
+        isset($m[$e[$pk]]) ?: $m[$e[$pk]] = array();
+        isset($m[$e[$k]]) ?: $m[$e[$k]] = array();
+        $m[$e[$pk]][] = array_merge($e, array($c => &$m[$e[$k]]));
+      }
+      return $m[$r]; // remove [0] if there could be more than one root nodes
     }
-    rmdir($dirPath);
+
+    function categories_tree($data, $is_child = 0, $group_slug = null, $category_slug = null) {
+        $is_child = $is_child ? 'ml-3' : '';
+        $result = array();
+        if (sizeof($data) > 0) {
+            $result[] = '<ul class="list-unstyled '.$is_child.'">';
+            foreach ($data as $entry) {
+                $result[] = sprintf(
+                    '<li><a href="%s" class="shop_side_nav_item link %s">%s</a>%s</li>',
+                    route('products', ['group' => $group_slug, 'category' => $entry['slug']]),
+                    $category_slug == $entry['slug'] ? 'active' : '',
+                    $entry['title'],
+                    categories_tree($entry['children'], 1)
+                );
+            }
+            $result[] = '</ul>';
+
+        }
+        return implode($result);
+    }
+
+    function recursCategoriesOptions($result, $parent_id, $selected = null, $category_id = null, &$html = '')
+    {
+        if(isset($result[$parent_id])):
+
+            foreach ($result[$parent_id] as $key => $category):
+                    $is_selected = '';
+                    if( (isset($category_id) && $category_id == $category->id) ||
+                        (isset($selected) && is_array($selected) && in_array($category->id, $selected))):
+                        $is_selected = " selected='selected'";
+                    endif;
+                    $html .='<option value="'.$category->id.'" '.$is_selected.' >';
+                        for($i = 2; $i <= $category->level; $i++):
+                            $html .= '---';
+                        endfor;
+                        $html .= $category->title;
+                    $html .='</option>';
+                recursCategoriesOptions($result, $category->id, $selected, $category_id, $html);
+            endforeach;
+        endif;
+        return $html;
+    }
+
+    function categories_tree_header_menu($data, $is_child = 0, $group_slug = null, $active_slug = null) {
+        $is_child = $is_child ? 'mb-123' : '';
+        $result = array();
+        if (sizeof($data) > 0) {
+            // $result[] = '<ul class="project--nav-secondary navbar-nav '.$is_child.'">';
+            foreach ($data as $entry) {
+                $result[] = sprintf(
+                    '<li class="nav-item pr-0"><a href="%s" class="nav-sublink text-uppercase pr-0 pl-0 text-dark %s">%s</a>%s</li>',
+                    route('products', ['group' => $group_slug, 'category' => $entry['slug']]),
+                    $active_slug == $entry['slug'] ? 'active' : '',
+                    $entry['title'],
+                    categories_tree_header_menu($entry['children'], 1)
+                );
+            }
+            // $result[] = '</ul>';
+
+        }
+        return implode($result);
+    }
+
+    function content_builder_text($text){
+        $text = str_replace('[delivery_addresses_dropdown]', delivery_addresses_dropdown_shortcode(), $text);
+        return $text;
+    }
+    function delivery_addresses_dropdown_shortcode(){
+        return '<div  class="form-wrapper">
+                    <div class="project--input-wrapper form-group mb-0" style="max-width: 280px;">
+                        <input name="shipping_city"
+                        type="text"
+                        class="project--input form-control autocomplete_address_city"
+                        id="shipping-city"
+                        data-group="1"
+                        autocomplete="autocompleate_random_6359271"/>
+                        <div class="show_address_list">
+                            <ul class="show_address_list_ul"></ul>
+                        </div>
+                        <span class="help-block error-help-block address-city-error global_city_error"></span>
+                        <label class="project--input-label" for="shipping-city">'.__('Перечень населённых пунктов').'</label>
+                        <div class="city_data_id">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-wrapper filter_checkbox">
+                    <input type="hidden" name="shipping_type" data-logic="courier_delivery">
+                    <p><b><span>Срок доставки: </span><span class="shipping-option-info"></span></b></p>
+                </div>';
     }
 ?>

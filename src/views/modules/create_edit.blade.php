@@ -15,17 +15,6 @@
 				<input type="hidden"  id="module_id" value="{{$module->id}}">
 				<h3 class="box-title">Edit Module</h3>
 				<a href="{{ route('modules.create') }}" class="btn btn-primary btn-flat pull-right ">Add New</a>
-{{--				@if(isset($parent_lang_id) || isset($module) && $module->lang == 'arm')--}}
-{{--					@if(isset($parent_lang_id))--}}
-{{--						<a href="{{ route('module.edit', [$parent_lang_id]) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to English</a>--}}
-{{--					@else--}}
-{{--						<a href="{{ route('module.edit', $module->parent_lang_id) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to English</a>--}}
-{{--					@endif--}}
-{{--				@else--}}
-{{--					<a href="{{ route('module.translate',$module->id) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate to Armenian</a>--}}
-{{--				@endif--}}
-
-{{--				<a href="{{ route('module.translate', [$module->id, $module->language_id]) }}" class="btn btn-warning btn-flat pull-right margin-right-15"><i class="fa fa-edit"></i> Translate</a>--}}
 			@endif
 	    </div>
 	    <div class="box-body">

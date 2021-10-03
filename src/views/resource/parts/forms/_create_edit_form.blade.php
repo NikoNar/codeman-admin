@@ -26,7 +26,7 @@
 				<div class='input-group'>
 					<span class="input-group-addon">
 						@if(isset($resource))
-							<a href="{!! url($resource->type.'/'.$resource->slug) !!}" target="_blank">
+							<a href="{!! $resource->permalink !!}" target="_blank">
 								<i class="fa fa-link"></i>
 							</a>
 						@else
@@ -36,11 +36,11 @@
 					<span class="input-group-addon no-border-right">
 						<i>
 							@if(isset($resource))
-								{{ URL::to('/'.buildUrl($resource, array(), false)).'/'.$resource->type }}
+								{{ $resource->permalink_excerpt_slug .'/' }}
 							@else
-								{{ URL::to('/') }}
+								{{ URL::to($module).'/' }}
 							@endif
-						/</i>
+						</i>
 					</span>
 					@if(isset($slugEdit) && $slugEdit == false)
 						{!! Form::text('slug', null, ['class' => 'form-control', 'readonly']) !!}
@@ -55,71 +55,42 @@
 	<div class="clearfix"></div>
 	<br>
 
-
 	@if(in_array('ckeditor', $options))
 		@include('admin-panel::components.ckeditor')
 	@endif
-
-{{--	@if(in_array('relations', $options))--}}
-{{--		@include('admin-panel::components.relations')--}}
-{{--	@endif--}}
-
-{{--	@if(in_array('gallery', $options))--}}
-{{--		@include('admin-panel::components.gallery')--}}
-{{--	@endif--}}
-{{--{{dd($resource->meta)}}--}}
-{{--{{dd($additional_options)}}--}}
-@foreach($additional_options as $key => $val)
-		@if($val['type'] != '')
-			@switch($val['type'])
-				@case('select')
-					@include('admin-panel::resource.parts.options.select', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type'], 'options'=>explode(',', $val['type_options']), 'multiple'=>array_key_exists('multiple', $val)])
-				@break
-				@case('textarea')
-					@include('admin-panel::resource.parts.options.textarea', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type']])
-				@break
-				@case('image')
-					@include('admin-panel::resource.parts.options.thumbnail', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type']])
-				@break
-				@case('gallery')
-					@include('admin-panel::resource.parts.options.gallery', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type']])
-				@break
-				@case('editor')
-					@include('admin-panel::resource.parts.options.ckeditor', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type']])
-				@break
-				@case('datepicker')
-					@include('admin-panel::resource.parts.options.datepicker', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type']])
-				@break
-				@case('iconpicker')
-				@include('admin-panel::resource.parts.options.iconpicker', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type']])
-				@break
-				@default
-					@include('admin-panel::resource.parts.options.input', ['id'=>$key, 'label' => $val['label'], 'name' => $val['name'], 'type' => $val['type'], 'options'=>explode(',', $val['type_options'])])
-				@break
-			@endswitch
-		@endif
-	@endforeach
-
+	
+	@if(in_array('content_builder', $options))
+		@include('admin-panel::page.content-builder.index')
+	@endif
+	
+	@include('admin-panel::components.additional_options')
 	<div class="clearfix"></div>
-	<div class="box">
-	    <div class="box-header with-border">
-	        <h3 class="box-title">SEO Options</h3>
-	    </div>
-	    <div class="box-body">
-	    	<div class="form-group">
-	    		{!! Form::label('meta-title', 'Meta Title'); !!}
-	    		{!! Form::text('meta-title', null, ['class' => 'form-control', 'placeholder' => '%title% | %sitename%']) !!}
-	    	</div>
-	    	<div class="form-group">
-	    		{!! Form::label('meta-description', 'Meta Description'); !!}
-	    		{!! Form::text('meta-description', null, ['class' => 'form-control']) !!}
-	    	</div>
-	    	<div class="form-group">
-	    		{!! Form::label('meta-keywords', 'Meta Keywords'); !!}
-	    		{!! Form::text('meta-keywords', null, ['class' => 'form-control', 'data-role' => "tagsinput" ]) !!}
-	    	</div>
-	    </div>
-	</div>
+	
+	@if($relations)
+		<div class="panel-group" id="accordion">
+			<div class="form-group">
+				@isset($resource)
+					@php
+						$current_rel = $resource->relations->groupBy('type')->toArray();
+					@endphp
+					{!! Form::label('relations', 'Relations'); !!}
+					@foreach($relations as $key => $val)
+						@include('admin-panel::components.relations', ['relation_name'=> $key, 'items' => $val, 'attached_relations' => @isset($attached_relations)? $attached_relations:null])
+					@endforeach
+					{!! Form::hidden('relations', null, ['id' => 'relations']) !!}
+				@else
+					{!! Form::label('relations', 'Relations'); !!}
+					@foreach($relations as $key => $val)
+						@include('admin-panel::components.relations', ['relation_name'=> $key, 'items' => $val])
+					@endforeach
+					{!! Form::hidden('relations', null, ['id' => 'relations']) !!}
+				@endif
+			</div>
+		</div>
+	@endif
+	
+	@include('admin-panel::components.seo_block')
+	
 </div>
 <div class="col-md-3">
 	<div class="form-group">
@@ -127,22 +98,6 @@
 		@include('admin-panel::components.timestamps',[
 			'value' => isset($resource)?$resource->created_at : date('Y-m-d H:i:a'), 
 			'updated' => isset($resource)?$resource->updated_at->diffForHumans() : null ])
-
-		{{--		{!! Form::label('updated_at', 'Updated',['class'=>'pull-right']); !!}--}}
-{{--		<div class="clearfix"></div>--}}
-{{--        <div class='input-group col-md-6 pull-left date'>--}}
-{{--			<div class="input-group-addon">--}}
-{{--				<i class="fa fa-calendar"></i>--}}
-{{--			</div>--}}
-{{--			<input type="text" name="created_at" class="form-control pull-right datepicker" value="{{isset($resource)?$resource->created_at : null}}" autocomplete="off">--}}
-{{--        </div>--}}
-
-{{--        <div class="input-group bootstrap-timepicker col-md-6 pull-left">--}}
-{{--        	{!! Form::text('updated_at', null, ['class' => 'form-control timepicker', 'disabled' =>'disabled']) !!}--}}
-{{--        	<div class="input-group-addon">--}}
-{{--        		<i class="glyphicon glyphicon-calendar"></i>--}}
-{{--        	</div>--}}
-{{--        </div>--}}
 		<div class="clearfix"></div>
 	</div>
 
@@ -159,11 +114,12 @@
 		@include('admin-panel::components.categories')
 	@endif
 
-
 	@if(in_array('thumbnail', $options))
-		@include('admin-panel::components.thumbnail')
+		@include('admin-panel::components.thumbnail', [
+			'name' => 'thumbnail',
+			'attributes' => isset($val['attributes']) ? $val['attributes'] : []
+		])
 	@endif
-
 
 	<div class="">
 		@if(isset($order) && !empty($order))
@@ -179,32 +135,6 @@
 		@endif
 	</div>
 	<div class="clearfix"></div>
-	<br>
-
-	@if($relations)
-		<div class="panel-group" id="accordion">
-		<div class="form-group">
-			@isset($resource)
-				@php
-					$current_rel = $resource->relations->groupBy('type')->toArray();
-				@endphp
-				{!! Form::label('relations', 'Relations'); !!}
-				@foreach($relations as $key => $val)
-					@include('admin-panel::components.relations', ['relation_name'=> $key, 'items' => $val, 'attached_relations' => @isset($attached_relations)? $attached_relations:null])
-				@endforeach
-				{!! Form::hidden('relations', null, ['id' => 'relations']) !!}
-			@else
-				{!! Form::label('relations', 'Relations'); !!}
-				@foreach($relations as $key => $val)
-					@include('admin-panel::components.relations', ['relation_name'=> $key, 'items' => $val])
-				@endforeach
-				{!! Form::hidden('relations', null, ['id' => 'relations']) !!}
-			@endif
-		</div>
-		</div>
-	@endif
-
-
 	<hr>
 	<div class="form-group">
 		@if(isset($resource))

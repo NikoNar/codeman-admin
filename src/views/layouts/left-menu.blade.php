@@ -38,7 +38,7 @@
                     @role('SuperAdmin')
                     <li class="@if(Request::is('admin/pages/templates')) active @endif">
                         <a href="{{route('pages.templates')}}">
-                            <i class="fa fa-wpforms"></i> Templates
+                            <i class="fa fa-circle-notch"></i> Templates
                         </a>
                     </li>
                     @endrole
@@ -64,67 +64,202 @@
                 </ul>
             </li>
             @endrole
+            @if(config('services.shop.is_shop'))
+            <li class="treeview
+            @if(Request::is('admin/products*') ||
+                Request::is('admin/product-options*') ||
+                Request::is('admin/variations*') ||
+                Request::is('admin/warehouses*') ||
+                Request::is('admin/product-groups*') ||
+                Request::is('admin/product-labels*') )  active @endif">
+                <a href="#">
+                    <i class="fa fa-shopping-bag"></i>
+                    <span>Products</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="@if(Request::is('admin/products')) active @endif">
+                        <a href="{!! route('products.index') !!}">
+                            <i class="fa fa-list fz-12"></i> View All
+                        </a>
+                    </li>
+                    <li class="@if(Request::is('admin/products/create')) active @endif">
+                        <a href="{!! route('products.create') !!}">
+                            <i class="fa fa-plus "></i> Create Products
+                        </a>
+                    </li>
+                    <li class="@if(Request::is('admin/products/categories*')) active @endif">
+                        <a href="{!! route('products.categories') !!}">
+                            <i class="fa fa-circle-notch "></i> Categories
+                        </a>
+                    </li>
+                    <li class="@if(Request::is('admin/product-groups*')) active @endif">
+                        <a href="{!! route('product-groups.index') !!}">
+                            <i class="fa fa-circle-notch "></i> Groups
+                        </a>
+                    </li>
+                    <li class="@if(Request::is('admin/product-labels*')) active @endif">
+                        <a href="{!! route('product-labels.index') !!}">
+                            <i class="fa fa-circle-notch "></i> Labels
+                        </a>
+                    </li>
+                    <li class="@if(Request::is('admin/variation/subscription')) active @endif">
+                        <a href="{!! route('admin.variations.subscription.index') !!}">
+                            <i class="fa fa-circle-notch "></i> Subscriptions
+                        </a>
+                    </li>
+                    <li class="treeview @if(Request::is('admin/product-options*')) active @endif">
+                        <a href="#">
+                            <i class="fa fa-circle-notch "></i> Properties
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="@if(Request::is('admin/product-options*')) active @endif">
+                                <a href="{!! route('product-options.index') !!}">
+                                    <i class="fa fa-circle-notch "></i> System Properties
+                                </a>
+                            </li>
+                            <li class="@if(Request::is('admin/shop/properties/filter-colors-group')) active @endif">
+                                <a href="{{ route('filter.colors.group') }}">
+                                    <i class="fa fa-circle-notch "></i>Filter Colors Group
+                                </a>
+                            </li>
+                            <li class="@if(Request::is('admin/shop/properties/season-colors')) active @endif">
+                                <a href="{{ route('season.colors') }}">
+                                    <i class="fa fa-circle-notch "></i> Season Colors
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="@if(Request::is('admin/warehouses*')) active @endif">
+                        <a href="{!! route('warehouses.index') !!}">
+                            <i class="fa fa-circle-notch "></i> Warehouses
+                        </a>
+                    </li>
+
+                    <li class="@if(Request::is('admin/variations*')) active @endif">
+                        <a href="{!! route('variations.index') !!}">
+                            <i class="fa fa-circle-notch "></i> Variations
+                        </a>
+{{--                        <ul class="treeview-menu">--}}
+{{--                            <li class="@if(Request::is('admin/variations/sort')) active @endif">--}}
+{{--                                <a href="{!! route('variations.sort') !!}">--}}
+{{--                                    <i class="fa fa-circle-notch "></i> Sort--}}
+{{--                                </a>--}}
+{{--                            </li>--}}
+{{--                        </ul>--}}
+                    </li>
+                </ul>
+            </li>
+            <li class="@if(Request::is('admin/shop-settings*')) active @endif">
+                <a href="{{ route('shop-settings.index') }}">
+                    <i class="fa fa-share"></i>
+                    <span>Shop Settings</span>
+                </a>
+            </li>
+            <li class="treeview @if(Request::is('admin/lookbooks*')) active @endif">
+                <a href="#">
+                    <i class="fa fa-share"></i>
+                    <span>LookBook</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="@if(Request::is('admin/lookbooks')) active @endif">
+                        <a href="{!! route('lookbooks.index') !!}">
+                            <i class="fa fa-list fz-12"></i> View all
+                        </a>
+                    </li>
+                    <li class="@if(Request::is('admin/lookbooks/create')) active @endif">
+                        <a href="{!! route('lookbooks.create') !!}">
+                            <i class="fa fa-plus fz-12"></i> Add New
+                        </a>
+                    </li>
+                    {{-- <li class="@if(Request::is('admin/collections/catalog*')) active @endif">
+                        <a href="{!! route('admin.collections.catalog') !!}">
+                            <i class="fa fa-list fz-12"></i> Catalogs
+                        </a>
+                    </li>
+                    <li class="@if(Request::is('admin/collections/looks*')) active @endif">
+                        <a href="{!! route('admin.collections.looks') !!}">
+                            <i class="fa fa-list fz-12"></i> Looks
+                        </a>
+                    </li>
+                    <li class="@if(Request::is('admin/collections/videos*')) active @endif">
+                        <a href="{!! route('admin.collections.videos') !!}">
+                            <i class="fa fa-list fz-12"></i> Videos
+                        </a>
+                    </li> --}}
+                </ul>
+            </li>
+            <li class="treeview @if(Request::is('admin/looks*')) active @endif">
+                <a href="#">
+                    <i class="fa fa-theater-masks"></i>
+                    <span>Looks</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="@if(Request::is('admin/looks')) active @endif">
+                        <a href="{!! route('looks.index') !!}">
+                            <i class="fa fa-list fz-12"></i> View All
+                        </a>
+                    </li>
+                    <li class="@if(Request::is('admin/looks/create')) active @endif">
+                        <a href="{!! route('looks.create') !!}">
+                            <i class="fa fa-plus fz-12"></i> Add New
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            @php
+                if (class_exists('Codeman\Admin\Models\Shop\Order')) {
+                    $order_model = new Codeman\Admin\Models\Shop\Order();
+                    $order_in_review = $order_model->where('status', 'in review')->count();
+                }
+            @endphp
+                <li class=" @if(Request::is('admin/orders*')) active @endif">
+                    <a href="{{ route('admin.orders') }}">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span>Orders <span class="label label-danger pull-right">{!! $order_in_review !!}</span></span>
+                    </a>
+                </li>
+            @endif
+
+            @if (class_exists('Codeman\Admin\Models\Shop\Coupon'))
+                <li class="treeview @if(Request::is('admin/marketing*')) active @endif">
+                    <a href="#">
+                        <i class="fa fa-lightbulb"></i>
+                        <span>Marketing</span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <li class="@if(Request::is('admin/marketing/coupon*')) active @endif">
+                            <a href="{!! route('coupon.index') !!}">
+                                <i class="fa fa-list fz-12"></i> Coupons
+                            </a>
+                        </li>
+                        {{-- <li class="@if(Request::is('admin/marketing/discounts*')) active @endif">
+                            <a href="{!! route('coupons.create') !!}">
+                                <i class="fa fa-list fz-12"></i> Discounts
+                            </a>
+                        </li> --}}
+                        <li class="@if(Request::is('admin/marketing/search-statistics*')) active @endif">
+                            <a href="{!! route('search-statistics.index') !!}">
+                                <i class="fa fa-list fz-12"></i> Search Statistics
+                            </a>
+                        </li>
+
+                        <li class="@if(Request::is('admin/marketing/cart_rules')) active @endif">
+                            <a href="{!! route('cart.rules.index') !!}">
+                                <i class="fa fa-list fz-12"></i> Cart Rules
+                            </a>
+                        </li>
+
+                        <li class="@if(Request::is('admin/marketing/catalog_rules')) active @endif">
+                            <a href="{!! route('catalog.rules.index') !!}">
+                                <i class="fa fa-list fz-12"></i> Catalog Rules
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+            @endif
             @if(isset($modules) && count($modules) > 0)
                 <hr>
-                <li class="treeview @if(Request::is('admin/product*')) active @endif">
-                    <a href="#">
-                        <i class="fa fa-car"></i>
-                        <span>Product</span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="@if(Request::is('admin/product')) active @endif">
-                            <a href="{!! route('product.index') !!}">
-                                <i class="fa fa-list fz-12"></i> View All
-                            </a>
-                        </li>
-                        <li class="@if(Request::is('admin/product/create')) active @endif">
-                            <a href="{!! route('product.create') !!}">
-                                <i class="fa fa-plus"></i> Add New
-                            </a>
-                        </li>
-                        <li class="@if(Request::is('admin/products/categories')) active @endif">
-                            <a href="{!! route('product.categories') !!}">
-                                <i class="fa fa-circle-notch "></i> Categories
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="treeview @if(Request::is('admin/vendor*')) active @endif">
-                    <a href="#">
-                        <i class="fab fa-app-store"></i>
-                        <span>Vendor</span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="@if(Request::is('admin/vendor')) active @endif">
-                            <a href="{!! route('vendor.index') !!}">
-                                <i class="fa fa-list fz-12"></i> View All
-                            </a>
-                        </li>
-                        <li class="@if(Request::is('admin/vendor/create')) active @endif">
-                            <a href="{!! route('vendor.create') !!}">
-                                <i class="fa fa-plus"></i> Add New
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="treeview @if(Request::is('admin/offer*')) active @endif">
-                    <a href="#">
-                        <i class="fas fa-bookmark"></i>
-                        <span>Offer</span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="@if(Request::is('admin/offer')) active @endif">
-                            <a href="{!! route('offer.index') !!}">
-                                <i class="fas fa-list fz-12"></i> View All
-                            </a>
-                        </li>
-                        <li class="@if(Request::is('admin/offer/create')) active @endif">
-                            <a href="{!! route('offer.create') !!}">
-                                <i class="fa fa-plus"></i> Add New
-                            </a>
-                        </li>
-                    </ul>
-                </li>
                 @foreach($modules as $key => $module)
                     <li class="treeview @if(Request::is('admin/'.$module->title.'*')) active @endif">
                         <a href="#">
@@ -151,7 +286,7 @@
                             @if(in_array('categories', $options))
                                 <li class="@if(Request::is('admin/resource/'.$module->title.'/categories')) active @endif">
                                     <a href='{!! url("admin/resource/$module->slug/categories") !!}'>
-                                        <i class="fa fa-code-fork"></i> Categories
+                                        <i class="fa fa-circle-notch"></i> Categories
                                     </a>
                                 </li>
                             @endif
@@ -159,114 +294,25 @@
                     </li>
                 @endforeach
             @endif
-            {{--            <li class="treeview @if(Request::is('admin/servisec*')) active @endif">--}}
-            {{--                <a href="#">--}}
-            {{--                    <i class="fas fa-concierge-bell"></i>--}}
-            {{--                    <span>Services</span>--}}
-            {{--                </a>--}}
-            {{--                <ul class="treeview-menu">--}}
-            {{--                    <li class="@if(Request::is('admin/servisec')) active @endif">--}}
-            {{--                        <a href="{!! route('service-index') !!}">--}}
-            {{--                            <i class="fa fa-circle-notch fz-12"></i> View All--}}
-            {{--                        </a>--}}
-            {{--                    </li>--}}
-            {{--                    <li class="@if(Request::is('admin/servisec/create')) active @endif">--}}
-            {{--                        <a href="{!! route('service-create') !!}">--}}
-            {{--                            <i class="fa fa-circle-notch fz-12"></i> Add New--}}
-            {{--                        </a>--}}
-            {{--                    </li>--}}
-            {{--                </ul>--}}
-            {{--            </li>--}}
-            {{--            <li class="treeview @if(Request::is('admin/resource*')) active @endif">--}}
-            {{--                <a href="#">--}}
-            {{--                    <i class="fas fa-briefcase"></i>--}}
-            {{--                    <span>Resources</span>--}}
-            {{--                </a>--}}
-            {{--                <ul class="treeview-menu">--}}
-            {{--                    <li class="@if(Request::is('admin/resource')) active @endif">--}}
-            {{--                        <a href="{!! route('resource-index') !!}">--}}
-            {{--                            <i class="fa fa-circle-notch fz-12"></i> View All--}}
-            {{--                        </a>--}}
-            {{--                    </li>--}}
-            {{--                    <li class="@if(Request::is('admin/resource/create')) active @endif">--}}
-            {{--                        <a href="{!! route('resource-create') !!}">--}}
-            {{--                            <i class="fa fa-circle-notch fz-12"></i> Add New--}}
-            {{--                        </a>--}}
-            {{--                    </li>--}}
-            {{--                    <li class="@if(Request::is('admin/resource/categories')) active @endif">--}}
-            {{--                        <a href="{!! route('resource-categories') !!}">--}}
-            {{--                            <i class="fa fa-circle-o"></i> Categories--}}
-            {{--                        </a>--}}
-            {{--                    </li>--}}
-            {{--                </ul>--}}
-            {{--            </li>--}}
-            {{--            <li class="treeview @if(Request::is('admin/file*')) active @endif">--}}
-            {{--                <a href="#">--}}
-            {{--                    <i class="fas fa-folder-open"></i>--}}
-            {{--                    <span>Files</span>--}}
-            {{--                </a>--}}
-            {{--                <ul class="treeview-menu">--}}
-            {{--                    <li class="@if(Request::is('admin/file')) active @endif">--}}
-            {{--                        <a href="{!! route('file-index') !!}">--}}
-            {{--                            <i class="fa fa-circle-notch fz-12"></i> View All--}}
-            {{--                        </a>--}}
-            {{--                    </li>--}}
-            {{--                    <li class="@if(Request::is('admin/file/create')) active @endif">--}}
-            {{--                        <a href="{!! route('file-create') !!}">--}}
-            {{--                            <i class="fa fa-circle-notch fz-12"></i> Add New--}}
-            {{--                        </a>--}}
-            {{--                    </li>--}}
-            {{--                    <li class="@if(Request::is('admin/file/categories')) active @endif">--}}
-            {{--                        <a href="{!! route('file-categories') !!}">--}}
-            {{--                            <i class="fa fa-circle-o"></i> Categories--}}
-            {{--                        </a>--}}
-            {{--                    </li>--}}
-            {{--                </ul>--}}
-            {{--            </li>--}}
+            <li class="treeview @if(Request::is('admin/instagram*')) active @endif">
 
-
-            {{--            <li class="treeview @if(Request::is('admin/lecturer*')) active @endif">--}}
-            {{--               <a href="#">--}}
-            {{--                   <i class="fas fa-users"></i>--}}
-            {{--                   <span>Team</span>--}}
-            {{--               </a>--}}
-            {{--               <ul class="treeview-menu">--}}
-            {{--                   <li class="@if(Request::is('admin/lecturer')) active @endif">--}}
-            {{--                       <a href="{!! route('lecturer-index') !!}">--}}
-            {{--                           <i class="fa fa-circle-notch fz-12"></i> View All --}}
-            {{--                       </a>--}}
-            {{--                   </li>--}}
-            {{--                   <li class="@if(Request::is('admin/lecturer/create')) active @endif">--}}
-            {{--                       <a href="{!! route('lecturer-create') !!}">--}}
-            {{--                           <i class="fa fa-circle-notch fz-12"></i> Add New --}}
-            {{--                       </a>--}}
-            {{--                   </li>--}}
-            {{--                   <li class="@if(Request::is('admin/lecturers/categories')) active @endif">--}}
-            {{--                        <a href="{!! route('lecturer-categories') !!}">--}}
-            {{--                            <i class="fa fa-circle-o"></i> Categories--}}
-            {{--                        </a>--}}
-            {{--                    </li>--}}
-            {{--               </ul>--}}
-            {{--           </li>--}}
-            {{--           <li class="treeview @if(Request::is('admin/review*')) active @endif">--}}
-            {{--               <a href="#">--}}
-            {{--                   <i class="fas fa-handshake"></i>--}}
-            {{--                   <span>Partners</span>--}}
-            {{--               </a>--}}
-            {{--               <ul class="treeview-menu">--}}
-            {{--                   <li class="@if(Request::is('admin/review')) active @endif">--}}
-            {{--                       <a href="{!! route('reviews-index') !!}">--}}
-            {{--                           <i class="fa fa-circle-notch fz-12"></i> View All --}}
-            {{--                       </a>--}}
-            {{--                   </li>--}}
-            {{--                   <li class="@if(Request::is('admin/review/create')) active @endif">--}}
-            {{--                       <a href="{!! route('review-create') !!}">--}}
-            {{--                           <i class="fa fa-circle-notch fz-12"></i> Add New --}}
-            {{--                       </a>--}}
-            {{--                   </li>--}}
-            {{--                   --}}
-            {{--               </ul>--}}
-            {{--           </li>--}}
+                <a href="#">
+                    <i class=" fab fa-instagram"></i>
+                    <span>Instagram</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="@if(Request::is('admin/instagram')) active @endif">
+                        <a href="{!! route('instagram.index') !!}">
+                            <i class="fa fa-list fz-12"></i> View All
+                        </a>
+                    </li>
+                    <li class="@if(Request::is('admin/instagram/create')) active @endif">
+                        <a href="{!! route('instagram.create') !!}">
+                            <i class="fa fa-plus fz-12"></i> Add New
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <hr>
             @hasanyrole('SuperAdmin|Admin')
 
@@ -287,13 +333,11 @@
                             <i class="fa fa-plus fz-12"></i> Add New
                         </a>
                     </li>
-
-                    {{--                    <li class="@if(Request::is('admin/users/roles')) active @endif">--}}
-                    {{--                        <a href="{!! route('roles.index') !!}">--}}
-                    {{--                            <i class="fa fa-eye"></i> Roles--}}
-                    {{--                        </a>--}}
-                    {{--                    </li>--}}
-
+                    <li class="@if(Request::is('admin/users/roles')) active @endif">
+                        <a href="{!! route('roles.index') !!}">
+                            <i class="fa fa-eye"></i> Roles
+                        </a>
+                    </li>
                 </ul>
             </li>
             @endrole
@@ -303,6 +347,12 @@
                     <i class="fa fa-th"></i> <span>Menus</span>
                 </a>
             </li>
+            <li class="@if(Request::is('admin/subscribers*')) active @endif">
+                <a href="{!! route('subscribers.index') !!}">
+                    <i class="fa fa-th"></i> <span>Subscribers</span>
+                </a>
+            </li>
+
 
 
             <li class="treeview @if(Request::is('admin/media*')) active @endif">

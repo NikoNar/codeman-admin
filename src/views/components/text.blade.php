@@ -1,3 +1,8 @@
 <div class="form-group">
-    <input type="text" name="{{ isset($name)? $name: null }}" value="{{isset($value)? $value: null}}" class="form-control">
+	@isset($label) <label for="{{ $id }}">{{ $label }}</label> @endif
+    {{ Form::text(isset($name) ? $name: null, isset($value) ? $value: null, ['class' => 'form-control']) }} 
+
+    @isset($info)
+        <small id="{{ $id }}" class="form-text text-muted">{!! $info !!}</small>
+    @endif
 </div>

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Language extends Model
 {
     use SoftDeletes;
+    protected $table  = 'languages';
     protected $fillable = [
         'name',
         'code',

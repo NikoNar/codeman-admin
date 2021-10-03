@@ -14,8 +14,7 @@ class PageRequest extends FormRequest
      */
     public function authorize()
     {
-        return true; 
-        auth()->check();
+        return auth()->check();
     }
 
     /**
@@ -42,7 +41,7 @@ class PageRequest extends FormRequest
         }else{
             return [
                 'title'  => 'required',
-                // 'slug'   => 'required|unique:pages',
+                'slug'   => 'nullable|unique:pages',
                 'status' => 'required',
             ];
         };

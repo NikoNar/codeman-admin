@@ -32,16 +32,16 @@ class Product extends Model
     	'meta-title',
     	'meta-description',
     	'meta-keywords',
-        'variations'
+        'variations',
+        'country'
     ];
 
-
+    // ALTER TABLE `products` ADD `country` VARCHAR(255) NULL AFTER `sex`;
 
     // public function categories()
     // {
     //     return $this->belongsToMany('Codeman\Admin\Models\Category', 'product_categories', 'product_id', 'category_id');
     // }
-
     
      /**
      * Get all of the categories for the post.

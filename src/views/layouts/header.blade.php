@@ -33,8 +33,10 @@ tih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">--}}
 
   <link rel="stylesheet" href="{{ asset('admin-panel/content-builder/content-builder.css') }}">
   
+  <link rel="stylesheet" href="{{ asset('admin-panel/js/toastr/toastr.min.css') }}">
   <link rel="stylesheet" href="{{ asset('admin-panel/css/admin.css') }}">
-  <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/datatables.net-bs/css/dataTables.bootstrap.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('admin-panel/js/datatables/datatables.min.css') }}"/>
+  {{-- <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/datatables.net-bs/css/dataTables.bootstrap.css') }}"> --}}
   <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
   <link rel="stylesheet" href="{{ asset('admin-panel/plugins/bootstrap-iconpicker-1.10.0/dist/css/bootstrap-iconpicker.min.css') }}">
   <link rel="stylesheet" href="{{ asset('admin-panel/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css')}}" />

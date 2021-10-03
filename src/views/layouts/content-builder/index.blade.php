@@ -1,5 +1,5 @@
-<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js'></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css" rel="stylesheet"
+<script src='{{ asset('admin-panel/js/dragula/dragula.min.js') }}'></script>
+<link href="{{ asset('admin-panel/js/dragula/dragula.min.css') }}" rel="stylesheet"
       />
 <section id="content-builder">
 	<div class="box">
@@ -9,7 +9,7 @@
 	    <div class="box-body">
 	    	<div id="builder-heading">
 	    		<ul id="content-elements" class="elements-list">
-	    			@if(isset($type) && $type == 'blog')
+	    			{{-- @if(isset($type) && $type == 'blog')
 		    			<li class="content-element" id="b-image">
 		    				<span class="glyphicon fa fa-image" aria-hidden="true"></span>
 		    				<span class="glyphicon-class">Image</span>
@@ -22,8 +22,7 @@
 		    				<span class="glyphicon fa fa-image" aria-hidden="true"></span>
 		    				<span class="glyphicon-class">2 images</span>
 	    				</li>
-
-	    			@else
+	    			@else --}}
 	    			<li class="content-element" id="b-slider">
 	    				<div class="icon-section">
 		    				<span class="glyphicon fa fa-images" aria-hidden="true"></span>
@@ -31,10 +30,10 @@
 	    				</div>
 	    			</li>
 
-	    			<!-- <li class="content-element" id="b-image">
+	    			<li class="content-element" id="b-image">
 	    				<span class="glyphicon fa fa-image" aria-hidden="true"></span>
 	    				<span class="glyphicon-class">Image</span>
-	    			</li> -->
+	    			</li>
 
 	    			<li class="content-element" id="b-text">
 	    				<span class="glyphicon fa fa-align-center" aria-hidden="true"></span>
@@ -57,12 +56,12 @@
 	    			<!-- <li class="content-element" id="b-offer-block">
 	    				<span class="glyphicon fa fa-th" aria-hidden="true"></span>
 	    				<span class="glyphicon-class">Offers Block</span>
-	    			</li>
+	    			</li> -->
 	    			<li class="content-element" id="b-products-block">
 	    				<span class="glyphicon fa fa-shopping-bag" aria-hidden="true"></span>
-	    				<span class="glyphicon-class">Products Block</span>
-	    			</li> -->
-	    			@endif
+	    				<span class="glyphicon-class">Products Slider</span>
+	    			</li>
+	    			{{-- @endif --}}
 	    		</ul>
 	    	</div>
 	    	<div class="clearfix"></div>
